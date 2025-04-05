@@ -1,0 +1,60 @@
+# macOS System Files
+# Ignore macOS system-specific files and directories
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Xcode
+# Ignore Xcode user-specific files and build artifacts
+xcuserdata/
+*.xcscmblueprint
+*.xccheckout
+build/
+DerivedData/
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Property List Files
+# Ignore various property list files
+Info.plist
+**/Info.plist
+*.plist
+GoogleService-Info.plist
+
+# Swift Package Manager
+# Ignore Swift Package Manager build artifacts and dependencies
+.build/
+Packages/
+Package.resolved
+.swiftpm
+
+# Carthage
+# Ignore Carthage dependencies
+Carthage/Build/
+
+# Fastlane
+# Ignore fastlane specific files
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# Development
+# Ignore code injection tools and temporary files
+injectionforxcode/
+*.swp
+*.swo
+*~
+
