@@ -6,6 +6,14 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		449FE9252DA285370044E7FA /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 449FE9242DA285370044E7FA /* FirebaseAuth */; };
+		449FE9272DA285370044E7FA /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 449FE9262DA285370044E7FA /* FirebaseCore */; };
+		449FE9292DA285370044E7FA /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 449FE9282DA285370044E7FA /* FirebaseDatabase */; };
+		449FE92B2DA285370044E7FA /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 449FE92A2DA285370044E7FA /* FirebaseFirestore */; };
+		449FE92F2DA288E60044E7FA /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 449FE92E2DA288E60044E7FA /* FirebaseAppCheck */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		4498319B2DA1BB4B00041AF4 /* Chef Maker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Chef Maker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +31,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				449FE9272DA285370044E7FA /* FirebaseCore in Frameworks */,
+				449FE9292DA285370044E7FA /* FirebaseDatabase in Frameworks */,
+				449FE92F2DA288E60044E7FA /* FirebaseAppCheck in Frameworks */,
+				449FE92B2DA285370044E7FA /* FirebaseFirestore in Frameworks */,
+				449FE9252DA285370044E7FA /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +78,11 @@
 			);
 			name = "Chef Maker";
 			packageProductDependencies = (
+				449FE9242DA285370044E7FA /* FirebaseAuth */,
+				449FE9262DA285370044E7FA /* FirebaseCore */,
+				449FE9282DA285370044E7FA /* FirebaseDatabase */,
+				449FE92A2DA285370044E7FA /* FirebaseFirestore */,
+				449FE92E2DA288E60044E7FA /* FirebaseAppCheck */,
 			);
 			productName = "Chef Maker";
 			productReference = 4498319B2DA1BB4B00041AF4 /* Chef Maker.app */;
@@ -94,6 +112,9 @@
 			);
 			mainGroup = 449831922DA1BB4B00041AF4;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				449FE9212DA285370044E7FA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4498319C2DA1BB4B00041AF4 /* Products */;
 			projectDirPath = "";
@@ -267,9 +288,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "ios.portfolioMe.Chef-Maker";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -296,9 +320,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "ios.portfolioMe.Chef-Maker";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -324,6 +351,45 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		449FE9212DA285370044E7FA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.11.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		449FE9242DA285370044E7FA /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 449FE9212DA285370044E7FA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		449FE9262DA285370044E7FA /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 449FE9212DA285370044E7FA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		449FE9282DA285370044E7FA /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 449FE9212DA285370044E7FA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
+		};
+		449FE92A2DA285370044E7FA /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 449FE9212DA285370044E7FA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		449FE92E2DA288E60044E7FA /* FirebaseAppCheck */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 449FE9212DA285370044E7FA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAppCheck;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 449831932DA1BB4B00041AF4 /* Project object */;
 }

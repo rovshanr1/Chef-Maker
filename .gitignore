@@ -5,6 +5,15 @@
 .LSOverride
 ._*
 
+# Secrets and Sensitive Configuration
+# Ignore all sensitive configuration files
+**/Support/Secrets.xcconfig
+**/Support/GoogleService-Info.plist
+**/Support/*.plist
+**/Support/*.xcconfig
+Secrets.xcconfig
+**/Secrets.xcconfig
+
 # Xcode
 # Ignore Xcode user-specific files and build artifacts
 xcuserdata/
