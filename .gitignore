@@ -41,7 +41,7 @@ Info.plist
 **/Info.plist
 *.plist
 GoogleService-Info.plist
-
+Chef-Maker-Info.plisti
 # Swift Package Manager
 # Ignore Swift Package Manager build artifacts and dependencies
 .build/
