@@ -17,15 +17,15 @@ enum DiscoveryViewError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .invalidUrl:
-            return "Geçersiz URL: API isteği için URL oluşturulamadı"
+            return "Invalid URL: Could not generate URL for API request"
         case .invalidResponse:
-            return "Geçersiz Yanıt: Sunucudan beklenmeyen bir yanıt alındı"
+            return "Invalid Response: An unexpected response was received from the server"
         case .networkError(let error):
-            return "Ağ Hatası: \(error.localizedDescription)"
+            return "Network Error: \(error.localizedDescription)"
         case .decodingError(let error):
-            return "Veri Çözümleme Hatası: \(error.localizedDescription)"
+            return "Data Parsing Error: \(error.localizedDescription)"
         case .missingAPIKey:
-            return "API Anahtarı Eksik: Lütfen Secrets.xcconfig dosyasında API anahtarını tanımlayın"
+            return "API Key Missing: Please define API key in Secrets.xcconfig"
         }
     }
 }
