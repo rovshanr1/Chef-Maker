@@ -1,7 +1,7 @@
 # Chef Maker
 
 <div style="background-color: #A1C181; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-  <img src="Assets/logo.png" alt="Chef Maker Logo" width="120" style="display: block; margin: 0 auto;">
+  ![Chef Maker Logo](Assets/logo.png)
   <h2 style="color: white; text-align: center; margin-top: 10px;">Smart Recipe Discovery</h2>
 </div>
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		449E69102DA3D0870000847E /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 449E690F2DA3D0870000847E /* README.md */; };
 		449FE9252DA285370044E7FA /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 449FE9242DA285370044E7FA /* FirebaseAuth */; };
 		449FE9272DA285370044E7FA /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 449FE9262DA285370044E7FA /* FirebaseCore */; };
 		449FE9292DA285370044E7FA /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 449FE9282DA285370044E7FA /* FirebaseDatabase */; };
@@ -16,6 +17,7 @@
 
 /* Begin PBXFileReference section */
 		4498319B2DA1BB4B00041AF4 /* Chef Maker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Chef Maker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		449E690F2DA3D0870000847E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -47,6 +49,7 @@
 			children = (
 				4498319D2DA1BB4B00041AF4 /* Chef Maker */,
 				4498319C2DA1BB4B00041AF4 /* Products */,
+				449E690F2DA3D0870000847E /* README.md */,
 			);
 			sourceTree = "<group>";
 		};
@@ -130,6 +133,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				449E69102DA3D0870000847E /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

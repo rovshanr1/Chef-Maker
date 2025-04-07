@@ -9,56 +9,88 @@ import SwiftUI
 
 struct DiscoveryView: View {
     @StateObject private var viewModel = DiscoveryViewViewModel()
+    @State private var scrollOffset: CGFloat = 0
+   
     
     private let columns = [
-        GridItem(.flexible()),
+        GridItem(.fixed(150)),
         GridItem(.flexible())
     ]
     
     var body: some View {
-        NavigationView {
-            VStack(spacing: 16) {
-                // Search bar
-                SearchBar(text: $viewModel.searchText)
-                    .padding()
-                
-                // Categories
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 12) {
-                        ForEach(viewModel.filteredCategories, id: \.self) { category in
-                            CategoryButton(
-                                title: category.rawValue,
-                                emoji: category.emoji,
-                                isSelected: viewModel.isSelected(category)
-                            ) {
-                                viewModel.toggleCategory(category)
-                            }
-                        }
-                    }
-                    .padding(.horizontal)
-                }
-                
-                // Loading or Error state
-                if viewModel.isLoading {
-                    ProgressView()
-                } else if let error = viewModel.error {
-                    Text(error.localizedDescription)
-                        .foregroundColor(.red)
-                        .padding()
-                }
-                
-                // Recipe grid
+        NavigationStack {
+            ZStack(alignment: .top) {
+                // Main Content
                 ScrollView {
-                    LazyVGrid(columns: columns, spacing: 16) {
-                        ForEach(viewModel.data) { recipe in
-                            RecipeCard(recipe: recipe)
+                    VStack(alignment: .leading, spacing: 16) {
+                        // Spacer for search bar
+                        Rectangle()
+                            .fill(.clear)
+                            .frame(height: 60)
+                        
+                        // Categories
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 12) {
+                                ForEach(viewModel.filteredCategories, id: \.self) { category in
+                                    CategoryButton(
+                                        title: category.rawValue,
+                                        emoji: category.emoji,
+                                        isSelected: viewModel.isSelected(category)
+                                    ) {
+                                        viewModel.toggleCategory(category)
+                                    }
+                                }
+                            }
+                            .padding(.horizontal)
                         }
+                        
+                        // Featured Section
+                        FeaturedView()
                     }
-                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(GeometryReader { geometry in
+                        Color.clear.preference(
+                            key: ScrollOffsetPreferenceKey.self,
+                            value: geometry.frame(in: .named("scroll")).minY
+                        )
+                    })
+                }
+                .coordinateSpace(name: "scroll")
+                .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
+                    scrollOffset = value
+                }
+                
+                // Fixed Search Bar with blur background
+                VStack(spacing: 0) {
+                    ModernSearchBar(text: $viewModel.searchText)
+                        .padding(.horizontal)
+                        .background(
+                            Rectangle()
+                                .fill(.ultraThinMaterial)
+                                .edgesIgnoringSafeArea(.top)
+                        )
                 }
             }
-            .navigationTitle("Discover Recipes")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    if scrollOffset < -20 {
+                        Text("Discovery")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .transition(.move(edge: .top).combined(with: .opacity))
+                    }
+                }
+            }
         }
+    }
+}
+
+// Preference key for tracking scroll offset
+struct ScrollOffsetPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
 
