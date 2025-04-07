@@ -1,7 +1,7 @@
 # Chef Maker
 
 <div style="background-color: #A1C181; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-  <img src="logo.png" alt="Chef Maker Logo" width="120" style="display: block; margin: 0 auto;">
+  <img src="/Users/rovshanrr1/Desktop/Chef Maker/Chef Maker/Assets.xcassets/logo.png" alt="Chef Maker Logo" width="120" style="display: block; margin: 0 auto;">
   <h2 style="color: white; text-align: center; margin-top: 10px;">Smart Recipe Discovery</h2>
 </div>
 
@@ -35,9 +35,11 @@ Our application uses a refreshing and natural color palette:
 
 ## App Screenshots
 
-![Home Screen](screenshots/home_screen.png)
-![Recipe Details](screenshots/recipe_details.png)
-![Search View](screenshots/search_view.png)
+🚧 Work in progress – screenshots will be added soon as development progresses.
+<!--![Home Screen](screenshots/home_screen.png)-->
+<!--![Recipe Details](screenshots/recipe_details.png)-->
+<!--![Search View](screenshots/search_view.png)-->
+
 
 ## Technologies Used
 
@@ -75,10 +77,6 @@ Chef Maker follows a minimalist design approach with these principles:
 - 📝 Recipe creation with AI assistance
 - 🍽️ Meal planning features
 - 📱 iPad support with adaptive layouts
-
-## Contact
-
-For questions or feedback, please contact [support@chefmaker.app](mailto:support@chefmaker.app)
 
 ---
 
