@@ -1,7 +1,7 @@
 # Chef Maker
 
 <div style="background-color: #A1C181; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-  <img src="/Users/rovshanrr1/Desktop/Chef Maker/Chef Maker/Assets.xcassets/logo.png" alt="Chef Maker Logo" width="120" style="display: block; margin: 0 auto;">
+  <img src="Assets/logo.png" alt="Chef Maker Logo" width="120" style="display: block; margin: 0 auto;">
   <h2 style="color: white; text-align: center; margin-top: 10px;">Smart Recipe Discovery</h2>
 </div>
 
@@ -46,6 +46,7 @@ Our application uses a refreshing and natural color palette:
 - **SwiftUI** - For building the modern user interface
 - **Combine** - For reactive programming
 - **Spoonacular API** - For recipe data
+- **Firebase** - For authentication, cloud storage, and analytics
 - **AI Integration** - For personalized recommendations
 
 ## Getting Started
@@ -53,15 +54,38 @@ Our application uses a refreshing and natural color palette:
 1. Clone the repository
 2. Open `Chef Maker.xcodeproj` in Xcode
 3. Add your Spoonacular API key to `Secrets.xcconfig`
-4. Build and run the application
+4. Set up Firebase:
+   - Create a project in the [Firebase Console](https://console.firebase.google.com/)
+   - Add an iOS app to your Firebase project
+   - Download the `GoogleService-Info.plist` file and add it to your Xcode project
+   - Install Firebase SDK via Swift Package Manager or CocoaPods
+5. Build and run the application
 
 ## API Integration
 
+### Spoonacular API
 Chef Maker uses the Spoonacular API for recipe data. You'll need to:
 
 1. Get an API key from [Spoonacular](https://spoonacular.com/food-api)
 2. Add your API key to the `Secrets.xcconfig` file
 3. The application will automatically use your API key for all requests
+
+### Firebase Integration
+
+Chef Maker leverages several Firebase services:
+
+- **Authentication** - For user sign-up and login
+- **Cloud Firestore** - For storing user recipes and favorites
+- **Storage** - For user-uploaded images
+- **Analytics** - For understanding user behavior
+- **Crashlytics** - For monitoring app stability
+
+To set up Firebase:
+
+1. Follow the [Firebase iOS setup guide](https://firebase.google.com/docs/ios/setup)
+2. Enable required services in the Firebase Console
+3. Configure authentication providers (Email, Google, Apple, etc.)
+4. Set up Firestore security rules for data protection
 
 ## Design Philosophy
 
