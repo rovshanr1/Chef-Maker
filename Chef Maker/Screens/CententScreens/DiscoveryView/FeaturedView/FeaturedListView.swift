@@ -2,9 +2,8 @@ import SwiftUI
 
 struct FeaturedListView: View {
     @StateObject private var viewModel = FeaturedViewModel()
-    @Environment(\.dismiss) private var dismiss
     
-    // Her satırda 2 kart olacak şekilde ayarlıyoruz
+   
     private let columns = [
         GridItem(.flexible(), spacing: 12),
         GridItem(.flexible(), spacing: 12)
@@ -30,9 +29,9 @@ struct FeaturedListView: View {
                 } else {
                     LazyVGrid(columns: columns, spacing: 12) {
                         ForEach(viewModel.data) { recipe in
-                            NavigationLink(destination: Text(recipe.title)) {
+                            NavigationLink(destination: RecipeDetailView(recipe: recipe)) {
                                 FeaturedGridItem(recipe: recipe)
-                                    .frame(height: 180) // Kart yüksekliğini sabitleyelim
+                                    .frame(height: 180)
                             }
                             .buttonStyle(PlainButtonStyle())
                         }
@@ -41,26 +40,8 @@ struct FeaturedListView: View {
                     .padding(.vertical, 16)
                 }
             }
-            .navigationTitle("En Çok Beğenilenler")
+            .navigationTitle("Most Popular")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        dismiss()
-                    }) {
-                        Image(systemName: "xmark.circle.fill")
-                            .foregroundStyle(.gray)
-                    }
-                }
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        viewModel.refreshFeaturedRecipes()
-                    }) {
-                        Image(systemName: "arrow.clockwise")
-                    }
-                }
-            }
         }
     }
 }

@@ -24,14 +24,14 @@ final class FeaturedViewModel: BaseViewModel<FeaturedModel> {
                 return
             }
             
-            // En çok beğenilen tarifleri al
+            
             let endpoint = "\(baseURL)/complexSearch"
             let queryParams = [
                 "apiKey": apiKey,
                 "number": "10",
                 "addRecipeInformation": "true",
-                "sort": "popularity",  // Popülerliğe göre sırala
-                "sortDirection": "desc", // Azalan sırada (en popülerden en aza)
+                "sort": "popularity",
+                "sortDirection": "desc",
                 "fillIngredients": "true",
                 "addRecipeNutrition": "true"
             ]
@@ -43,7 +43,7 @@ final class FeaturedViewModel: BaseViewModel<FeaturedModel> {
             
             let response: SpoonacularFeaturedResponse = try await networkService.fetchData(from: url)
             
-            // Tarifleri beğeni sayısına göre sırala
+            
             let sortedRecipes = response.recipes.sorted { $0.aggregateLikes > $1.aggregateLikes }
             self.data = sortedRecipes
             
