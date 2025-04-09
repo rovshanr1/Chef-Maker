@@ -17,10 +17,26 @@ struct AppColors {
   
 
     // Dark Mode Colors
-    static let darkBackground = Color(hex: "#232421")
-    static let darkCardBackground = Color(hex: "#2C2C2C")
-    static let darkAccent = Color(hex: "#A8D8A0")
+    static let darkBackground = Color(hex: "#1C1C1E")
+    static let darkCardBackground = Color(hex: "#2C2C2E")
+    static let darkAccent = Color(hex: "#86C17B")
     static let darkText = Color.white
+    
+    // Dynamic Colors 
+    static var adaptiveBackground: Color {
+        @Environment(\.colorScheme) var colorScheme
+        return colorScheme == .dark ? darkBackground : lightBackground
+    }
+    
+    static var adaptiveText: Color {
+        @Environment(\.colorScheme) var colorScheme
+        return colorScheme == .dark ? darkText : lightText
+    }
+    
+    static var adaptiveAccent: Color {
+        @Environment(\.colorScheme) var colorScheme
+        return colorScheme == .dark ? darkAccent : lightAccent
+    }
 }
 
 extension Color {
