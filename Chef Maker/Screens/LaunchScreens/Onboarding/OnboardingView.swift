@@ -27,7 +27,7 @@ struct OnboardingView: View {
                         hasSeenOnboarding = true
                     }
                 }) {
-                    Text(currentPage < onboardingData.count - 1 ? "Next" : "Get Started")
+                    Text(currentPage < onboardingData.count - 1 ? "Next" : "Start Cooking ")
                         .font(.headline)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)

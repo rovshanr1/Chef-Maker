@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct OnboardingPage: Identifiable {
+struct OnboardingPageModel: Identifiable {
     let id = UUID()
     let title: String
     let description: String
@@ -17,17 +17,17 @@ struct OnboardingPage: Identifiable {
 
 
 let onboardingData = [
-    OnboardingPage(
+    OnboardingPageModel(
         title: "Discover Recipes",
         description: "Browse thousands of delicious recipes and save your favorites to your collection.",
         imageName: "discover_recipes"
     ),
-    OnboardingPage(
+    OnboardingPageModel(
         title: "Step-by-Step Instructions",
         description: "Master the kitchen with detailed and easy-to-follow recipe guides.",
         imageName: "step_by_step"
     ),
-    OnboardingPage(
+    OnboardingPageModel(
         title: "Share Your Own Recipes",
         description: "Share your unique creations with the community and inspire others.",
         imageName: "share_recipes"

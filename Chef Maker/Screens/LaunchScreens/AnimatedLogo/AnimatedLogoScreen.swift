@@ -25,7 +25,7 @@ struct AnimatedLogoScreen: View {
                     Image("ChefMaker") 
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 150, height: 150)
+                        .frame(width: 250, height: 250)
                         .scaleEffect(scale)
                         .opacity(opacity)
                         .rotationEffect(.degrees(rotation))

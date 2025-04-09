@@ -13,6 +13,8 @@ struct AppColors {
     static let lightCardBackground = Color.white
     static let lightAccent = Color(hex: "#7BAE68")
     static let lightText = Color.primary
+    static let secondaryColor = Color(hex: "FF9C00")
+  
 
     // Dark Mode Colors
     static let darkBackground = Color(hex: "#232421")
