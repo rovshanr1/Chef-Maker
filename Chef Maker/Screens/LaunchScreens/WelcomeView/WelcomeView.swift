@@ -143,7 +143,7 @@ struct WelcomeView: View {
                 .frame(width: 64, height: 64)
                 .background(
                     RoundedRectangle(cornerRadius: 12)
-                        .fill(colorScheme == .dark ? Color(UIColor.systemGray6) : .white)
+                        .fill(colorScheme == .dark ? Color(AppColors.adaptiveBackground(for: colorScheme)) : .white)
                         .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
                 )
         }

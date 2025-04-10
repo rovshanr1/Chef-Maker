@@ -15,29 +15,26 @@ struct AppColors {
     static let lightText = Color.primary
     static let secondaryColor = Color(hex: "FF9C00")
   
-
     // Dark Mode Colors
-    static let darkBackground = Color(hex: "#1C1C1E")
+    static let darkBackground = Color(hex: "#1C1C1E")  // iOS standart dark mode rengi
     static let darkCardBackground = Color(hex: "#2C2C2E")
-    static let darkAccent = Color(hex: "#86C17B")
+    static let darkAccent = Color(hex: "#86C17B")  // Dark mode'da daha parlak yeşil
     static let darkText = Color.white
     
-    // Dynamic Colors 
-    static var adaptiveBackground: Color {
-        @Environment(\.colorScheme) var colorScheme
-        return colorScheme == .dark ? darkBackground : lightBackground
+    // Adaptive Colors Functions
+    static func adaptiveBackground(for colorScheme: ColorScheme) -> Color {
+        colorScheme == .dark ? darkBackground : lightBackground
     }
     
-    static var adaptiveText: Color {
-        @Environment(\.colorScheme) var colorScheme
-        return colorScheme == .dark ? darkText : lightText
+    static func adaptiveText(for colorScheme: ColorScheme) -> Color {
+        colorScheme == .dark ? darkText : lightText
     }
     
-    static var adaptiveAccent: Color {
-        @Environment(\.colorScheme) var colorScheme
-        return colorScheme == .dark ? darkAccent : lightAccent
+    static func adaptiveAccent(for colorScheme: ColorScheme) -> Color {
+        colorScheme == .dark ? darkAccent : lightAccent
     }
 }
+
 
 extension Color {
     init(hex: String) {

@@ -17,12 +17,12 @@ struct CustomTextFieldStyle: TextFieldStyle {
             .background(
                 ZStack {
                     RoundedRectangle(cornerRadius: 10)
-                        .fill(colorScheme == .dark ? AppColors.darkCardBackground : .white)
+                        .fill(colorScheme == .dark ? AppColors.darkCardBackground : AppColors.lightBackground)
                     
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(colorScheme == .dark ? Color.gray.opacity(0.3) : Color(hex: "#D9D9D9"), lineWidth: 1.5)
                 }
             )
-            .foregroundColor(AppColors.adaptiveText)
+         
     }
 }

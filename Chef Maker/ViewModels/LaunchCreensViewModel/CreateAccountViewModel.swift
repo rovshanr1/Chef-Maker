@@ -11,4 +11,12 @@ class CreateAccountViewModel: ObservableObject{
     @Published var email: String = ""
     @Published var password: String = ""
     @Published var name: String = ""
+    
+    
+    
+    
+    
+    func createAccount(){
+        
+    }
 }
