@@ -13,13 +13,25 @@ struct AnimatedLogoScreen: View {
     @State private var opacity = 0.0
     @State private var rotation = 0.0
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
+    @Environment(\.colorScheme) var colorScheme
+    
+    // Navigation
     @State private var isAnimationComplete = false
+    
+    
     
     var body: some View {
         NavigationStack {
             ZStack {
-                AppColors.lightBackground
-                    .ignoresSafeArea()
+                Group{
+                    if colorScheme == .dark {
+                        AppColors.darkBackground
+                    }else {
+                        AppColors.lightBackground
+                    }
+                        
+                }
+                .ignoresSafeArea()
                 
                 VStack {
                     Image("ChefMaker") 

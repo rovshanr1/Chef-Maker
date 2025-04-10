@@ -4,10 +4,18 @@ struct OnboardingView: View {
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
     @State private var currentPage = 0
     
+    @Environment(\.colorScheme) var colorScheme
+
     var body: some View {
         ZStack {
-            AppColors.lightBackground
-                .ignoresSafeArea()
+            Group{
+                if colorScheme == .dark {
+                    AppColors.darkBackground
+                }else {
+                    AppColors.lightBackground
+                }
+            }
+            .ignoresSafeArea()
             
             VStack {
                 TabView(selection: $currentPage) {
