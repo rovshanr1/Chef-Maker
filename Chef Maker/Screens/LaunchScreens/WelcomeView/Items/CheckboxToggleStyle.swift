@@ -10,13 +10,18 @@ import SwiftUI
 struct CheckboxToggleStyle: ToggleStyle {
     func makeBody(configuration: Configuration) -> some View {
         Button(action: {
-            configuration.isOn.toggle()
+            withAnimation{
+                configuration.isOn.toggle()
+            }
         }){
             HStack{
+                Text("I agree terms and conditions")
+                    .font(.custom("Poppins-Regular", size: 14))
+                    .foregroundColor(AppColors.secondaryColor)
                 Image(systemName: configuration.isOn ? "checkmark.square" : "square")
                     .foregroundStyle(AppColors.secondaryColor)
-                    
             }
         }
+        .buttonStyle(PlainButtonStyle())
     }
 }

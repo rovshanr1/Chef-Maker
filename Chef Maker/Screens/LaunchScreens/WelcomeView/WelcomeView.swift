@@ -36,7 +36,7 @@ struct WelcomeView: View {
                         VStack(alignment: .leading, spacing: 24) {
                             CustomInputField(
                                 title: "Email",
-                                placeholder: "Enter Email",
+                                placeholder: "Enter Your Email",
                                 text: $loginViewModel.email,
                                 keyboardType: .emailAddress,
                                 textContentType: .emailAddress,
@@ -64,6 +64,8 @@ struct WelcomeView: View {
                             
                             // Login Button
                             Button(action: {
+                                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                                
                                 loginViewModel.login()
                             }) {
                                 Text("Login")
@@ -106,7 +108,9 @@ struct WelcomeView: View {
                                     .foregroundStyle(colorScheme == .dark ? .white.opacity(0.7) : AppColors.lightText.opacity(0.8))
                                 
                                 Button(action: {
-                                    navigateToSignUp = true
+                                    withAnimation{
+                                        navigateToSignUp = true
+                                    }
                                 }) {
                                     Text("Sign Up")
                                         .font(.custom("Poppins-SemiBold", size: 14))
@@ -125,7 +129,7 @@ struct WelcomeView: View {
                 }
             }
             .navigationDestination(isPresented: $navigateToSignUp) {
-                CreateAccountView()
+                    CreateAccountView()
             }
             .navigationBarBackButtonHidden(true)
         }
@@ -144,7 +148,7 @@ struct WelcomeView: View {
                 .background(
                     RoundedRectangle(cornerRadius: 12)
                         .fill(colorScheme == .dark ? Color(AppColors.adaptiveBackground(for: colorScheme)) : .white)
-                        .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
+                        .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: 4)
                 )
         }
     }

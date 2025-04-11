@@ -16,9 +16,9 @@ struct AppColors {
     static let secondaryColor = Color(hex: "FF9C00")
   
     // Dark Mode Colors
-    static let darkBackground = Color(hex: "#1C1C1E")  // iOS standart dark mode rengi
+    static let darkBackground = Color(hex: "#1C1C1E")
     static let darkCardBackground = Color(hex: "#2C2C2E")
-    static let darkAccent = Color(hex: "#86C17B")  // Dark mode'da daha parlak yeşil
+    static let darkAccent = Color(hex: "#86C17B")  
     static let darkText = Color.white
     
     // Adaptive Colors Functions

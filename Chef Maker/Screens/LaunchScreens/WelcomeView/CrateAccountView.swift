@@ -12,6 +12,7 @@ struct CreateAccountView: View {
     @Environment(\.colorScheme) var colorScheme
     
     @State private var isOn = false
+    @State private var navigateToWelcomeScreen = false
     
     var body: some View {
         NavigationStack {
@@ -77,9 +78,8 @@ struct CreateAccountView: View {
                                 submitLabel: .done
                             )
                             
-                            
                                 Toggle(isOn: $isOn){
-                                    Text("Terms and Conditions")
+                                // no action required
                                 }
                                 .toggleStyle(CheckboxToggleStyle())
                                 .frame(maxWidth: .infinity, alignment: .trailing)
@@ -88,9 +88,11 @@ struct CreateAccountView: View {
                          
                             // Create Account Button
                             Button(action: {
+                                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+
                                 createAccountViewModel.createAccount()
                             }) {
-                                Text("Create Account")
+                                Text("Sign Up")
                                     .font(.custom("Poppins-SemiBold", size: 16))
                                     .foregroundColor(.white)
                                     .frame(maxWidth: .infinity)
@@ -102,6 +104,20 @@ struct CreateAccountView: View {
                             .disabled(!isOn)
                             
                             
+                            HStack{
+                                Text("Already a member?")
+                                Button(action: {
+                                    withAnimation {
+                                        navigateToWelcomeScreen = true
+                                    }
+                                }){
+                                   Text("Sign in")
+                                        .font(.custom("Poppins-SemiBold", size: 14))
+                                        .foregroundColor(AppColors.secondaryColor)
+                                }
+                            }
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .padding(.top, 32)
                         }
                     }
                     .padding(.horizontal, 24)
@@ -111,8 +127,13 @@ struct CreateAccountView: View {
                     hideKeyboard()
                 }
             }
+            .navigationDestination(isPresented: $navigateToWelcomeScreen, destination: {
+                WelcomeView()
+            })
+            .navigationBarBackButtonHidden(true)
         }
     }
+    
 }
 
 #Preview {
