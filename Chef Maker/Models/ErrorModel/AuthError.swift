@@ -15,6 +15,7 @@ enum AuthError: LocalizedError {
     case emailAlreadyInUse
     case weakPassword
     case networkError
+    case userNameCanNotBeEmpty
     case unknown(String)
 
     var errorDescription: String? {
@@ -31,6 +32,8 @@ enum AuthError: LocalizedError {
             return "Your password is too weak. Please use a stronger password."
         case .networkError:
             return "Check your internet connection and try again."
+        case .userNameCanNotBeEmpty:
+            return "Username can not be empty "
         case .unknown(let message):
             return message
         }
@@ -39,6 +42,7 @@ enum AuthError: LocalizedError {
 
 func mapFirebaseError(_ error: Error) -> AuthError {
     let nsError = error as NSError
+    
     guard let errorCode = AuthErrorCode(rawValue: nsError.code) else {
         return .unknown(error.localizedDescription)
     }
