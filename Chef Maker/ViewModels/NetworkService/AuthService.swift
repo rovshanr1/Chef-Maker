@@ -12,104 +12,98 @@ protocol AuthServiceProtocol {
     func login(email: String, password: String) async throws
     func createAccount(userName: String, email: String, password: String) async throws
     func resetPassword(email: String) async throws
+    func logout() throws
 }
 
 
 class AuthService: AuthServiceProtocol{
+    
     static let shared = AuthService()
     
     private let auth = Auth.auth()
     
     func login(email: String, password: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-               auth.signIn(withEmail: email, password: password) { authResult, error in
-                   if let error = error {
-                       continuation.resume(throwing: error)
-                       return
-                   }
-                   
-                   guard let user = authResult?.user else{
-                       continuation.resume(throwing: AuthError.unknown("An unkown error occured. Please try again"))
-                   }
-                   
-                   if !user.isEmailVerified {
-                       continuation.resume(throwing: AuthError.unknown("Email not verified"))
-                   }
-                   continuation.resume()
-               }
-           }
-       }
+            auth.signIn(withEmail: email, password: password) { authResult, error in
+                
+                if let error = error {
+                    continuation.resume(throwing: mapFirebaseError(error))
+                    return
+                }
+                
+                guard let user = authResult?.user else{
+                    continuation.resume(throwing: AuthError.unknown("An unkown error occured. Please try again"))
+                    return
+                }
+                
+                if !user.isEmailVerified {
+                    continuation.resume(throwing: AuthError.emailNotVerified)
+                    return
+                }
+                continuation.resume()
+            }
+        }
+    }
     
     func createAccount(userName: String, email: String, password: String) async throws {
-        try await withCheckedThrowingContinuation { (contination: CheckedContinuation<Void, any Error>) in
-            <#code#>
-        }
-    }
-    
-    func resetPassword(email: String) async throws {
-        <#code#>
-    }
-    
-   
-    
-    func loginn(email: String, password: String, completion: @escaping (Result<Void, any Error>) -> Void) {
-        Auth.auth().signIn(withEmail: email, password: password ){ authResult, error in
-            if let error = error {
-                let mappedError = mapFirebaseError(error)
-                completion(.failure(mappedError))
-                return
-            }
-            if let user = authResult?.user, !user.isEmailVerified{
-                completion(.failure(AuthError.emailNotVerified))
-                return
-            }
-            completion(.success(()))
-        }
-    }
-    
-    func createAccount(userName: String, email: String, password: String, completion: @escaping (Result<Void, any Error>) -> Void) {
         guard !userName.isEmpty else {
-            completion(.failure(AuthError.userNameCanNotBeEmpty))
-            return
+            throw AuthError.userNameCanNotBeEmpty
         }
         
-        Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
-            guard self != nil else {
-                completion(.failure(AuthError.unknown("Internal error occurred")))
-                return
-            }
-            
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            
-            guard let user = authResult?.user else {
-                completion(.failure(AuthError.unknown("Internal error occurred")))
-                return
-            }
-            
-            user.sendEmailVerification { error in
+        try await withCheckedThrowingContinuation { (contination: CheckedContinuation<Void, any Error>) in
+            auth.createUser(withEmail: email, password: password) { authResult, error in
                 if let error = error {
-                    print("Sending verification email...\(error.localizedDescription)")
+                    contination.resume(throwing: mapFirebaseError(error))
+                    return
                 }
-            }
-        }
-        
-        func resetPassword(email: String) {
-            Auth.auth().sendPasswordReset(withEmail: email) { error in
-                if let error = error {
-                    print("Sending password reset email...\(error.localizedDescription)")
-                } else {
-                    print("A password reset email has been sent to your email address.")
+                guard let user = authResult?.user else {
+                    contination.resume(throwing: AuthError.unknown("Internal error occurred"))
+                    return
                 }
-            }
-            
-            UserService.shared.saveUserProfile{_ in 
                 
+                user.sendEmailVerification { error in
+                    if let error = error {
+                        print("Email verification faild: \(error.localizedDescription)")
+                    } else{
+                        print("Verification email sent")
+                    }
+                }
+
+                Task {
+                    do {
+                        let profile = ProfileModel(
+                            id: UUID(),
+                            userName: userName,
+                            email: email,
+                            timeStamp: Date()
+                        )
+                        try await UserService.shared.saveUserProfile(userId: user.uid, data: profile)
+                        contination.resume()
+                    } catch {
+                        contination.resume(throwing: error)
+                    }
+                }
             }
         }
     }
     
+    func resetPassword(email: String)  async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, any Error>) in
+            auth.sendPasswordReset(withEmail: email) { error in
+                if let error = error {
+                    continuation.resume(throwing: mapFirebaseError(error))
+                } else{
+                    continuation.resume()
+                }
+            }
+        }
+    }
     
+    func logout() throws {
+        do {
+            try auth.signOut()
+        } catch {
+            throw AuthError.logoutFailed
+        }
+    }
 }
