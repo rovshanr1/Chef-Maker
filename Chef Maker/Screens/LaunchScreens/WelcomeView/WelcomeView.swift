@@ -113,7 +113,6 @@ struct WelcomeView: View {
                                 Text("Don't have an account?")
                                     .font(.custom("Poppins-Regular", size: 14))
                                     .foregroundStyle(colorScheme == .dark ? .white.opacity(0.7) : AppColors.lightText.opacity(0.8))
-                                
                                 Button(action: {
                                     withAnimation{
                                         navigateToSignUp = true
@@ -135,10 +134,22 @@ struct WelcomeView: View {
                     hideKeyboard()
                 }
             }
+            .navigationDestination(isPresented: $loginViewModel.isLoggedIn, destination: {
+                //DiscoveryView()
+            })
             .navigationDestination(isPresented: $navigateToSignUp) {
                     CreateAccountView()
             }
             .navigationBarBackButtonHidden(true)
+        }
+        .alert(isPresented: Binding<Bool>(
+            get: { loginViewModel.errorMessage != nil },
+            set: {_ in loginViewModel.errorMessage = nil}
+        )) {
+            Alert(
+                title: Text("Error"),
+                message: Text(loginViewModel.errorMessage ?? ""),
+                dismissButton: .default(Text("OK")))
         }
     }
     

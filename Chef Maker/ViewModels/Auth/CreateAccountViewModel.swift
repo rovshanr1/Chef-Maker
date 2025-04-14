@@ -9,7 +9,7 @@ import Foundation
 
 @MainActor
 class CreateAccountViewModel: ObservableObject{
-    //Imput
+    //Input
     @Published var email: String = ""
     @Published var password: String = ""
     @Published var confirmPassword: String = ""
@@ -62,7 +62,7 @@ class CreateAccountViewModel: ObservableObject{
                 if let authError = error as? AuthError {
                     errorMessage = authError.localizedDescription
                 } else {
-                    errorMessage = error.localizedDescription
+                    errorMessage = mapFirebaseError(error).localizedDescription
                 }
             }
             isLoading = false
