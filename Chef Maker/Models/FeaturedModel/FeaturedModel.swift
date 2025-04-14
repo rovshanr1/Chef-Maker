@@ -29,13 +29,12 @@ struct FeaturedModel: Identifiable, Codable {
         case nutrition
     }
     
-    // Recipe modelinden dönüştürme
     init(from recipe: Recipe) {
         self.id = recipe.id
         self.title = recipe.title
         self.image = recipe.image
-        self.readyInMinutes = 30 // Varsayılan değer
-        self.aggregateLikes = Int.random(in: 100...1000) // Örnek değer
+        self.readyInMinutes = 30
+        self.aggregateLikes = Int.random(in: 100...1000) 
         self.nutrition = recipe.nutrition
     }
     

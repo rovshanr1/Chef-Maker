@@ -15,9 +15,7 @@ struct CheckboxToggleStyle: ToggleStyle {
             }
         }){
             HStack{
-                Text("I agree terms and conditions")
-                    .font(.custom("Poppins-Regular", size: 14))
-                    .foregroundColor(AppColors.secondaryColor)
+                configuration.label
                 Image(systemName: configuration.isOn ? "checkmark.square" : "square")
                     .foregroundStyle(AppColors.secondaryColor)
             }

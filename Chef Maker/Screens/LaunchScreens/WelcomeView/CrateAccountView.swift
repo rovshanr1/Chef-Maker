@@ -72,15 +72,13 @@ struct CreateAccountView: View {
                             CustomInputField(
                                 title: "Confirm Password",
                                 placeholder: "Retype Password",
-                                text: $createAccountViewModel.password,
+                                text: $createAccountViewModel.confirmPassword,
                                 isSecure: true,
                                 textContentType: .password,
                                 submitLabel: .done
                             )
                             
-                                Toggle(isOn: $isOn){
-                                // no action required
-                                }
+                                Toggle("I agree to the terms and conditions", isOn: $isOn)
                                 .toggleStyle(CheckboxToggleStyle())
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                                 .padding(.top, -8)
@@ -89,19 +87,24 @@ struct CreateAccountView: View {
                             // Create Account Button
                             Button(action: {
                                 UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-
                                 createAccountViewModel.createAccount()
                             }) {
-                                Text("Sign Up")
-                                    .font(.custom("Poppins-SemiBold", size: 16))
-                                    .foregroundColor(.white)
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 16)
-                                    .background(AppColors.adaptiveAccent(for: colorScheme))
-                                    .cornerRadius(12)
+                                if createAccountViewModel.isLoading{
+                                    ProgressView()
+                                        .progressViewStyle(.circular)
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.vertical, 16)
+                                }else{
+                                    Text("Sign Up")
+                                        .font(.custom("Poppins-SemiBold", size: 16))
+                                        .foregroundColor(.white)
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.vertical, 16)
+                                }
                             }
-                            .padding(.top, 8)
-                            .disabled(!isOn)
+                            .background(AppColors.adaptiveAccent(for: colorScheme))
+                            .cornerRadius(12)
+                            .disabled(!isOn || createAccountViewModel.isLoading)
                             
                             
                             HStack{
@@ -130,7 +133,20 @@ struct CreateAccountView: View {
             .navigationDestination(isPresented: $navigateToWelcomeScreen, destination: {
                 WelcomeView()
             })
+            .navigationDestination(isPresented: $createAccountViewModel.accountCreated, destination: {
+                WelcomeView()
+            })
             .navigationBarBackButtonHidden(true)
+        }
+        .alert(isPresented: Binding<Bool>(
+            get: {createAccountViewModel.errorMessage != nil},
+            set: {_ in createAccountViewModel.errorMessage = nil}
+        )){
+            Alert(
+                title: Text("Opps"),
+                message: Text(createAccountViewModel.errorMessage ?? ""),
+                dismissButton: .default(Text("Ok"))
+            )
         }
     }
     

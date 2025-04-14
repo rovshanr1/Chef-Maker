@@ -65,18 +65,25 @@ struct WelcomeView: View {
                             // Login Button
                             Button(action: {
                                 UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                                
                                 loginViewModel.login()
                             }) {
-                                Text("Login")
-                                    .font(.custom("Poppins-SemiBold", size: 16))
-                                    .foregroundColor(.white)
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 16)
-                                    .background(AppColors.lightAccent)
-                                    .cornerRadius(12)
+                                if loginViewModel.isLoading{
+                                    ProgressView()
+                                        .progressViewStyle(.circular)
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.vertical, 16)
+                                } else{
+                                    Text("Login")
+                                        .font(.custom("Poppins-SemiBold", size: 16))
+                                        .foregroundColor(.white)
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.vertical, 16)
+                                        
+                                }
                             }
-                            .padding(.top, 8)
+                            .background(AppColors.lightAccent)
+                            .cornerRadius(12)
+                            .disabled(loginViewModel.isLoading)
                             
                             // Divider with Text
                             HStack {

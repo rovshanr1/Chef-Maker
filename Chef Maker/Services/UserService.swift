@@ -47,6 +47,9 @@ class UserService: UserServiceProtocol{
             "email": data.email,
             "timestamp": data.timeStamp
         ])
-        
+    }
+    
+    func deleteUserProfile(userId: String) async throws {
+        //
     }
 }

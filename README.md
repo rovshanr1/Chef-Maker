@@ -1,6 +1,5 @@
 # Chef Maker
 
-
 ## About
 
 Chef Maker is a modern recipe discovery application powered by artificial intelligence. It helps you find and create delicious recipes based on ingredients you have or cuisines you want to explore. With a clean, minimal design and powerful features, Chef Maker transforms the way you interact with food.

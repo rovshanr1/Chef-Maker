@@ -17,11 +17,11 @@ protocol AuthServiceProtocol {
 
 
 class AuthService: AuthServiceProtocol{
-    
     static let shared = AuthService()
     
     private let auth = Auth.auth()
     
+    // login func
     func login(email: String, password: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             auth.signIn(withEmail: email, password: password) { authResult, error in
@@ -45,11 +45,8 @@ class AuthService: AuthServiceProtocol{
         }
     }
     
+    // account creation func
     func createAccount(userName: String, email: String, password: String) async throws {
-        guard !userName.isEmpty else {
-            throw AuthError.userNameCanNotBeEmpty
-        }
-        
         try await withCheckedThrowingContinuation { (contination: CheckedContinuation<Void, any Error>) in
             auth.createUser(withEmail: email, password: password) { authResult, error in
                 if let error = error {
@@ -87,6 +84,7 @@ class AuthService: AuthServiceProtocol{
         }
     }
     
+    // reset password func
     func resetPassword(email: String)  async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, any Error>) in
             auth.sendPasswordReset(withEmail: email) { error in
@@ -99,6 +97,7 @@ class AuthService: AuthServiceProtocol{
         }
     }
     
+    // logout func
     func logout() throws {
         do {
             try auth.signOut()
