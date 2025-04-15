@@ -81,7 +81,7 @@ actor CacheManager {
     private let defaults = UserDefaults.standard
     private let featuredRecipesKey = "featuredRecipes"
     private let lastUpdateKey = "featuredRecipesLastUpdate"
-    private let cacheValidityDuration: TimeInterval = 24 * 60 * 60 // 24 saat
+    private let cacheValidityDuration: TimeInterval = 24 * 60 * 60 
     
     private init() {}
     

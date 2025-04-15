@@ -11,6 +11,7 @@ struct CheckboxToggleStyle: ToggleStyle {
     func makeBody(configuration: Configuration) -> some View {
         Button(action: {
             withAnimation{
+                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                 configuration.isOn.toggle()
             }
         }){

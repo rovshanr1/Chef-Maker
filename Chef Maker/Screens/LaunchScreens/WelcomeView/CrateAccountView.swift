@@ -17,14 +17,9 @@ struct CreateAccountView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Group {
-                    if colorScheme == .dark {
-                        AppColors.darkBackground
-                    }else{
-                        AppColors.lightBackground
-                    }
-                }
+                AppColors.adaptiveBackground(for: colorScheme)
                 .ignoresSafeArea()
+              
                 
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 32) {
@@ -79,6 +74,8 @@ struct CreateAccountView: View {
                             )
                             
                                 Toggle("I agree to the terms and conditions", isOn: $isOn)
+                                .font(.custom("Poppins-Medium", size: 14))
+                                .foregroundStyle(.secondary)
                                 .toggleStyle(CheckboxToggleStyle())
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                                 .padding(.top, -8)
@@ -109,10 +106,11 @@ struct CreateAccountView: View {
                             
                             HStack{
                                 Text("Already a member?")
+                                    .font(.custom("Poppins-Regular", size: 14))
+                                    .foregroundStyle(.secondary)
                                 Button(action: {
-                                    withAnimation {
-                                        navigateToWelcomeScreen = true
-                                    }
+                                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                                    navigateToWelcomeScreen = true
                                 }){
                                    Text("Sign in")
                                         .font(.custom("Poppins-SemiBold", size: 14))

@@ -5,7 +5,7 @@
 //  Created by Rovshan Rasulov on 11.04.25.
 //
 
-import Foundation
+import SwiftUI
 import FirebaseAuth
 
 protocol AuthServiceProtocol {
@@ -17,6 +17,9 @@ protocol AuthServiceProtocol {
 
 
 class AuthService: AuthServiceProtocol{
+    //LogedIn state
+    @AppStorage("isLogedIn") var isLogedIn: Bool = false
+    
     static let shared = AuthService()
     
     private let auth = Auth.auth()
@@ -101,6 +104,7 @@ class AuthService: AuthServiceProtocol{
     func logout() throws {
         do {
             try auth.signOut()
+            isLogedIn = false
         } catch {
             throw AuthError.logoutFailed
         }

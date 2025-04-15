@@ -26,7 +26,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct MyApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    //  @StateObject var authState = AuthState()
+   // @StateObject var authState = AuthState()
     
     var body: some Scene {
         WindowGroup {

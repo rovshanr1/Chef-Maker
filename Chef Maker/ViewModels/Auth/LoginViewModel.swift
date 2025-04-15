@@ -11,7 +11,7 @@ class LoginViewModel: ObservableObject {
     //UI-State
     @Published var errorMessage: String?
     @Published var isLoading: Bool = false
-    @Published var isLoggedIn: Bool = false
+    @Published var isLogedIn: Bool = false
     
     //Service
     private let authService: AuthServiceProtocol
@@ -21,6 +21,7 @@ class LoginViewModel: ObservableObject {
     }
     
     func login() {
+        
        //TextFields cannot be empty
         guard !email.isEmpty, !password.isEmpty else {
             errorMessage = "Please fill in all fields."
@@ -33,15 +34,14 @@ class LoginViewModel: ObservableObject {
             return
         }
         
-        
         Task{
             isLoading = true
             errorMessage = nil
-            isLoggedIn = false
+            isLogedIn = false
             
             do{
                 try await authService.login(email: email, password: password)
-                isLoggedIn = true
+                isLogedIn = true
             } catch {
                 if let authError = error as? AuthError {
                     errorMessage = authError.localizedDescription

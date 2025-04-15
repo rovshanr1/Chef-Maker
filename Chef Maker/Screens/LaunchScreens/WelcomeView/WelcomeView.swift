@@ -6,17 +6,12 @@ struct WelcomeView: View {
     
     //Navigation State
     @State private var navigateToSignUp: Bool = false
+    @State private var navigateToForgotPassword: Bool = false
     
     var body: some View {
         NavigationStack {
             ZStack {
-                Group{
-                    if colorScheme == .dark {
-                        AppColors.darkBackground
-                    }else {
-                        AppColors.lightBackground
-                    }
-                }
+                AppColors.adaptiveBackground(for: colorScheme)
                 .ignoresSafeArea()
                 
                 ScrollView(showsIndicators: false) {
@@ -52,8 +47,11 @@ struct WelcomeView: View {
                                 submitLabel: .done
                             )
                             
+                            // Forgot password button
                             Button(action: {
-                                // Forgot password action
+                                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                                navigateToForgotPassword = true
+                                
                             }) {
                                 Text("Forgot Password?")
                                     .font(.custom("Poppins-Regular", size: 14))
@@ -61,8 +59,11 @@ struct WelcomeView: View {
                             }
                             .frame(maxWidth: .infinity, alignment: .trailing)
                             .padding(.top, -8)
+                            .sheet(isPresented: $navigateToForgotPassword){
+                                ResetPasswordView()
+                            }
                             
-                            // Login Button
+                            // Login button
                             Button(action: {
                                 UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                                 loginViewModel.login()
@@ -114,9 +115,9 @@ struct WelcomeView: View {
                                     .font(.custom("Poppins-Regular", size: 14))
                                     .foregroundStyle(colorScheme == .dark ? .white.opacity(0.7) : AppColors.lightText.opacity(0.8))
                                 Button(action: {
-                                    withAnimation{
-                                        navigateToSignUp = true
-                                    }
+                                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                                    navigateToSignUp = true
+                                    
                                 }) {
                                     Text("Sign Up")
                                         .font(.custom("Poppins-SemiBold", size: 14))
@@ -134,7 +135,7 @@ struct WelcomeView: View {
                     hideKeyboard()
                 }
             }
-            .navigationDestination(isPresented: $loginViewModel.isLoggedIn, destination: {
+            .navigationDestination(isPresented: $loginViewModel.isLogedIn, destination: {
                 //DiscoveryView()
             })
             .navigationDestination(isPresented: $navigateToSignUp) {
@@ -155,6 +156,7 @@ struct WelcomeView: View {
     
     private func socialLoginButton(image: String) -> some View {
         Button(action: {
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
             // Social login action
         }) {
             Image(image)
@@ -165,7 +167,8 @@ struct WelcomeView: View {
                 .frame(width: 64, height: 64)
                 .background(
                     RoundedRectangle(cornerRadius: 12)
-                        .fill(colorScheme == .dark ? Color(AppColors.adaptiveBackground(for: colorScheme)) : .white)
+                        .fill(colorScheme == .dark
+                              ? Color(AppColors.darkCardBackground.opacity(1.0)) : Color(AppColors.lightBackground.opacity(1.0)))
                         .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: 4)
                 )
         }

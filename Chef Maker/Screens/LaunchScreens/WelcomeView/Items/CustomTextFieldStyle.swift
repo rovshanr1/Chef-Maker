@@ -7,6 +7,7 @@
 import SwiftUI
 
 struct CustomTextFieldStyle: TextFieldStyle {
+    var isFocused: Bool = false
     @Environment(\.colorScheme) var colorScheme
     
     func _body(configuration: TextField<Self._Label>) -> some View {
@@ -20,7 +21,9 @@ struct CustomTextFieldStyle: TextFieldStyle {
                         .fill(colorScheme == .dark ? AppColors.darkCardBackground : AppColors.lightBackground)
                     
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(colorScheme == .dark ? Color.gray.opacity(0.3) : Color(hex: "#D9D9D9"), lineWidth: 1.5)
+                        .stroke(
+                            isFocused ? AppColors.secondaryColor : colorScheme == .dark ? Color.gray.opacity(0.3) : Color(hex: "#D9D9D9"), lineWidth: 1.5)
+                        .animation(.easeInOut(duration: 0.3), value: isFocused)
                 }
             )
          
