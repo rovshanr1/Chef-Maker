@@ -7,10 +7,7 @@
 
 import Foundation
 
-protocol RecipeServiceProtocol {
-    func fetchRecipes(for category: Category) async throws -> [Recipe]
-}
-
+@MainActor
 protocol DiscoveryViewModelProtocol: BaseViewModelProtocol {
     var selectedCategories: Set<Category> { get set }
     var searchText: String { get set }
@@ -21,7 +18,7 @@ protocol DiscoveryViewModelProtocol: BaseViewModelProtocol {
     func isSelected(_ category: Category) -> Bool
 }
 
-
+@MainActor
 class DiscoveryViewViewModel: BaseViewModel<Recipe>, DiscoveryViewModelProtocol {
     @Published var selectedCategories: Set<Category> = []
     @Published var searchText: String = ""
@@ -84,4 +81,5 @@ class DiscoveryViewViewModel: BaseViewModel<Recipe>, DiscoveryViewModelProtocol 
         selectedCategories.contains(category)
     }
 }
+
 

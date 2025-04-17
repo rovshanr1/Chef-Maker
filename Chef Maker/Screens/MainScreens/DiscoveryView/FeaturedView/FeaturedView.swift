@@ -2,136 +2,59 @@
 //  FeaturedView.swift
 //  Chef Maker
 //
-//  Created by Rovshan Rasulov on 07.04.25.
+//  Created by Rovshan Rasulov on 16.04.25.
 //
 
 import SwiftUI
 
 struct FeaturedView: View {
+    @Namespace var namespace
     @StateObject private var viewModel = FeaturedViewModel()
-
-    
+    @State var show = false
+    @State var selectedRecipe: FeaturedModel?
     
     var body: some View {
-        NavigationStack{
-            VStack(alignment: .leading, spacing: 12) {
-                
-                HStack {
-                    Text("Chef's Picks 🍽️")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .padding(.leading)
-                    
-                    Spacer()
-                    
-                    NavigationLink(destination: FeaturedListView()){
-                        Text("See All")
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                            .foregroundStyle(.blue)
-                            .padding(.trailing)
-                    }
-                }
-                
-                if viewModel.isLoading {
-                    HStack {
-                        Spacer()
-                        ProgressView()
-                        Spacer()
-                    }
-                    .frame(height: 200)
-                } else if let error = viewModel.error {
-                    HStack {
-                        Spacer()
-                        VStack(spacing: 8) {
-                            Image(systemName: "exclamationmark.triangle")
-                                .font(.title)
-                                .foregroundColor(.orange)
-                            Text(error.localizedDescription)
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                                .multilineTextAlignment(.center)
-                        }
-                        Spacer()
-                    }
-                    .frame(height: 200)
-                } else {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 16) {
-                            ForEach(viewModel.data) { recipe in
-                                NavigationLink(destination: RecipeDetailView(recipe: recipe)){
-                                    VStack(alignment: .leading, spacing: 8) {
-                                        // Image Section
-                                        AsyncImage(url: URL(string: recipe.image)) { image in
-                                            image
-                                                .resizable()
-                                                .aspectRatio(contentMode: .fill)
-                                        } placeholder: {
-                                            Rectangle()
-                                                .fill(Color.gray.opacity(0.2))
-                                        }
-                                        .frame(width: 180, height: 140)
-                                        .clipped()
-                                        .cornerRadius(12)
-                                        
-                                        // Info Section
-                                        VStack(alignment: .leading, spacing: 6) {
-                                            // Title with truncation
-                                            Text(recipe.title)
-                                                .font(.headline)
-                                                .foregroundColor(.primary)
-                                                .lineLimit(2)
-                                                .multilineTextAlignment(.leading)
-                                                .frame(height: 44)
-                                            
-                                            // Stats Row
-                                            HStack(spacing: 12) {
-                                                // Cook Time
-                                                HStack(spacing: 4) {
-                                                    Image(systemName: "clock")
-                                                        .font(.caption)
-                                                    Text(recipe.formattedCookTime)
-                                                        .font(.caption)
-                                                }
-                                                .foregroundColor(.secondary)
-                                                
-                                                Spacer()
-                                                
-                                                // Likes
-                                                HStack(spacing: 4) {
-                                                    Image(systemName: "heart.fill")
-                                                        .font(.caption)
-                                                        .foregroundColor(.red)
-                                                    Text("\(recipe.likesCount)")
-                                                        .font(.caption)
-                                                        .foregroundColor(.secondary)
-                                                }
-                                            }
-                                        }
-                                        .padding(.horizontal, 8)
-                                    }
-                                    .frame(width: 180)
-                                    .background(Color(.systemBackground))
-                                    .cornerRadius(12)
-                                    .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
-                                }
-                                .buttonStyle(PlainButtonStyle())
-                                
-                                
+        ScrollView(.horizontal, showsIndicators: false) {
+            LazyHStack(spacing: 20) {
+                ForEach(viewModel.data) { recipe in
+                    FeaturedCardView(recipe: recipe, namespace: namespace, show: $show)
+                        .onTapGesture {
+                            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                                selectedRecipe = recipe
+                                show.toggle()
                             }
                         }
-                    }
-                    .padding(.horizontal)
                 }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.top, 8)
-          
+            .padding(.horizontal)
+        }
+        .overlay {
+            if show, let recipe = selectedRecipe {
+                FeaturedContenView(recipe: recipe, namepsace: namespace, show: $show)
+                    .transition(.asymmetric(
+                        insertion: .opacity,
+                        removal: .opacity
+                    ))
+            }
+        }
+        .overlay {
+            if viewModel.isLoading {
+                ProgressView()
+                    .scaleEffect(1.5)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color.black.opacity(0.2))
+            }
+        }
+        .alert("Error", isPresented: .constant(viewModel.error != nil)) {
+            Button("OK") {
+                viewModel.error = nil
+            }
+        } message: {
+            Text(viewModel.error?.localizedDescription ?? "Unknown error")
         }
     }
 }
 
 #Preview {
     FeaturedView()
-        .preferredColorScheme(.light)
 }

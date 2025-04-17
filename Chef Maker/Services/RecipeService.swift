@@ -7,20 +7,25 @@
 
 import Foundation
 
+protocol RecipeServiceProtocol {
+    func fetchRecipes(for category: Category) async throws -> [Recipe]
+}
+
 
 class RecipeService: RecipeServiceProtocol {
+    private let networService: NetworkServiceProtocol
     private let baseURL = "https://api.spoonacular.com/recipes/complexSearch"
     
-    private var apiKey: String {
-        if let apiKey = Bundle.main.infoDictionary?["API_KEY"] as? String {
-            return apiKey
-        }
-        return ""
+    init(networService: NetworkServiceProtocol = BaseNetworkService()) {
+        self.networService = networService
     }
     
+    private var apiKey: String {
+           Bundle.main.infoDictionary?["API_KEY"] as? String ?? ""
+       }
+    
     func fetchRecipes(for category: Category) async throws -> [Recipe] {
-        var urlComponents = URLComponents(string: baseURL)
-        
+      var urlComponents = URLComponents(string: baseURL)
         urlComponents?.queryItems = [
             URLQueryItem(name: "apiKey", value: apiKey),
             URLQueryItem(name: "query", value: category.rawValue),
@@ -29,24 +34,9 @@ class RecipeService: RecipeServiceProtocol {
         ]
         
         guard let url = urlComponents?.url else {
-            throw DiscoveryViewError.invalidUrl
+            throw NetworkError.invalidUrl
         }
-        
-        let (data, response) = try await URLSession.shared.data(from: url)
-        
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw DiscoveryViewError.invalidResponse
-        }
-        
-        guard (200...299).contains(httpResponse.statusCode) else {
-            throw DiscoveryViewError.invalidResponse
-        }
-        
-        do {
-            let decoder = JSONDecoder()
-            return try decoder.decode(SpoonacularResponse.self, from: data).results
-        } catch {
-            throw DiscoveryViewError.decodingError(error)
-        }
+        let response: SpoonacularResponse = try await networService.fetchData(from: url)
+        return response.results
     }
 }

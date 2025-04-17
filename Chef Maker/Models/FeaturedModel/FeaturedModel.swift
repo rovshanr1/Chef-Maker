@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - API Response
 struct SpoonacularFeaturedResponse: Codable {
-    let recipes: [FeaturedModel]
+    let results: [FeaturedModel]
 }
 
 struct FeaturedModel: Identifiable, Codable {

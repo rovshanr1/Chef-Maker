@@ -87,4 +87,3 @@ struct WeightPerServing: Codable {
     let unit: String
 }
 
-// MARK: - Ingredient Extensions

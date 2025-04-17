@@ -21,7 +21,7 @@ class BaseNetworkService: NetworkServiceProtocol {
         
         guard (200...299).contains(httpResponse.statusCode) else {
             if httpResponse.statusCode == 401 {
-                throw NetworkError.missingAPIKey
+                throw NetworkError.unauthorized
             }
             throw NetworkError.invalidResponse
         }

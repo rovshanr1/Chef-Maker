@@ -41,7 +41,7 @@ struct ResetPasswordView: View {
                     VStack(spacing: 8) {
                         Text("Reset Password")
                             .font(.system(size: 24, weight: .bold))
-                            .foregroundStyle(.white)
+                            .foregroundStyle(AppColors.adaptiveText(for: colorScheme))
                         
                         Divider()
                             .background(Color.gray.opacity(0.3))

@@ -10,16 +10,21 @@ import SwiftUI
 struct AppColors {
     // Light Mode Colors
     static let lightBackground = Color(hex: "#E1EFD4")
-    static let lightCardBackground = Color.white
+    static let lightCardBackground = Color(hex: "#D9D9D9")
     static let lightAccent = Color(hex: "#7BAE68")
     static let lightText = Color.primary
-    static let secondaryColor = Color(hex: "FF9C00")
+    static let lightMainTabBackground = Color(.white)
   
     // Dark Mode Colors
     static let darkBackground = Color(hex: "#1C1C1E")
     static let darkCardBackground = Color(hex: "#2C2C2E")
     static let darkAccent = Color(hex: "#86C17B")  
     static let darkText = Color.white
+    
+    //Item Colors
+    static let cardBackground = Color(hex: "#D9D9D9")
+    static let cardStarBackground = Color(hex: "#FFE1B3")
+    static let secondaryColor = Color(hex: "FF9C00")
     
     // Adaptive Colors Functions
     static func adaptiveBackground(for colorScheme: ColorScheme) -> Color {
@@ -32,6 +37,13 @@ struct AppColors {
     
     static func adaptiveAccent(for colorScheme: ColorScheme) -> Color {
         colorScheme == .dark ? darkAccent : lightAccent
+    }
+    
+    static func adaptiveMainTabView(for colorScheme: ColorScheme) -> Color{
+        colorScheme == .dark ? darkBackground : lightMainTabBackground
+    }
+    static func adaptiveCardBackground(for colorScheme: ColorScheme) -> Color {
+        colorScheme == .dark ? darkCardBackground : lightCardBackground
     }
 }
 

@@ -13,6 +13,7 @@ enum NetworkError: LocalizedError {
     case decodingError(Error)
     case networkError(Error)
     case missingAPIKey
+    case unauthorized
     case unknown(Error)
     
     var errorDescription: String? {
@@ -27,6 +28,8 @@ enum NetworkError: LocalizedError {
             return "Network connection error"
         case .missingAPIKey:
             return "API key not found"
+        case .unauthorized:
+            return "Unauthorized"
         case .unknown(let error):
             return error.localizedDescription
         }

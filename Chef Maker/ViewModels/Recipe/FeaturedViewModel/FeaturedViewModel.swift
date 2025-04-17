@@ -1,6 +1,8 @@
 import Foundation
 import Combine
 
+
+
 @MainActor
 final class FeaturedViewModel: BaseViewModel<FeaturedModel> {
     private let baseURL = "https://api.spoonacular.com/recipes"
@@ -44,7 +46,7 @@ final class FeaturedViewModel: BaseViewModel<FeaturedModel> {
             let response: SpoonacularFeaturedResponse = try await networkService.fetchData(from: url)
             
             
-            let sortedRecipes = response.recipes.sorted { $0.aggregateLikes > $1.aggregateLikes }
+            let sortedRecipes = response.results.sorted { $0.aggregateLikes > $1.aggregateLikes }
             self.data = sortedRecipes
             
             try await cache.saveFeaturedRecipes(recipes: sortedRecipes)
@@ -117,4 +119,6 @@ actor CacheManager {
         defaults.removeObject(forKey: lastUpdateKey)
     }
 }
+
+
 

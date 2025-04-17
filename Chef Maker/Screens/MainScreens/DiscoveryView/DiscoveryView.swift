@@ -10,24 +10,17 @@ import SwiftUI
 struct DiscoveryView: View {
     @StateObject private var viewModel = DiscoveryViewViewModel()
     @State private var scrollOffset: CGFloat = 0
-   
     
-    private let columns = [
-        GridItem(.fixed(150)),
-        GridItem(.flexible())
-    ]
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         NavigationStack {
             ZStack(alignment: .top) {
-                // Main Content
+                AppColors.adaptiveMainTabView(for: colorScheme)
+                    .ignoresSafeArea()
+            
                 ScrollView {
                     VStack(alignment: .leading, spacing: 16) {
-                        // Spacer for search bar
-                        Rectangle()
-                            .fill(.clear)
-                            .frame(height: 60)
-                        
                         // Categories
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 12) {
@@ -61,15 +54,6 @@ struct DiscoveryView: View {
                 }
                 
                 // Fixed Search Bar with blur background
-                VStack(spacing: 0) {
-                    ModernSearchBar(text: $viewModel.searchText)
-                        .padding(.horizontal)
-                        .background(
-                            Rectangle()
-                                .fill(.ultraThinMaterial)
-                                .edgesIgnoringSafeArea(.top)
-                        )
-                }
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -94,6 +78,9 @@ struct ScrollOffsetPreferenceKey: PreferenceKey {
     }
 }
 
-#Preview {
-    DiscoveryView()
+//Prewiev
+struct DiscoveryView_Previews: PreviewProvider {
+    static var previews: some View {
+        DiscoveryView()
+    }
 }

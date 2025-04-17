@@ -7,15 +7,10 @@
 
 import Foundation
 
-
 struct MockData {
-    
-
-    
-   
     static let sampleRecipe = Recipe(
         id: 1001,
-        title: "Kremalı Mantarlı Makarna",
+        title: "Creamy Mushroom Pasta",
         image: "https://spoonacular.com/recipeImages/579247-556x370.jpg",
         imageType: "jpg",
         nutrition: RecipeNutrition(
@@ -27,12 +22,12 @@ struct MockData {
             ]
         )
     )
-    
+
     static let sampleRecipes: [Recipe] = [
         sampleRecipe,
         Recipe(
             id: 1002,
-            title: "Avokadolu Kahvaltı Tostu",
+            title: "Avocado Breakfast Toast",
             image: "https://spoonacular.com/recipeImages/637876-556x370.jpg",
             imageType: "jpg",
             nutrition: RecipeNutrition(
@@ -46,7 +41,7 @@ struct MockData {
         ),
         Recipe(
             id: 1003,
-            title: "Izgara Tavuk Salatası",
+            title: "Grilled Chicken Salad",
             image: "https://spoonacular.com/recipeImages/715523-556x370.jpg",
             imageType: "jpg",
             nutrition: RecipeNutrition(
@@ -60,7 +55,7 @@ struct MockData {
         ),
         Recipe(
             id: 1004,
-            title: "Çikolatalı Brownie",
+            title: "Chocolate Brownie",
             image: "https://spoonacular.com/recipeImages/633547-556x370.jpg",
             imageType: "jpg",
             nutrition: RecipeNutrition(
@@ -73,24 +68,21 @@ struct MockData {
             )
         )
     ]
-    
-
-    
 
     static let sampleIngredient = Ingredient(
         id: 2001,
-        original: "2 yemek kaşığı zeytinyağı",
-        originalName: "zeytinyağı",
-        name: "Zeytinyağı",
+        original: "2 tablespoons olive oil",
+        originalName: "olive oil",
+        name: "Olive Oil",
         amount: 2.0,
-        unit: "yemek kaşığı",
-        unitShort: "ykş",
-        unitLong: "yemek kaşığı",
-        possibleUnits: ["yemek kaşığı", "gram", "ml"],
-        estimatedCost: Cost(value: 500, unit: "TL"),
+        unit: "tablespoon",
+        unitShort: "tbsp",
+        unitLong: "tablespoon",
+        possibleUnits: ["tablespoon", "gram", "ml"],
+        estimatedCost: Cost(value: 500, unit: "TRY"),
         consistency: "liquid",
-        shoppingListUnits: ["şişe", "litre"],
-        aisle: "Yağlar",
+        shoppingListUnits: ["bottle", "liter"],
+        aisle: "Oils",
         image: "olive-oil.jpg",
         meta: [],
         nutrition: Nutrition(
@@ -103,19 +95,17 @@ struct MockData {
             caloricBreakdown: CaloricBreakdown(percentProtein: 0, percentFat: 100, percentCarbs: 0),
             weightPerServing: WeightPerServing(amount: 27, unit: "g")
         ),
-        categoryPath: ["Yağlar", "Bitkisel Yağlar"]
+        categoryPath: ["Oils", "Vegetable Oils"]
     )
-    
 
     static let sampleIngredients: [Ingredient] = [
         sampleIngredient,
-     
     ]
-    
+
     static let sampleResponse = SpoonacularResponse(
         results: sampleRecipes,
         offset: 0,
         number: 4,
         totalResults: 4
     )
-} 
+}

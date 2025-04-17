@@ -12,14 +12,10 @@ protocol AuthServiceProtocol {
     func login(email: String, password: String) async throws
     func createAccount(userName: String, email: String, password: String) async throws
     func resetPassword(email: String) async throws
-    func logout() throws
 }
 
 
 class AuthService: AuthServiceProtocol{
-    //LogedIn state
-    @AppStorage("isLogedIn") var isLogedIn: Bool = false
-    
     static let shared = AuthService()
     
     private let auth = Auth.auth()
@@ -101,10 +97,10 @@ class AuthService: AuthServiceProtocol{
     }
     
     // logout func
-    func logout() throws {
+    func logout(appState: AppState) throws {
         do {
             try auth.signOut()
-            isLogedIn = false
+            appState.isLoggedIn = false
         } catch {
             throw AuthError.logoutFailed
         }
