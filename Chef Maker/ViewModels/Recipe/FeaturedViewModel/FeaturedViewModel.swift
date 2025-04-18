@@ -122,3 +122,12 @@ actor CacheManager {
 
 
 
+extension FeaturedModel {
+    var shortTitle: String {
+        if title.count > 50 {
+            return String(title.prefix(47)) + "..."
+        } else {
+            return title
+        }
+    }
+}

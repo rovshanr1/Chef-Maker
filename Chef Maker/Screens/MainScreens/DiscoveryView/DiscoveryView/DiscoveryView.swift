@@ -11,6 +11,12 @@ struct DiscoveryView: View {
     @StateObject private var viewModel = DiscoveryViewViewModel()
     @State private var scrollOffset: CGFloat = 0
     
+    //Featured Componenet
+    @Namespace var namespace
+    @StateObject private var featuredViewModel = FeaturedViewModel()
+    @State var show = false
+    @State var selectedRecipe: FeaturedModel?
+    
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
@@ -22,23 +28,24 @@ struct DiscoveryView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 16) {
                         // Categories
+                        ShowCategoryButton()
+                        
+                        featuredHeader
+                        
                         ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 12) {
-                                ForEach(viewModel.filteredCategories, id: \.self) { category in
-                                    CategoryButton(
-                                        title: category.rawValue,
-                                        emoji: category.emoji,
-                                        isSelected: viewModel.isSelected(category)
-                                    ) {
-                                        viewModel.toggleCategory(category)
-                                    }
+                            LazyHStack(spacing: 20) {
+                                ForEach(featuredViewModel.data) { recipe in
+                                    FeaturedCardView(recipe: recipe, namespace: namespace, show: $show)
+                                        .onTapGesture {
+                                            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                                                selectedRecipe = recipe
+                                                show.toggle()
+                                            }
+                                        }
                                 }
                             }
-                            .padding(.horizontal)
                         }
-                        
-                        // Featured Section
-                        FeaturedView()
+                    
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(GeometryReader { geometry in
@@ -47,13 +54,23 @@ struct DiscoveryView: View {
                             value: geometry.frame(in: .named("scroll")).minY
                         )
                     })
+                    
+                    
                 }
                 .coordinateSpace(name: "scroll")
                 .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
                     scrollOffset = value
                 }
                 
-                // Fixed Search Bar with blur background
+                if show, let recipe = selectedRecipe {
+                    FeaturedContenView(recipe: recipe, namespace: namespace, show: $show)
+                        .transition(.asymmetric(
+                            insertion: .opacity,
+                            removal: .opacity
+                        ))
+                }
+
+            
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -70,6 +87,28 @@ struct DiscoveryView: View {
     }
 }
 
+
+//Featured Header
+var featuredHeader: some View {
+    VStack(alignment: .leading) {
+        HStack(){
+            Text("Chef's Picks")
+                .font(.custom("Poppins-Bold", size: 24))
+            
+            Spacer()
+            
+            Button(action: {
+                
+            }){
+                Text("See All")
+                    .font(.custom("Poppins-Medium", size: 16))
+                    .foregroundStyle(AppColors.secondaryColor)
+            }
+        }
+        .padding(.horizontal)
+    }
+}
+
 // Preference key for tracking scroll offset
 struct ScrollOffsetPreferenceKey: PreferenceKey {
     static var defaultValue: CGFloat = 0
@@ -79,8 +118,6 @@ struct ScrollOffsetPreferenceKey: PreferenceKey {
 }
 
 //Prewiev
-struct DiscoveryView_Previews: PreviewProvider {
-    static var previews: some View {
-        DiscoveryView()
-    }
+#Preview {
+    DiscoveryView()
 }
