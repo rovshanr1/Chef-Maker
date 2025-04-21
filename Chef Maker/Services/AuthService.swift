@@ -12,10 +12,15 @@ protocol AuthServiceProtocol {
     func login(email: String, password: String) async throws
     func createAccount(userName: String, email: String, password: String) async throws
     func resetPassword(email: String) async throws
+    
+    func checkSession() async -> Bool
+
 }
 
 
 class AuthService: AuthServiceProtocol{
+  
+    
     static let shared = AuthService()
     
     private let auth = Auth.auth()
@@ -64,7 +69,7 @@ class AuthService: AuthServiceProtocol{
                         print("Verification email sent")
                     }
                 }
-
+                
                 Task {
                     do {
                         let profile = ProfileModel(
@@ -105,4 +110,17 @@ class AuthService: AuthServiceProtocol{
             throw AuthError.logoutFailed
         }
     }
+    
+    func checkSession() async -> Bool {
+        guard let currentUser = auth.currentUser else {
+            return false
+        }
+        
+        guard currentUser.isEmailVerified else {
+            return false
+        }
+        
+        return true
+    }
+
 }

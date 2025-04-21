@@ -1,6 +1,8 @@
 import Foundation
 import FirebaseAuth
 
+
+
 @MainActor
 class LoginViewModel: ObservableObject {
     //Input
@@ -18,7 +20,7 @@ class LoginViewModel: ObservableObject {
     
     init(authService: AuthServiceProtocol = AuthService.shared){
         self.authService = authService
-    }
+    } 
     
     func login() {
         
@@ -37,7 +39,7 @@ class LoginViewModel: ObservableObject {
         Task{
             isLoading = true
             errorMessage = nil
-            isLogedIn = false
+            defer { isLogedIn = false}
             
             do{
                 try await authService.login(email: email, password: password)
@@ -49,7 +51,7 @@ class LoginViewModel: ObservableObject {
                     errorMessage = mapFirebaseError(error).localizedDescription
                 }
             }
-            isLoading = false
+           
         }
     }
 } 

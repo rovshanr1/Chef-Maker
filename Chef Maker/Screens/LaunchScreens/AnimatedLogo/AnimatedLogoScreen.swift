@@ -27,11 +27,7 @@ struct AnimatedLogoScreen: View {
         NavigationStack {
             ZStack {
                 Group{
-                    if colorScheme == .dark {
-                        AppColors.darkBackground
-                    }else {
-                        AppColors.lightBackground
-                    }
+                    AppColors.adaptiveBackground(for: colorScheme)
                     
                 }
                 .ignoresSafeArea()

@@ -9,11 +9,12 @@ import SwiftUI
 
 struct DiscoveryView: View {
     @StateObject private var viewModel = DiscoveryViewViewModel()
+    @StateObject private var featuredViewModel = FeaturedViewModel()
     @State private var scrollOffset: CGFloat = 0
     
     //Featured Componenet
     @Namespace var namespace
-    @StateObject private var featuredViewModel = FeaturedViewModel()
+   
     @State var show = false
     @State var selectedRecipe: FeaturedModel?
     
@@ -26,36 +27,46 @@ struct DiscoveryView: View {
                     .ignoresSafeArea()
             
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 16) {
-                        // Categories
-                        ShowCategoryButton()
-                        
-                        featuredHeader
-                        
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            LazyHStack(spacing: 20) {
-                                ForEach(featuredViewModel.data) { recipe in
-                                    FeaturedCardView(recipe: recipe, namespace: namespace, show: $show)
-                                        .onTapGesture {
-                                            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
-                                                selectedRecipe = recipe
-                                                show.toggle()
+                    RefreshableScrollView(onRefresh: {
+                        await featuredViewModel.forceRefresh()
+                    }) {
+                        VStack(alignment: .leading, spacing: 16) {
+                            // Categories
+                            ShowCategoryButton()
+                            
+                            featuredHeader
+                            
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 20) {
+                                    ForEach(featuredViewModel.data) { recipe in
+                                        FeaturedCardView(recipe: recipe, namespace: namespace, show: $show)
+                                            .onTapGesture {
+                                                withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                                                    selectedRecipe = recipe
+                                                    show.toggle()
+                                                }
                                             }
-                                        }
+                                    }
                                 }
                             }
+                            
+                            
                         }
-                    
+                        .alert("Error", isPresented: .constant(featuredViewModel.error != nil)) {
+                            Button("Ok") {
+                                featuredViewModel.error = nil
+                            }
+                        } message:{
+                            Text(featuredViewModel.error?.localizedDescription ?? "Unkonwn Error")
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(GeometryReader { geometry in
+                            Color.clear.preference(
+                                key: ScrollOffsetPreferenceKey.self,
+                                value: geometry.frame(in: .named("scroll")).minY
+                            )
+                        })
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(GeometryReader { geometry in
-                        Color.clear.preference(
-                            key: ScrollOffsetPreferenceKey.self,
-                            value: geometry.frame(in: .named("scroll")).minY
-                        )
-                    })
-                    
-                    
                 }
                 .coordinateSpace(name: "scroll")
                 .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
@@ -72,6 +83,13 @@ struct DiscoveryView: View {
 
             
             }
+            .onAppear{
+                Task{
+                    await featuredViewModel.forceRefresh()
+                    print("DATA: \(featuredViewModel.data.count)")
+                    print("🍱 UI verisi:", featuredViewModel.data.map { $0.title })
+                }
+            }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -83,6 +101,7 @@ struct DiscoveryView: View {
                     }
                 }
             }
+           
         }
     }
 }
@@ -118,6 +137,6 @@ struct ScrollOffsetPreferenceKey: PreferenceKey {
 }
 
 //Prewiev
-#Preview {
-    DiscoveryView()
-}
+//#Preview {
+//    
+//}

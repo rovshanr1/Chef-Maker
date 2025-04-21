@@ -12,6 +12,8 @@ struct FeaturedCardView: View {
     var namespace: Namespace.ID
     @Binding var show: Bool
     @Environment(\.colorScheme) var colorScheme
+    
+    
 
     var body: some View {
         VStack {
@@ -20,19 +22,19 @@ struct FeaturedCardView: View {
             VStack {
                 Text("\(recipe.shortTitle)".uppercased())
                     .font(.custom("Poppins-Bold", size: 16))
-                    .matchedGeometryEffect(id: "title\(recipe.id)", in: namespace)
-                    .frame(width: 300, alignment: .center)
+                    .matchedGeometryEffect(id: "title\(recipe.id)", in: namespace,  isSource: !show)
+                    .frame(width: 325, alignment: .center)
                 
                 HStack{
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Time")
                             .font(.custom("Poppins-Regular", size: 16))
                             .foregroundColor(.secondary)
-                            .matchedGeometryEffect(id: "time\(recipe.id)", in: namespace)
+                            .matchedGeometryEffect(id: "time\(recipe.id)", in: namespace,  isSource: !show)
                         
                         Text("\(recipe.cookTime) Mins")
                             .font(.custom("Poppins-Regular", size: 14))
-                            .matchedGeometryEffect(id: "cookTime\(recipe.id)", in: namespace)
+                            .matchedGeometryEffect(id: "cookTime\(recipe.id)", in: namespace,  isSource: !show)
                     }
                     
                     Spacer()
@@ -45,7 +47,7 @@ struct FeaturedCardView: View {
                             .resizable()
                             .frame(width: 40, height: 40)
                     }
-                    .matchedGeometryEffect(id: "bookmark\(recipe.id)", in: namespace)
+                    .matchedGeometryEffect(id: "bookmark\(recipe.id)", in: namespace,  isSource: !show)
                 }
                 .padding()
             }
@@ -55,7 +57,7 @@ struct FeaturedCardView: View {
                     .fill(.ultraThinMaterial)
                     .mask(RoundedRectangle(cornerRadius: 20, style: .continuous))
                     .blur(radius: 20)
-                    .matchedGeometryEffect(id: "blur\(recipe.id)", in: namespace)
+                    .matchedGeometryEffect(id: "blur\(recipe.id)", in: namespace,  isSource: !show)
             )
         }
         .background(
@@ -64,17 +66,15 @@ struct FeaturedCardView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-                    
             } placeholder: {
                 RoundedRectangle(cornerRadius: 20, style: .continuous)
                     .foregroundStyle(AppColors.adaptiveCardBackground(for: colorScheme))
-                    
             }
-                .matchedGeometryEffect(id: "image\(recipe.id)", in: namespace)
+            .matchedGeometryEffect(id: "image\(recipe.id)", in: namespace, isSource: !show)
         )
         .mask(
             RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .matchedGeometryEffect(id: "mask\(recipe.id)", in: namespace)
+                .matchedGeometryEffect(id: "mask\(recipe.id)", in: namespace,  isSource: !show)
         )
         .frame(height: 300)
         .padding(20)

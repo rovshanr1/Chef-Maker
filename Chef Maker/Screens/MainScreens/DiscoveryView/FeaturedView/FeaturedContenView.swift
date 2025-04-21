@@ -13,6 +13,7 @@ struct FeaturedContenView: View {
     @Binding var show: Bool
     @Environment(\.colorScheme) var colorScheme
     
+    
     var body: some View {
         ZStack {
             ScrollView {
@@ -38,7 +39,6 @@ struct FeaturedContenView: View {
             }
             
         }
-        
     }
     
     var cover: some View {
@@ -53,23 +53,22 @@ struct FeaturedContenView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-                
             } placeholder: {
                 RoundedRectangle(cornerRadius: 20, style: .continuous)
                     .foregroundStyle(AppColors.adaptiveCardBackground(for: colorScheme))
-                
             }
-                .matchedGeometryEffect(id: "image\(recipe.id)", in: namespace)
+            .matchedGeometryEffect(id: "image\(recipe.id)", in: namespace, isSource: show)
+               
         )
         .mask(
             RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .matchedGeometryEffect(id: "mask\(recipe.id)", in: namespace)
+                .matchedGeometryEffect(id: "mask\(recipe.id)", in: namespace, isSource: show)
         )
         .overlay(
             VStack(alignment: .leading, spacing: 12){
-                Text("\(recipe.title)".uppercased())
+                Text("\(recipe.shortTitle)".uppercased())
                     .font(.custom("Poppins-Bold", size: 16))
-                    .matchedGeometryEffect(id: "title\(recipe.id)", in: namespace)
+                    .matchedGeometryEffect(id: "title\(recipe.id)", in: namespace, isSource: show)
                     .lineLimit(2)
                     .fixedSize(horizontal: false, vertical: true)
                 
@@ -78,11 +77,11 @@ struct FeaturedContenView: View {
                         Text("Time")
                             .font(.custom("Poppins-Regular", size: 16))
                             .foregroundColor(.secondary)
-                            .matchedGeometryEffect(id: "time\(recipe.id)", in: namespace)
+                            .matchedGeometryEffect(id: "time\(recipe.id)", in: namespace, isSource: show)
                         
                         Text("\(recipe.cookTime) Mins")
                             .font(.custom("Poppins-Regular", size: 14))
-                            .matchedGeometryEffect(id: "cookTime\(recipe.id)", in: namespace)
+                            .matchedGeometryEffect(id: "cookTime\(recipe.id)", in: namespace, isSource: show)
                     }
                     
                     Spacer()
@@ -95,20 +94,29 @@ struct FeaturedContenView: View {
                             .resizable()
                             .frame(width: 40, height: 40)
                     }
-                    .matchedGeometryEffect(id: "bookmark\(recipe.id)", in: namespace)
+                    .matchedGeometryEffect(id: "bookmark\(recipe.id)", in: namespace, isSource: show)
                     
                 }
                 Divider()
+                VStack(alignment: .leading, spacing: 8){
+                    Text("Nutritional Information")
+                        .font(.custom("Poppins-Bold", size: 12))
+                        .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
+                    
+                    
+                        
+                    
+                }
             }
                 .padding(20)
                 .background(
                     Rectangle()
                         .fill(.ultraThinMaterial)
                         .mask(RoundedRectangle(cornerRadius: 20, style: .continuous))
-                        .matchedGeometryEffect(id: "blur\(recipe.id)", in: namespace)
+                        .matchedGeometryEffect(id: "blur\(recipe.id)", in: namespace, isSource: show)
                 )
                 .offset(y: 250)
-                .padding(10)
+                .padding(20)
             
         )
     }

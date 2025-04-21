@@ -29,13 +29,13 @@ struct FeaturedModel: Identifiable, Codable {
         case nutrition
     }
     
-    init(from recipe: Recipe) {
-        self.id = recipe.id
-        self.title = recipe.title
-        self.image = recipe.image
+    init(from results: Recipe) {
+        self.id = results.id
+        self.title = results.title
+        self.image = results.image
         self.readyInMinutes = 30
         self.aggregateLikes = Int.random(in: 100...1000) 
-        self.nutrition = recipe.nutrition
+        self.nutrition = results.nutrition
     }
     
     var cookTime: Int {

@@ -13,4 +13,14 @@ struct ProfileModel: Identifiable, Codable{
     var userName: String
     var email: String
     var timeStamp: Date
+    
+    
+    var initials: String{
+        let formatter = PersonNameComponentsFormatter()
+        if let components = formatter.personNameComponents(from: userName) {
+            formatter.style = .abbreviated
+            return formatter.string(from: components)
+        }
+        return ""
+    }
 }

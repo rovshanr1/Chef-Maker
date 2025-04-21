@@ -8,39 +8,37 @@
 import SwiftUI
 
 struct MatchView: View {
-    @Namespace var namespace
-    @State var show = false
-    
-    @Environment(\.colorScheme) var colorScheme
-    
-    var recipe: FeaturedModel
-    var body: some View {
-        ZStack {
-            if !show{
-              
-            
-            } else{
-                
-            }
-        }
-       
-    }
-}
+    @StateObject var viewModel = FeaturedViewModel()
 
-struct MatchView_Previews: PreviewProvider {
-    static var previews: some View {
-        MatchView(recipe: FeaturedModel(from: Recipe(
-            id: 1,
-            title: "categorically organized list of foods",
-            image:"https://spoonacular.com/recipeImages/579247-556x370.jpg",
-            imageType: "jpg",
-            nutrition: RecipeNutrition(nutrients: [
-                RecipeNutrient(name: "Calories", amount: 450, unit: "kcal"),
-                RecipeNutrient(name: "Protein", amount: 20, unit: "g"),
-                RecipeNutrient(name: "Carbohydrates", amount: 60, unit: "g"),
-                RecipeNutrient(name: "Fat", amount: 15, unit: "g")
-            ])
-        )))
-    }
+       var body: some View {
+           NavigationView {
+               List(viewModel.data, id: \.id) { recipe in
+                   VStack(alignment: .leading, spacing: 8) {
+                       Text(recipe.title)
+                           .font(.headline)
+                       
+                       Text("Time: \(recipe.cookTime) min")
+                           .font(.subheadline)
+                       
+                       AsyncImage(url: URL(string: recipe.image)) { image in
+                           image
+                               .resizable()
+                               .aspectRatio(contentMode: .fill)
+                       } placeholder: {
+                           Color.gray.opacity(0.3)
+                       }
+                       .frame(height: 200)
+                       .cornerRadius(12)
+                   }
+                   .padding(.vertical, 10)
+               }
+               .navigationTitle("Test Recipes")
+           }
+           .onAppear {
+               Task{
+                   await viewModel.loadFeaturedRecipes()
+               }
+               print("📲 Veriler: \(viewModel.data.count)")
+           }
+       }
 }
-

@@ -74,12 +74,15 @@ struct WelcomeView: View {
                                         .frame(maxWidth: .infinity)
                                         .padding(.vertical, 16)
                                 } else{
-                                    Text("Login")
-                                        .font(.custom("Poppins-SemiBold", size: 16))
-                                        .foregroundColor(.white)
-                                        .frame(maxWidth: .infinity)
-                                        .padding(.vertical, 16)
-                                        
+                                    HStack{
+                                        Text("Login")
+                                            .font(.custom("Poppins-SemiBold", size: 16))
+                                          
+                                        Image(systemName: "arrow.right")
+                                    }
+                                    .foregroundColor(.white)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 16)
                                 }
                             }
                             .background(AppColors.lightAccent)

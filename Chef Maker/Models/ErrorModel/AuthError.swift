@@ -18,6 +18,7 @@ enum AuthError: LocalizedError {
     case userNameCanNotBeEmpty
     case invalidEmail
     case logoutFailed
+    case tokenRefreshFailed
     case unknown(String)
 
     var errorDescription: String? {
@@ -35,14 +36,17 @@ enum AuthError: LocalizedError {
         case .networkError:
             return "Check your internet connection and try again."
         case .userNameCanNotBeEmpty:
-            return "Username can not be empty "
+            return "Username can not be empty"
         case .invalidEmail:
             return "The email address is badly formatted"
         case .logoutFailed:
             return "Logout failed"
+        case .tokenRefreshFailed:
+            return "Token refresh failed"
         case .unknown(let message):
             return message
        
+      
         }
     }
 }
@@ -67,6 +71,8 @@ func mapFirebaseError(_ error: Error) -> AuthError {
         return .invalidEmail
     case .emailAlreadyInUse:
         return .emailAlreadyInUse
+    case .userTokenExpired:
+        return .tokenRefreshFailed
     default:
         return .unknown(error.localizedDescription)
     }
