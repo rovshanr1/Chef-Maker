@@ -10,8 +10,9 @@ import FirebaseAuth
 import FirebaseFirestore
 
 protocol UserServiceProtocol {
-    func fetchUserProfile(userId: String) async throws -> ProfileModel
+    func fetchUserProfile(userId: String) async throws -> ProfileModel?
     func saveUserProfile(userId: String, data: ProfileModel) async throws
+    func deleteUserProfile(userId: String) async throws
 }
 
 
@@ -19,7 +20,7 @@ class UserService: UserServiceProtocol{
     static let shared = UserService()
     private let db = Firestore.firestore()
     
-    func fetchUserProfile(userId: String) async throws -> ProfileModel {
+    func fetchUserProfile(userId: String) async throws -> ProfileModel? {
         let docRef = db.collection("users").document(userId)
         let document = try await docRef.getDocument()
        

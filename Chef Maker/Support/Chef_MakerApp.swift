@@ -7,17 +7,13 @@
 
 import SwiftUI
 import FirebaseCore
-import FirebaseAppCheck
+
 
 
 class AppDelegate: NSObject, UIApplicationDelegate {
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
     FirebaseApp.configure()
-      
-      #if DEBUG
-      AppCheck.setAppCheckProviderFactory(AppCheckDebugProviderFactory())
-      #endif
       
     return true
   }
@@ -30,7 +26,6 @@ struct MyApp: App {
     
     var body: some Scene {
         WindowGroup {
-            MatchView()
-        }
+            AnimatedLogoScreen()        }
     }
 }
