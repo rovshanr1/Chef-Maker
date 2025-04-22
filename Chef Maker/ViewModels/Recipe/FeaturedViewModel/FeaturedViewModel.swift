@@ -27,19 +27,26 @@ final class FeaturedViewModel: BaseViewModel<FeaturedModel> {
         defer { isLoading = false }
         
         do {
+            if try await cache.shouldRefreshCache(){
+                let newData = try await recipeService.fetchFeaturedRecipes()
+                try await cache.saveFeaturedRecipes(recipes: newData)
+                self.data = newData
+                return
+            }
+            
             if let cachedData = try await cache.getFeaturedRecipes() {
                 self.data = cachedData
                 return
             }
             let newData = try await recipeService.fetchFeaturedRecipes()
             try await cache.saveFeaturedRecipes(recipes: newData)
-            
             self.data = newData
-            
         } catch {
             self.error = error as? NetworkError ?? .unknown(error)
         }
     }
+    
+    
     
     func refreshFeaturedRecipes() {
         Task {
@@ -48,8 +55,19 @@ final class FeaturedViewModel: BaseViewModel<FeaturedModel> {
     }
     
     func forceRefresh() async {
-        await cache.clearCache()
-        await loadFeaturedRecipes()
+      isLoading = true
+        defer { isLoading = false}
+        
+        do{
+            await cache.clearCache()
+            
+            let newData = try await recipeService.fetchFeaturedRecipes()
+            try await cache.saveFeaturedRecipes(recipes: newData)
+            self.data = newData
+        }catch{
+            self.error = error as? NetworkError ?? .unknown(error)
+        }
+        
     }
 }
 

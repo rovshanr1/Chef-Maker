@@ -7,8 +7,10 @@ struct WelcomeView: View {
     //Navigation State
     @State private var navigateToSignUp: Bool = false
     @State private var navigateToForgotPassword: Bool = false
+    @State private var navigateToDiscoveryView: Bool = false
     
     var body: some View {
+        
         NavigationStack {
             ZStack {
                 AppColors.adaptiveBackground(for: colorScheme)
@@ -66,8 +68,14 @@ struct WelcomeView: View {
                             // Login button
                             Button(action: {
                                 UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                                loginViewModel.login()
-                            }) {
+                                Task{
+                                    let succes = await loginViewModel.login()
+                                    if succes{
+                                        loginViewModel.isLogedIn = true
+                                    }
+                                    }
+                                    
+                                }) {
                                 if loginViewModel.isLoading{
                                     ProgressView()
                                         .progressViewStyle(.circular)
@@ -139,7 +147,7 @@ struct WelcomeView: View {
                 }
             }
             .navigationDestination(isPresented: $loginViewModel.isLogedIn, destination: {
-                //DiscoveryView()
+                DiscoveryView()
             })
             .navigationDestination(isPresented: $navigateToSignUp) {
                     CreateAccountView()

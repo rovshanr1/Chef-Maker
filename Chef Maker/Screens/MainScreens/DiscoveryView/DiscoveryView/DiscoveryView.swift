@@ -80,16 +80,17 @@ struct DiscoveryView: View {
                             removal: .opacity
                         ))
                 }
-
-            
             }
             .onAppear{
                 Task{
-                    await featuredViewModel.forceRefresh()
-                    print("DATA: \(featuredViewModel.data.count)")
-                    print("🍱 UI verisi:", featuredViewModel.data.map { $0.title })
+                    if featuredViewModel.data.isEmpty{
+                        await featuredViewModel.forceRefresh()
+                    }
+                    print("Data Loaded Successfully: \(featuredViewModel.data.count)")
+                    print("Recipe Loaded Successfully:", featuredViewModel.data.map { $0.title})
                 }
             }
+            .navigationBarBackButtonHidden(true)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {

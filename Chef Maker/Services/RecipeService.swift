@@ -39,7 +39,8 @@ class RecipeService: RecipeServiceProtocol {
         URLQueryItem(name: "addRecipeInformation", value: "true"),
         URLQueryItem(name: "sort", value: "popularity"),
         URLQueryItem(name: "sortDirection", value: "desc"),
-        URLQueryItem(name: "addRecipeNutrition", value: "true")
+        URLQueryItem(name: "addRecipeNutrition", value: "true"),
+        URLQueryItem(name: "random", value: "true")
     ]
         
         guard let url = urlComponents?.url else {

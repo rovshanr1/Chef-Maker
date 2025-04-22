@@ -22,21 +22,19 @@ class LoginViewModel: ObservableObject {
         self.authService = authService
     } 
     
-    func login() {
-        
+    func login() async -> Bool {
        //TextFields cannot be empty
         guard !email.isEmpty, !password.isEmpty else {
             errorMessage = "Please fill in all fields."
-            return
+            return false
         }
         
         //check valid email adress
         guard email.contains("@") else {
             errorMessage = "Please enter a valid email adress."
-            return
+            return false
         }
         
-        Task{
             isLoading = true
             errorMessage = nil
             defer { isLogedIn = false}
@@ -44,14 +42,16 @@ class LoginViewModel: ObservableObject {
             do{
                 try await authService.login(email: email, password: password)
                 isLogedIn = true
+                return true
             } catch {
                 if let authError = error as? AuthError {
                     errorMessage = authError.localizedDescription
                 } else {
                     errorMessage = mapFirebaseError(error).localizedDescription
                 }
+                return false
             }
            
-        }
+        
     }
 } 

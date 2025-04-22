@@ -1,53 +1,52 @@
 import SwiftUI
 
 struct OnboardingView: View {
-    @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
     @State private var currentPage = 0
-    
+    @State private var showWelcomeView: Bool = false
     @Environment(\.colorScheme) var colorScheme
-
+    
     var body: some View {
-        ZStack {
-            Group{
-                if colorScheme == .dark {
-                    AppColors.darkBackground
-                }else {
-                    AppColors.lightBackground
-                }
-            }
-            .ignoresSafeArea()
-            
-            VStack {
-                TabView(selection: $currentPage) {
-                    ForEach(0..<onboardingData.count, id: \.self) { index in
-                        OnboardingPageView(page: onboardingData[index])
-                            .tag(index)
-                    }
-                }
-                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
+        NavigationStack{
+            ZStack {
+                AppColors.adaptiveBackground(for: colorScheme)
+                    .ignoresSafeArea()
                 
-                Button(action: {
-                    if currentPage < onboardingData.count - 1 {
-                        withAnimation {
-                            currentPage += 1
+                VStack {
+                    TabView(selection: $currentPage) {
+                        ForEach(0..<onboardingData.count, id: \.self) { index in
+                            OnboardingPageView(page: onboardingData[index])
+                                .tag(index)
                         }
-                    } else {
-                        hasSeenOnboarding = true
                     }
-                }) {
-                    Text(currentPage < onboardingData.count - 1 ? "Next" : "Start Cooking ")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(AppColors.lightAccent)
-                        .cornerRadius(10)
+                    .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
+                    
+                    Button(action: {
+                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                        if currentPage < onboardingData.count - 1 {
+                            withAnimation {
+                                currentPage += 1
+                            }
+                        } else {
+                            showWelcomeView = true
+                        }
+                    }) {
+                        Text(currentPage < onboardingData.count - 1 ? "Next" : "Start Cooking ")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(AppColors.lightAccent)
+                            .cornerRadius(10)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 30)
                 }
-                .padding(.horizontal, 20)
-                .padding(.bottom, 30)
             }
+            .navigationDestination(isPresented: $showWelcomeView){
+                WelcomeView()
+            }
+            .navigationBarBackButtonHidden(true)
         }
-        .navigationBarBackButtonHidden(true)
     }
 }
 

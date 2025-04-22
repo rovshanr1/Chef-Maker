@@ -20,14 +20,22 @@ actor CacheManager {
     func shouldRefreshCache() async throws -> Bool {
         let lastUpdate = defaults.double(forKey: lastUpdateKey)
         let currentTime = Date().timeIntervalSince1970
-        let shouldRefresh = (currentTime - lastUpdate) >= cacheValidityDuration
         
-        if shouldRefresh{
-            print("cache expired")
-            clearCache()
+        if lastUpdate == 0{
+            return true
         }
         
-        return shouldRefresh
+        let shouldRefresh = (currentTime - lastUpdate) >= cacheValidityDuration
+        
+        if shouldRefresh {
+            print("Cache is outdated, refreshing...")
+            clearCache()
+        } else{
+         print("ℹ️ Cache is valid")
+        }
+        
+         return shouldRefresh
+      
     }
     
     func saveFeaturedRecipes(recipes: [FeaturedModel]) async throws {
@@ -64,5 +72,6 @@ actor CacheManager {
         defaults.removeObject(forKey: featuredRecipesKey)
         defaults.removeObject(forKey: lastUpdateKey)
         defaults.synchronize()
+        print("Clearing cache")
     }
 }

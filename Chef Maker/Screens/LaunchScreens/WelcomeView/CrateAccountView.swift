@@ -84,7 +84,13 @@ struct CreateAccountView: View {
                             // Create Account Button
                             Button(action: {
                                 UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                                createAccountViewModel.createAccount()
+                                
+                                Task{
+                                 let succes = await createAccountViewModel.createAccount()
+                                    if succes{
+                                        createAccountViewModel.accountCreated = true
+                                    }
+                                }
                             }) {
                                 if createAccountViewModel.isLoading{
                                     ProgressView()

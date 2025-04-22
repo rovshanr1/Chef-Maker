@@ -33,39 +33,42 @@ class CreateAccountViewModel: ObservableObject{
         return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: password)
     }
     
-    func createAccount(){
+    func createAccount() async -> Bool{
         //TextFields cannot be emty
         guard !name.isEmpty, !email.isEmpty, !password.isEmpty else {
             errorMessage = "All fields are required"
-            return
+            return false
         }
                 
         //ConfirmPassword check
         guard password == confirmPassword else {
             errorMessage = "Passwords do not match"
-            return
+            return false
         }
         
         guard isPasswordValid(password) else {
             errorMessage = "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character."
-            return
+            return false
         }
         
-        Task{
+        
             isLoading = true
             errorMessage = nil
             accountCreated = false
             do {
                 try await authService.createAccount(userName: name, email: email, password: password)
                 accountCreated = true
+                return true
             } catch {
                 if let authError = error as? AuthError {
                     errorMessage = authError.localizedDescription
                 } else {
                     errorMessage = mapFirebaseError(error).localizedDescription
                 }
+                return false
             }
-            isLoading = false
-        }
+        
+            
+        
     }
 }
