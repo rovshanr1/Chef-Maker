@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		444917C42DB8496900A83F71 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 444917C32DB8496900A83F71 /* Kingfisher */; };
 		449E69102DA3D0870000847E /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 449E690F2DA3D0870000847E /* README.md */; };
 		449FE9252DA285370044E7FA /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 449FE9242DA285370044E7FA /* FirebaseAuth */; };
 		449FE9272DA285370044E7FA /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 449FE9262DA285370044E7FA /* FirebaseCore */; };
@@ -49,6 +50,7 @@
 				449FE9292DA285370044E7FA /* FirebaseDatabase in Frameworks */,
 				449FE92B2DA285370044E7FA /* FirebaseFirestore in Frameworks */,
 				449FE9252DA285370044E7FA /* FirebaseAuth in Frameworks */,
+				444917C42DB8496900A83F71 /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,6 +98,7 @@
 				449FE9262DA285370044E7FA /* FirebaseCore */,
 				449FE9282DA285370044E7FA /* FirebaseDatabase */,
 				449FE92A2DA285370044E7FA /* FirebaseFirestore */,
+				444917C32DB8496900A83F71 /* Kingfisher */,
 			);
 			productName = "Chef Maker";
 			productReference = 4498319B2DA1BB4B00041AF4 /* Chef Maker.app */;
@@ -127,6 +130,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				449FE9212DA285370044E7FA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				444917C22DB8496900A83F71 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4498319C2DA1BB4B00041AF4 /* Products */;
@@ -379,6 +383,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		444917C22DB8496900A83F71 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.3.2;
+			};
+		};
 		449FE9212DA285370044E7FA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -390,6 +402,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		444917C32DB8496900A83F71 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 444917C22DB8496900A83F71 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
 		449FE9242DA285370044E7FA /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 449FE9212DA285370044E7FA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

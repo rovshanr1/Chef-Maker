@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct FeaturedCardView: View {
     var recipe: FeaturedModel
@@ -37,6 +38,7 @@ struct FeaturedCardView: View {
                             .matchedGeometryEffect(id: "cookTime\(recipe.id)", in: namespace,  isSource: !show)
                     }
                     
+                    
                     Spacer()
                     
                     Button(action: {
@@ -61,15 +63,17 @@ struct FeaturedCardView: View {
             )
         }
         .background(
-            AsyncImage(url: URL(string: recipe.image)) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-            } placeholder: {
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .foregroundStyle(AppColors.adaptiveCardBackground(for: colorScheme))
-            }
+            KFImage(URL(string: recipe.image))
+                .targetCache(CacheManager.shared.imageCache)
+                .placeholder{
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .foregroundStyle(AppColors.adaptiveCardBackground(for: colorScheme))
+                }
+                .fade(duration: 0.5)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(height: 300)
+                .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
             .matchedGeometryEffect(id: "image\(recipe.id)", in: namespace, isSource: !show)
         )
         .mask(

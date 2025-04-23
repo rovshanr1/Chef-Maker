@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct FeaturedContenView: View {
     var recipe: FeaturedModel
     var namespace: Namespace.ID
     @Binding var show: Bool
     @Environment(\.colorScheme) var colorScheme
+    
+    private let imageSize = CGSize(width: 600, height: 400)
     
     
     var body: some View {
@@ -31,13 +34,15 @@ struct FeaturedContenView: View {
                     .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
                     .padding(8)
                     .background(.ultraThinMaterial, in: Circle())
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                    .frame(width: 44, height: 44)
                     .padding(20)
-                    .padding(.top)
-                    .ignoresSafeArea()
-                    
+                    .contentShape(Rectangle())
             }
-            
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+            .padding(20)
+            .ignoresSafeArea()
+            .zIndex(1)
+
         }
     }
     
@@ -48,17 +53,18 @@ struct FeaturedContenView: View {
         .frame(maxWidth: .infinity)
         .frame(height: 500)
         .background(
-            AsyncImage(url: URL(string: recipe.image)) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-            } placeholder: {
+            KFImage(URL(string: recipe.image))
+                .targetCache(CacheManager.shared.imageCache)
+                .placeholder {
                 RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .foregroundStyle(AppColors.adaptiveCardBackground(for: colorScheme))
+                .foregroundStyle(AppColors.adaptiveBackground(for: colorScheme).secondary)
             }
+            .fade(duration: 0.5)
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .frame(height: 500)
+            .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
             .matchedGeometryEffect(id: "image\(recipe.id)", in: namespace, isSource: show)
-               
         )
         .mask(
             RoundedRectangle(cornerRadius: 20, style: .continuous)

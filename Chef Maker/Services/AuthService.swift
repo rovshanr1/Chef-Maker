@@ -7,8 +7,10 @@
 
 import SwiftUI
 import FirebaseAuth
+import FirebaseFirestore
 
 protocol AuthServiceProtocol {
+    var currentUser: User? { get }
     func login(email: String, password: String) async throws
     func createAccount(userName: String, email: String, password: String) async throws
     func resetPassword(email: String) async throws
@@ -22,6 +24,13 @@ class AuthService: AuthServiceProtocol{
     static let shared = AuthService()
     
     private let auth = Auth.auth()
+    private let db = Firestore.firestore()
+    
+    var currentUser: User? {
+        auth.currentUser
+    }
+    
+    init() {}
     
     // login func
     func login(email: String, password: String) async throws {
@@ -49,14 +58,14 @@ class AuthService: AuthServiceProtocol{
     
     // account creation func
     func createAccount(userName: String, email: String, password: String) async throws {
-        try await withCheckedThrowingContinuation { (contination: CheckedContinuation<Void, any Error>) in
-            auth.createUser(withEmail: email, password: password) { authResult, error in
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, any Error>) in
+            auth.createUser(withEmail: email, password: password) { [self] authResult, error in
                 if let error = error {
-                    contination.resume(throwing: mapFirebaseError(error))
+                    continuation.resume(throwing: mapFirebaseError(error))
                     return
                 }
                 guard let user = authResult?.user else {
-                    contination.resume(throwing: AuthError.unknown("Internal error occurred"))
+                    continuation.resume(throwing: AuthError.unknown("Internal error occurred"))
                     return
                 }
                 
@@ -71,15 +80,15 @@ class AuthService: AuthServiceProtocol{
                 Task {
                     do {
                         let profile = ProfileModel(
-                            id: UUID(),
-                            userName: userName,
+                            id: user.uid,
+                            fullName: userName,
                             email: email,
                             timeStamp: Date()
                         )
-                        try await UserService.shared.saveUserProfile(userId: user.uid, data: profile)
-                        contination.resume()
+                        try await db.collection("users").document(user.uid).setData(profile.toFirebase())
+                        continuation.resume()
                     } catch {
-                        contination.resume(throwing: error)
+                        continuation.resume(throwing: error)
                     }
                 }
             }
@@ -109,11 +118,11 @@ class AuthService: AuthServiceProtocol{
     }
     
     func checkSession() async -> Bool {
-        guard let currentUser = auth.currentUser else {
+        guard let user = currentUser else {
             return false
         }
         
-        guard currentUser.isEmailVerified else {
+        guard user.isEmailVerified else {
             return false
         }
         

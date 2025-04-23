@@ -10,6 +10,7 @@ import SwiftUI
 struct DiscoveryView: View {
     @StateObject private var viewModel = DiscoveryViewViewModel()
     @StateObject private var featuredViewModel = FeaturedViewModel()
+    @StateObject private var profileViewModel = ProfileViewModel(appState: AppState.shared)
     @State private var scrollOffset: CGFloat = 0
     
     //Featured Componenet
@@ -17,6 +18,7 @@ struct DiscoveryView: View {
    
     @State var show = false
     @State var selectedRecipe: FeaturedModel?
+    
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -27,10 +29,15 @@ struct DiscoveryView: View {
                     .ignoresSafeArea()
             
                 ScrollView {
+                    
                     RefreshableScrollView(onRefresh: {
                         await featuredViewModel.forceRefresh()
                     }) {
                         VStack(alignment: .leading, spacing: 16) {
+                            
+                            //Avatar
+                            ProfileAvatarView(profile: profileViewModel.profile)
+                              
                             // Categories
                             ShowCategoryButton()
                             
@@ -49,8 +56,6 @@ struct DiscoveryView: View {
                                     }
                                 }
                             }
-                            
-                            
                         }
                         .alert("Error", isPresented: .constant(featuredViewModel.error != nil)) {
                             Button("Ok") {
@@ -75,10 +80,6 @@ struct DiscoveryView: View {
                 
                 if show, let recipe = selectedRecipe {
                     FeaturedContenView(recipe: recipe, namespace: namespace, show: $show)
-                        .transition(.asymmetric(
-                            insertion: .opacity,
-                            removal: .opacity
-                        ))
                 }
             }
             .onAppear{
@@ -137,7 +138,7 @@ struct ScrollOffsetPreferenceKey: PreferenceKey {
     }
 }
 
-//Prewiev
-//#Preview {
-//    
-//}
+
+#Preview{
+    DiscoveryView()
+}
