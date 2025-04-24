@@ -25,6 +25,8 @@ struct AppColors {
     static let cardBackground = Color(hex: "#D9D9D9")
     static let cardStarBackground = Color(hex: "#FFE1B3")
     static let secondaryColor = Color(hex: "FF9C00")
+    static let filedFilterButtonColor = Color(hex: "#129575")
+    static let emptyFilterButtonColor = Color(hex: "#71B1A1")
     
     // Adaptive Colors Functions
     static func adaptiveBackground(for colorScheme: ColorScheme) -> Color {
@@ -45,6 +47,7 @@ struct AppColors {
     static func adaptiveCardBackground(for colorScheme: ColorScheme) -> Color {
         colorScheme == .dark ? darkCardBackground : lightCardBackground
     }
+  
 }
 
 

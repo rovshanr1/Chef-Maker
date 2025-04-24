@@ -76,7 +76,7 @@ struct FeaturedContenView: View {
                     .font(.custom("Poppins-Bold", size: 16))
                     .matchedGeometryEffect(id: "title\(recipe.id)", in: namespace, isSource: show)
                     .lineLimit(2)
-                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(width: 300)
                 
                 HStack(spacing: 15){
                     VStack(alignment: .leading, spacing: 8) {

@@ -24,7 +24,7 @@ struct FeaturedCardView: View {
                 Text("\(recipe.shortTitle)".uppercased())
                     .font(.custom("Poppins-Bold", size: 16))
                     .matchedGeometryEffect(id: "title\(recipe.id)", in: namespace,  isSource: !show)
-                    .frame(width: 325, alignment: .center)
+                    .frame(width: 300, alignment: .center)
                 
                 HStack{
                     VStack(alignment: .leading, spacing: 8) {

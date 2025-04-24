@@ -37,6 +37,9 @@ struct DiscoveryView: View {
                             
                             //Avatar
                             ProfileAvatarView(profile: profileViewModel.profile)
+                            
+                            //Search
+                            SearchBarView(txt: .constant(""), show: $show, namespace: namespace) 
                               
                             // Categories
                             ShowCategoryButton()
@@ -103,6 +106,7 @@ struct DiscoveryView: View {
                     }
                 }
             }
+            .onTapGesture{ hideKeyboard() } 
            
         }
     }

@@ -15,7 +15,7 @@ struct ProfileAvatarView: View {
             
             VStack(alignment: .leading, spacing: 8) {
                 Text(profile.fullName)
-                    .font(.custom("Poppins-Bold", size: 16))
+                    .font(.custom("Poppins-SemiBold", size: 20))
                     .foregroundStyle(AppColors.adaptiveText(for: colorScheme))
                 
                 Text("What are you cooking today?")
@@ -26,12 +26,14 @@ struct ProfileAvatarView: View {
             
             Spacer()
             
+            //TODO: - NavigationLink ProfileView
+            
             Circle()
                 .fill(.gray)
-                .frame(width: 60, height: 60)
+                .frame(width: 50, height: 50)
                 .overlay(
                     Text(profile.initials)
-                        .font(.custom("Poppins-Bold", size: 16))
+                        .font(.custom("Poppins-SemiBold", size: 16))
                         .foregroundStyle(.white)
                 )
                

@@ -23,7 +23,7 @@ struct CategoryButton: View {
                     .fontWeight(.medium)
             }
             .padding(.vertical, 12)
-            .padding(.horizontal, 16)
+            .padding(.horizontal)
             .background(isSelected ? Color(red: 0.13, green: 0.47, blue: 0.38) : Color.gray.opacity(0.1))
             .foregroundColor(isSelected ? .white : .primary)
             .cornerRadius(12)
