@@ -129,23 +129,23 @@ struct FeaturedContenView: View {
 }
 
 
-
-struct FeaturedContenView_Preview: PreviewProvider {
-    @Namespace static var namespace
-    static var previews: some View {
-        FeaturedContenView(recipe: FeaturedModel(from: Recipe(
-            id: 1,
-            title: "categorically organized list of foods",
-            image: "https://spoonacular.com/recipeImages/579247-556x370.jpg",
-            imageType: "jpg",
-            nutrition: RecipeNutrition(nutrients: [
-                RecipeNutrient(name: "Calories", amount: 450, unit: "kcal"),
-                RecipeNutrient(name: "Protein", amount: 20, unit: "g"),
-                RecipeNutrient(name: "Carbohydrates", amount: 60, unit: "g"),
-                RecipeNutrient(name: "Fat", amount: 15, unit: "g")
-            ])
-        )),
-                           namespace: namespace,
-                           show: .constant(true))
-    }
-}
+//
+//struct FeaturedContenView_Preview: PreviewProvider {
+//    @Namespace static var namespace
+//    static var previews: some View {
+//        FeaturedContenView(recipe: FeaturedModel(from: Recipe(
+//            id: 1,
+//            title: "categorically organized list of foods",
+//            image: "https://spoonacular.com/recipeImages/579247-556x370.jpg",
+//            imageType: "jpg",
+//            nutrition: RecipeNutrition(nutrients: [
+//                RecipeNutrient(name: "Calories", amount: 450, unit: "kcal"),
+//                RecipeNutrient(name: "Protein", amount: 20, unit: "g"),
+//                RecipeNutrient(name: "Carbohydrates", amount: 60, unit: "g"),
+//                RecipeNutrient(name: "Fat", amount: 15, unit: "g")
+//            ])
+//        )),
+//                           namespace: namespace,
+//                           show: .constant(true))
+//    }
+//}

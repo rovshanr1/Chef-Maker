@@ -15,12 +15,18 @@ protocol SearchViewModelProtocol: BaseViewModelProtocol {
 
 class SearchObservableObject: BaseViewModel<Recipe>, SearchViewModelProtocol {
     @Published var searchText: String = ""
+    @Published var selectedTime: Set<TimeFilter> = []
+    @Published var selectedRate: RateFilter?
+    @Published var selectedCategory: Set<CategoryFilter> = []
     private var cancellables = Set<AnyCancellable>()
     private let baseURL = "https://api.spoonacular.com/recipes/complexSearch"
     
     override init(networkService: NetworkServiceProtocol = BaseNetworkService()) {
         super.init(networkService: networkService)
         setupSearchSubscription()
+        Task { [weak self] in
+            await self?.fetchAllRecipes()
+        }
     }
     
     private func setupSearchSubscription() {
@@ -39,6 +45,7 @@ class SearchObservableObject: BaseViewModel<Recipe>, SearchViewModelProtocol {
     func searchRecipes(query: String) async {
         guard !query.isEmpty else {
             data = []
+            isLoading = false
             return
         }
         
@@ -56,14 +63,58 @@ class SearchObservableObject: BaseViewModel<Recipe>, SearchViewModelProtocol {
         isLoading = false
     }
     
+    func fetchAllRecipes() async {
+        isLoading = true; error = nil
+        do {
+            let url = try createURL(query: "")
+            let response: SpoonacularResponse = try await networkService.fetchData(from: url)
+            data = response.results
+        } catch {
+            self.error = error as? NetworkError ?? .networkError(error)
+        }
+        isLoading = false
+    }
+    
     private func createURL(query: String) throws -> URL {
         var components = URLComponents(string: baseURL)
-        components?.queryItems = [
+        var items: [URLQueryItem] = [
             URLQueryItem(name: "apiKey", value: apiKey),
-            URLQueryItem(name: "query", value: query),
             URLQueryItem(name: "number", value: "20"),
             URLQueryItem(name: "addRecipeNutrition", value: "true")
         ]
+        if !query.isEmpty {
+            items.append(URLQueryItem(name: "query", value: query))
+        }
+        if let filter = selectedTime.first {
+            switch filter {
+            case .newest:
+                items.append(URLQueryItem(name: "sort", value: "time"))
+            case .oldest:
+                items.append(contentsOf: [
+                    URLQueryItem(name: "sort", value: "time"),
+                    URLQueryItem(name: "sortDirection", value: "asc")
+                ])
+            case .popularity:
+                items.append(URLQueryItem(name: "sort", value: "popularity"))
+            default:
+                break
+            }
+            
+        }
+        
+        if !selectedCategory.isEmpty {
+               let types = selectedCategory
+                   .map { $0.rawValue.lowercased() }
+                   .joined(separator: ",")
+               items.append(URLQueryItem(name: "type", value: types))
+           }
+        
+        
+      
+        if let rate = selectedRate {
+            data = data.filter { ($0.spoonacularScore ?? 0) >= Double(rate.rawValue) * 20 }
+        }
+        components?.queryItems = items
         
         guard let url = components?.url else {
             throw NetworkError.invalidUrl
@@ -71,6 +122,45 @@ class SearchObservableObject: BaseViewModel<Recipe>, SearchViewModelProtocol {
         
         return url
     }
+    
+    
+    func isTimeFilterSelected(_ filter: TimeFilter) -> Bool {
+        selectedTime.contains(filter)
+    }
+    
+    func togleTimeFilter(_ filter: TimeFilter) {
+        if selectedTime.contains(filter){
+            selectedTime.remove(filter)
+        }else{
+            selectedTime.insert(filter)
+        }
+    }
+    
+    func isSelectedRate(_ rate: RateFilter) -> Bool {
+        selectedRate == rate
+        
+    }
+    
+    func togleRateFilter(_ rate: RateFilter) {
+        if selectedRate == rate {
+            selectedRate = nil
+        }else{
+            selectedRate = rate
+        }
+    }
+    
+    func categorySelected(_ category: CategoryFilter) -> Bool {
+        selectedCategory.contains(category)
+    }
+    
+    func categoryToggeled(_ category: CategoryFilter) {
+        if selectedCategory.contains(category){
+            selectedCategory.remove(category)
+        }else{
+            selectedCategory.insert(category)
+        }
+    }
+    
 }
 
 

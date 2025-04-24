@@ -15,8 +15,12 @@ struct Recipe: Codable, Identifiable {
     let image: String
     let imageType: String
     let nutrition: RecipeNutrition
+    let spoonacularScore: Double?
     
- 
+    var starRating: Int {
+        Int( (spoonacularScore ?? 0) / 20)
+    }
+    
     var calories: Double {
         nutrition.nutrients.first { $0.name == "Calories" }?.amount ?? 0
     }
@@ -34,6 +38,10 @@ struct Recipe: Codable, Identifiable {
     }
 }
 
+enum CodingKeys: String, CodingKey{
+    case id, title, image, imageType, nutrition
+    case spoonacularScore = "meta-score"
+}
 
 struct RecipeNutrition: Codable {
     let nutrients: [RecipeNutrient]

@@ -20,7 +20,7 @@ struct MockData {
                 RecipeNutrient(name: "Carbohydrates", amount: 56, unit: "g"),
                 RecipeNutrient(name: "Fat", amount: 18, unit: "g")
             ]
-        )
+        ), spoonacularScore: 5
     )
 
     static let sampleRecipes: [Recipe] = [
@@ -37,7 +37,7 @@ struct MockData {
                     RecipeNutrient(name: "Carbohydrates", amount: 30, unit: "g"),
                     RecipeNutrient(name: "Fat", amount: 22, unit: "g")
                 ]
-            )
+            ), spoonacularScore: 4
         ),
         Recipe(
             id: 1003,
@@ -51,7 +51,7 @@ struct MockData {
                     RecipeNutrient(name: "Carbohydrates", amount: 15, unit: "g"),
                     RecipeNutrient(name: "Fat", amount: 12, unit: "g")
                 ]
-            )
+            ), spoonacularScore: 3
         ),
         Recipe(
             id: 1004,
@@ -65,7 +65,7 @@ struct MockData {
                     RecipeNutrient(name: "Carbohydrates", amount: 68, unit: "g"),
                     RecipeNutrient(name: "Fat", amount: 24, unit: "g")
                 ]
-            )
+            ), spoonacularScore: 5
         )
     ]
 
