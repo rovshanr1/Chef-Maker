@@ -23,6 +23,7 @@ struct ProfileAvatarView: View {
                     .foregroundStyle(.secondary)
                     .foregroundStyle(AppColors.adaptiveText(for: colorScheme))
             }
+            .padding(.leading, 2)
             
             Spacer()
             
@@ -30,7 +31,7 @@ struct ProfileAvatarView: View {
             
             Circle()
                 .fill(.gray)
-                .frame(width: 50, height: 50)
+                .frame(width: 52, height: 52)
                 .overlay(
                     Text(profile.initials)
                         .font(.custom("Poppins-SemiBold", size: 16))

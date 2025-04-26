@@ -10,68 +10,78 @@ import SwiftUI
 struct FilterView: View {
     @StateObject private var viewModel = SearchObservableObject()
     
+    @State private var navigateToSearchScreen = false
+    
     private let columns = Array(repeating: GridItem(.adaptive(minimum: 100)), count: 4)
     
     var body: some View {
-       
-        
-        NavigationStack {
-            VStack(alignment: .leading, spacing: 24){
-                VStack(alignment: .leading, spacing: 18){
-                    Text("Time")
-                        .font(.custom("Poppins-Bold", size: 18))
-                    HStack {
-                        ForEach(TimeFilter.allCases, id: \.self) { filter in
-                            FilterButton(
-                                title: filter.rawValue.capitalized,
-                                symbol: "",
-                                showSymbol: false,
-                                isSelected: viewModel.isTimeFilterSelected(filter),
-                            ){
-                                viewModel.togleTimeFilter(filter)
-                            }
-                            
-                        }
-                    }
-                }
-                
-                VStack(alignment: .leading, spacing: 18){
-                    Text("Rate")
-                        .font(.custom("Poppins-Bold", size: 18))
-                    HStack{
-                        ForEach(RateFilter.allCases, id: \.self) { rate in
-                            FilterButton(
-                                title: rate.rawValue.formatted(),
-                                symbol: "star.fill",
-                                showSymbol: true,
-                                isSelected: viewModel.isSelectedRate(rate)){
-                                    viewModel.togleRateFilter(rate)
+            VStack(spacing: 30) {
+                VStack(alignment: .leading, spacing: 24){
+                    VStack(alignment: .leading, spacing: 18){
+                        Text("Time")
+                            .font(.custom("Poppins-Bold", size: 18))
+                        HStack {
+                            ForEach(TimeFilter.allCases, id: \.self) { filter in
+                                FilterButton(
+                                    title: filter.rawValue.capitalized,
+                                    symbol: "",
+                                    showSymbol: false,
+                                    isSelected: viewModel.isTimeFilterSelected(filter),
+                                ){
+                                    viewModel.selectedTime = filter
                                 }
-                            
+                                
+                            }
                         }
                     }
                     
+                    VStack(alignment: .leading, spacing: 18){
+                        Text("Rate")
+                            .font(.custom("Poppins-Bold", size: 18))
+                        HStack{
+                            ForEach(RateFilter.allCases, id: \.self) { rate in
+                                FilterButton(
+                                    title: rate.rawValue.formatted(),
+                                    symbol: "star.fill",
+                                    showSymbol: true,
+                                    isSelected: viewModel.isSelectedRate(rate)){
+                                        viewModel.togleRateFilter(rate)
+                                    }
+                                
+                            }
+                        }
+                    }
                     
+                    VStack(alignment: .leading, spacing: 18){
+                        Text("Category")
+                            .font(.custom("Poppins-Bold", size: 18))
+                        
+                        categoryButons
+                    }
                 }
                 
-                VStack(alignment: .leading, spacing: 18){
-                    Text("Category")
+                Button(action: {
+                    
+                }){
+                    Text("Filter")
                         .font(.custom("Poppins-Bold", size: 18))
-                    
-                    categoryButons
-                    
-                    
+                        .padding()
+                        .frame(width: 175)
                 }
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(AppColors.filedFilterButtonColor)
+                )
+                .foregroundStyle(.white)
+               
             }
-            .padding(.horizontal)
-            .navigationBarBackButtonHidden(true)
-        }
+            .padding([.horizontal, .top])
+            
+        
         
     }
     
     private var categoryButons: some View {
-        
-        
             LazyVGrid(columns: columns){
                 ForEach(CategoryFilter.allCases, id: \.self) { category in
                     FilterButton(
@@ -90,5 +100,8 @@ struct FilterView: View {
 
 
 #Preview{
-    FilterView()
+    @Previewable @Namespace var namespace
+    @Previewable @State var show = false
+    
+    SearchView(namespace: namespace, show: $show)
 }

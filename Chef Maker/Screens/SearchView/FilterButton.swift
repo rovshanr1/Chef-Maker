@@ -14,17 +14,17 @@ struct FilterButton: View {
     let isSelected: Bool
     let action: () -> Void
     
-    @Environment(\.colorScheme) var colorScheme
     var body: some View {
         Button(action: action){
-            HStack(spacing: 4){
+            HStack(){
                 if showSymbol {
                     Image(systemName: symbol)
+                        .resizable()
+                        .font(.footnote)
+                        .frame(width: 12, height: 12)
                     }
                 Text(title)
-                    .font(.custom("Poppins-Regular", size: 14))
-                    
-                   
+                    .font(.custom("Poppins-Regular", size: 12))
             }
             .padding(.vertical, 8)
             .padding(.horizontal, 12)

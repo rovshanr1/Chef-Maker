@@ -14,7 +14,7 @@ struct FeaturedContenView: View {
     @Binding var show: Bool
     @Environment(\.colorScheme) var colorScheme
     
-    private let imageSize = CGSize(width: 600, height: 400)
+    
     
     
     var body: some View {
@@ -103,16 +103,16 @@ struct FeaturedContenView: View {
                     .matchedGeometryEffect(id: "bookmark\(recipe.id)", in: namespace, isSource: show)
                     
                 }
-                Divider()
-                VStack(alignment: .leading, spacing: 8){
-                    Text("Nutritional Information")
-                        .font(.custom("Poppins-Bold", size: 12))
-                        .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
+//                Divider()
+//                VStack(alignment: .leading, spacing: 8){
+//                    Text("Nutritional Information")
+//                        .font(.custom("Poppins-Bold", size: 12))
+//                        .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
                     
                     
                         
                     
-                }
+//                }
             }
                 .padding(20)
                 .background(

@@ -11,9 +11,10 @@ struct DiscoveryView: View {
     @StateObject private var viewModel = DiscoveryViewViewModel()
     @StateObject private var featuredViewModel = FeaturedViewModel()
     @StateObject private var profileViewModel = ProfileViewModel(appState: AppState.shared)
+    @ObservedObject private var searchViewModel = SearchObservableObject()
     @State private var scrollOffset: CGFloat = 0
     
-    //Featured Componenet
+    //Animation
     @Namespace var namespace
    
     @State var show = false
@@ -39,7 +40,21 @@ struct DiscoveryView: View {
                             ProfileAvatarView(profile: profileViewModel.profile)
                             
                             //Search
-                            SearchBarView(txt: .constant(""), show: $show, namespace: namespace) 
+                            ZStack{
+                            if searchViewModel.searchActive {
+                                SearchBarView()
+                                         
+                            }else{
+                                SearchBarView()
+                                    .matchedGeometryEffect(id: "Search", in: namespace)
+                            }
+                        }
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                withAnimation(.easeInOut(duration: 0.3)){
+                                    searchViewModel.searchActive = true
+                                }
+                            }
                               
                             // Categories
                             ShowCategoryButton()
@@ -106,7 +121,14 @@ struct DiscoveryView: View {
                     }
                 }
             }
-            .onTapGesture{ hideKeyboard() } 
+            .overlay(
+                ZStack{
+                    if searchViewModel.searchActive{
+                        SearchView(namespace: namespace, show: $searchViewModel.searchActive)
+                    }
+                }
+            )
+            .onTapGesture{ hideKeyboard() }
            
         }
     }
@@ -119,6 +141,7 @@ var featuredHeader: some View {
         HStack(){
             Text("Chef's Picks")
                 .font(.custom("Poppins-Bold", size: 24))
+                
             
             Spacer()
             
@@ -127,8 +150,10 @@ var featuredHeader: some View {
             }){
                 Text("See All")
                     .font(.custom("Poppins-Medium", size: 16))
-                    .foregroundStyle(AppColors.secondaryColor)
+                    .foregroundStyle(AppColors.filedFilterButtonColor)
             }
+            .padding(.trailing, 8)
+            
         }
         .padding(.horizontal)
     }

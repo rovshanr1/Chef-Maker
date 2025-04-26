@@ -15,7 +15,8 @@ protocol SearchViewModelProtocol: BaseViewModelProtocol {
 
 class SearchObservableObject: BaseViewModel<Recipe>, SearchViewModelProtocol {
     @Published var searchText: String = ""
-    @Published var selectedTime: Set<TimeFilter> = []
+    @Published var searchActive: Bool = false
+    @Published var selectedTime: TimeFilter = .all
     @Published var selectedRate: RateFilter?
     @Published var selectedCategory: Set<CategoryFilter> = []
     private var cancellables = Set<AnyCancellable>()
@@ -55,12 +56,15 @@ class SearchObservableObject: BaseViewModel<Recipe>, SearchViewModelProtocol {
         do {
             let url = try createURL(query: query)
             let response: SpoonacularResponse = try await networkService.fetchData(from: url)
-            data = response.results
+            data = applyAllFilters(to: response.results)
         } catch {
             self.error = error as? NetworkError ?? .networkError(error)
         }
         
         isLoading = false
+        
+   
+
     }
     
     func fetchAllRecipes() async {
@@ -68,11 +72,13 @@ class SearchObservableObject: BaseViewModel<Recipe>, SearchViewModelProtocol {
         do {
             let url = try createURL(query: "")
             let response: SpoonacularResponse = try await networkService.fetchData(from: url)
-            data = response.results
+            data = applyAllFilters(to: response.results)
         } catch {
             self.error = error as? NetworkError ?? .networkError(error)
         }
         isLoading = false
+    
+
     }
     
     private func createURL(query: String) throws -> URL {
@@ -85,8 +91,8 @@ class SearchObservableObject: BaseViewModel<Recipe>, SearchViewModelProtocol {
         if !query.isEmpty {
             items.append(URLQueryItem(name: "query", value: query))
         }
-        if let filter = selectedTime.first {
-            switch filter {
+        
+            switch  selectedTime {
             case .newest:
                 items.append(URLQueryItem(name: "sort", value: "time"))
             case .oldest:
@@ -100,7 +106,7 @@ class SearchObservableObject: BaseViewModel<Recipe>, SearchViewModelProtocol {
                 break
             }
             
-        }
+        
         
         if !selectedCategory.isEmpty {
                let types = selectedCategory
@@ -110,10 +116,8 @@ class SearchObservableObject: BaseViewModel<Recipe>, SearchViewModelProtocol {
            }
         
         
+        
       
-        if let rate = selectedRate {
-            data = data.filter { ($0.spoonacularScore ?? 0) >= Double(rate.rawValue) * 20 }
-        }
         components?.queryItems = items
         
         guard let url = components?.url else {
@@ -123,18 +127,23 @@ class SearchObservableObject: BaseViewModel<Recipe>, SearchViewModelProtocol {
         return url
     }
     
+    func applyRateFilter(to recipes: [Recipe]) -> [Recipe] {
+        guard let rate = selectedRate else { return recipes }
+        return recipes.filter { ($0.spoonacularScore ?? 0) >= Double(rate.rawValue) * 20 }
+    }
     
+   
+    
+    func applyAllFilters(to recipes: [Recipe]) -> [Recipe] {
+        var filtered = recipes
+        filtered = applyRateFilter(to: filtered)
+//        filtered = applyCategoryFilter(to: filtered)
+        return filtered
+    }
     func isTimeFilterSelected(_ filter: TimeFilter) -> Bool {
-        selectedTime.contains(filter)
+        selectedTime == filter  
     }
-    
-    func togleTimeFilter(_ filter: TimeFilter) {
-        if selectedTime.contains(filter){
-            selectedTime.remove(filter)
-        }else{
-            selectedTime.insert(filter)
-        }
-    }
+
     
     func isSelectedRate(_ rate: RateFilter) -> Bool {
         selectedRate == rate

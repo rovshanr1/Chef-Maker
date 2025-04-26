@@ -37,7 +37,6 @@ class RecipeService: RecipeServiceProtocol {
         URLQueryItem(name: "apiKey", value: apiKey),
         URLQueryItem(name: "number", value: "10"),
         URLQueryItem(name: "addRecipeInformation", value: "true"),
-        URLQueryItem(name: "sort", value: "popularity"),
         URLQueryItem(name: "sortDirection", value: "desc"),
         URLQueryItem(name: "addRecipeNutrition", value: "true"),
         URLQueryItem(name: "random", value: "true")
