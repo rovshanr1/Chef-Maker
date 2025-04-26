@@ -11,7 +11,7 @@ struct DiscoveryView: View {
     @StateObject private var viewModel = DiscoveryViewViewModel()
     @StateObject private var featuredViewModel = FeaturedViewModel()
     @StateObject private var profileViewModel = ProfileViewModel(appState: AppState.shared)
-    @ObservedObject private var searchViewModel = SearchObservableObject()
+    @ObservedObject private var searchViewModel = SearchViewModel()
     @State private var scrollOffset: CGFloat = 0
     
     //Animation

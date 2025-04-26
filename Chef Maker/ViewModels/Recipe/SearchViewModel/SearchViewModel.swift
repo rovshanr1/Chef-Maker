@@ -13,7 +13,7 @@ protocol SearchViewModelProtocol: BaseViewModelProtocol {
 }
 
 
-class SearchObservableObject: BaseViewModel<Recipe>, SearchViewModelProtocol {
+class SearchViewModel: BaseViewModel<Recipe>, SearchViewModelProtocol {
     @Published var searchText: String = ""
     @Published var searchActive: Bool = false
     @Published var selectedTime: TimeFilter = .all
@@ -28,6 +28,13 @@ class SearchObservableObject: BaseViewModel<Recipe>, SearchViewModelProtocol {
         Task { [weak self] in
             await self?.fetchAllRecipes()
         }
+    }
+    
+    // Mock data initializer for preview
+    static func preview() -> SearchViewModel {
+        let viewModel = SearchViewModel()
+        viewModel.data = MockData.sampleRecipes
+        return viewModel
     }
     
     private func setupSearchSubscription() {

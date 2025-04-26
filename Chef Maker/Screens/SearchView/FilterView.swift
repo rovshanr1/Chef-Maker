@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FilterView: View {
-    @StateObject private var viewModel = SearchObservableObject()
+    @StateObject private var viewModel = SearchViewModel()
     
     @State private var navigateToSearchScreen = false
     

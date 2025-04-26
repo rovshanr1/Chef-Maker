@@ -66,6 +66,62 @@ struct MockData {
                     RecipeNutrient(name: "Fat", amount: 24, unit: "g")
                 ]
             ), spoonacularScore: 5
+        ),
+        Recipe(
+            id: 1005,
+            title: "Spicy Thai Noodles",
+            image: "https://spoonacular.com/recipeImages/715544-556x370.jpg",
+            imageType: "jpg",
+            nutrition: RecipeNutrition(
+                nutrients: [
+                    RecipeNutrient(name: "Calories", amount: 420, unit: "kcal"),
+                    RecipeNutrient(name: "Protein", amount: 15, unit: "g"),
+                    RecipeNutrient(name: "Carbohydrates", amount: 65, unit: "g"),
+                    RecipeNutrient(name: "Fat", amount: 18, unit: "g")
+                ]
+            ), spoonacularScore: 4.5
+        ),
+        Recipe(
+            id: 1006,
+            title: "Mediterranean Quinoa Bowl",
+            image: "https://spoonacular.com/recipeImages/716429-556x370.jpg",
+            imageType: "jpg",
+            nutrition: RecipeNutrition(
+                nutrients: [
+                    RecipeNutrient(name: "Calories", amount: 350, unit: "kcal"),
+                    RecipeNutrient(name: "Protein", amount: 12, unit: "g"),
+                    RecipeNutrient(name: "Carbohydrates", amount: 45, unit: "g"),
+                    RecipeNutrient(name: "Fat", amount: 16, unit: "g")
+                ]
+            ), spoonacularScore: 4.8
+        ),
+        Recipe(
+            id: 1007,
+            title: "Homemade Pizza Margherita",
+            image: "https://spoonacular.com/recipeImages/716381-556x370.jpg",
+            imageType: "jpg",
+            nutrition: RecipeNutrition(
+                nutrients: [
+                    RecipeNutrient(name: "Calories", amount: 280, unit: "kcal"),
+                    RecipeNutrient(name: "Protein", amount: 10, unit: "g"),
+                    RecipeNutrient(name: "Carbohydrates", amount: 42, unit: "g"),
+                    RecipeNutrient(name: "Fat", amount: 8, unit: "g")
+                ]
+            ), spoonacularScore: 4.7
+        ),
+        Recipe(
+            id: 1008,
+            title: "Berry Smoothie Bowl",
+            image: "https://spoonacular.com/recipeImages/715497-556x370.jpg",
+            imageType: "jpg",
+            nutrition: RecipeNutrition(
+                nutrients: [
+                    RecipeNutrient(name: "Calories", amount: 240, unit: "kcal"),
+                    RecipeNutrient(name: "Protein", amount: 6, unit: "g"),
+                    RecipeNutrient(name: "Carbohydrates", amount: 48, unit: "g"),
+                    RecipeNutrient(name: "Fat", amount: 4, unit: "g")
+                ]
+            ), spoonacularScore: 4.2
         )
     ]
 
