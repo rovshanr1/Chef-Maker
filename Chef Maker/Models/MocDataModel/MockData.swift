@@ -12,6 +12,7 @@ struct MockData {
         id: 1001,
         title: "Creamy Mushroom Pasta",
         image: "https://spoonacular.com/recipeImages/579247-556x370.jpg",
+        readyInMinutes: 45,
         imageType: "jpg",
         nutrition: RecipeNutrition(
             nutrients: [
@@ -29,6 +30,7 @@ struct MockData {
             id: 1002,
             title: "Avocado Breakfast Toast",
             image: "https://spoonacular.com/recipeImages/637876-556x370.jpg",
+            readyInMinutes: 45,
             imageType: "jpg",
             nutrition: RecipeNutrition(
                 nutrients: [
@@ -43,6 +45,7 @@ struct MockData {
             id: 1003,
             title: "Grilled Chicken Salad",
             image: "https://spoonacular.com/recipeImages/715523-556x370.jpg",
+            readyInMinutes: 45,
             imageType: "jpg",
             nutrition: RecipeNutrition(
                 nutrients: [
@@ -56,7 +59,7 @@ struct MockData {
         Recipe(
             id: 1004,
             title: "Chocolate Brownie",
-            image: "https://spoonacular.com/recipeImages/633547-556x370.jpg",
+            image: "https://spoonacular.com/recipeImages/633547-556x370.jpg", readyInMinutes: 34,
             imageType: "jpg",
             nutrition: RecipeNutrition(
                 nutrients: [
@@ -70,7 +73,7 @@ struct MockData {
         Recipe(
             id: 1005,
             title: "Spicy Thai Noodles",
-            image: "https://spoonacular.com/recipeImages/715544-556x370.jpg",
+            image: "https://spoonacular.com/recipeImages/715544-556x370.jpg", readyInMinutes: 55,
             imageType: "jpg",
             nutrition: RecipeNutrition(
                 nutrients: [
@@ -84,7 +87,7 @@ struct MockData {
         Recipe(
             id: 1006,
             title: "Mediterranean Quinoa Bowl",
-            image: "https://spoonacular.com/recipeImages/716429-556x370.jpg",
+            image: "https://spoonacular.com/recipeImages/716429-556x370.jpg", readyInMinutes: 28,
             imageType: "jpg",
             nutrition: RecipeNutrition(
                 nutrients: [
@@ -98,7 +101,7 @@ struct MockData {
         Recipe(
             id: 1007,
             title: "Homemade Pizza Margherita",
-            image: "https://spoonacular.com/recipeImages/716381-556x370.jpg",
+            image: "https://spoonacular.com/recipeImages/716381-556x370.jpg", readyInMinutes: 28,
             imageType: "jpg",
             nutrition: RecipeNutrition(
                 nutrients: [
@@ -112,7 +115,7 @@ struct MockData {
         Recipe(
             id: 1008,
             title: "Berry Smoothie Bowl",
-            image: "https://spoonacular.com/recipeImages/715497-556x370.jpg",
+            image: "https://spoonacular.com/recipeImages/715497-556x370.jpg", readyInMinutes: 20,
             imageType: "jpg",
             nutrition: RecipeNutrition(
                 nutrients: [

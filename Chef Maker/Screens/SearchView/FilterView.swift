@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct FilterView: View {
-    @StateObject private var viewModel = SearchViewModel()
-    
-    @State private var navigateToSearchScreen = false
+    @ObservedObject private var viewModel = SearchViewModel()
+    @Binding var isFilterPresented: Bool
     
     private let columns = Array(repeating: GridItem(.adaptive(minimum: 100)), count: 4)
     
@@ -61,6 +60,9 @@ struct FilterView: View {
                 }
                 
                 Button(action: {
+                    viewModel.data = viewModel.applyAllFilters(to: viewModel.data )
+                    
+                    isFilterPresented = false
                     
                 }){
                     Text("Filter")

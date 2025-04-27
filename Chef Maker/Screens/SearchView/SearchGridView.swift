@@ -14,26 +14,31 @@ struct SearchGridView: View {
         GridItem(.flexible()),
         GridItem(.flexible())
     ]
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
-        VStack(spacing: 20){
-            HStack{
-                Text("Search \($viewModel.data.count) Result")
-                    .font(.custom("Poppins-Medium", size: 18))
-                    .padding(.leading)
-            }
-            
-            ScrollView{
-                LazyVGrid(columns: columns, spacing: 16 ){
-                    ForEach(viewModel.data){ recipe in
-                        RecipeCardView(recipe: recipe)
-                    }
-                    
+        ZStack {
+            AppColors.adaptiveMainTabView(for: colorScheme)
+                .ignoresSafeArea()
+            VStack(spacing: 20){
+                HStack{
+                    Text("Search \($viewModel.data.count) Result")
+                        .font(.custom("Poppins-Medium", size: 18))
+                        .padding(.leading)
                 }
+                
+                ScrollView{
+                    LazyVGrid(columns: columns, spacing: 16 ){
+                        ForEach(viewModel.data){ recipe in
+                            RecipeCardView(recipe: recipe)
+                        }
+                        
+                    }
+                }
+                
             }
-            
+            .padding(.top)
         }
-        .padding(.top)
         
     }
 }

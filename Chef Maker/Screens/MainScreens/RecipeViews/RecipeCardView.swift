@@ -43,14 +43,14 @@ struct RecipeCardView: View {
                             .foregroundStyle(AppColors.secondaryColor)
                         
                         
-                        Text(String(format: "%.g", recipe.spoonacularScore ?? 0))
+                        Text("\(recipe.starRating)")
                             .font(.system(size: 12))
                             .foregroundStyle(.white)
                         
                     }
                     .padding(8)
-                    .background(.gray.opacity(0.3))
-                    .cornerRadius(10)
+                    .background(.gray.opacity(0.6))
+                    .cornerRadius(12)
                    
                     
                     Spacer()

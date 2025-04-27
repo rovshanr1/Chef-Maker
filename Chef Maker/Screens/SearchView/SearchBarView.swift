@@ -29,8 +29,4 @@ struct SearchBarView: View {
         }
     }
 }
-struct SearchView_Preview: PreviewProvider {
-    static var previews: some View {
-        DiscoveryView()
-    }
-}
+

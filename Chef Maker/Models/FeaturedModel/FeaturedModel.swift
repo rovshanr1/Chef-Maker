@@ -18,25 +18,10 @@ struct FeaturedModel: Identifiable, Codable {
     let image: String
     let readyInMinutes: Int
     let aggregateLikes: Int
+    let spoonacularScore: Double?
     let nutrition: RecipeNutrition?
     
-    enum CodingKeys: String, CodingKey {
-        case id
-        case title
-        case image
-        case readyInMinutes
-        case aggregateLikes
-        case nutrition
-    }
-    
-    init(from results: Recipe) {
-        self.id = results.id
-        self.title = results.title
-        self.image = results.image
-        self.readyInMinutes = 30
-        self.aggregateLikes = Int.random(in: 100...1000) 
-        self.nutrition = results.nutrition
-    }
+   
     
     var cookTime: Int {
         readyInMinutes
@@ -46,11 +31,24 @@ struct FeaturedModel: Identifiable, Codable {
         aggregateLikes
     }
     
+    var rating: Double {
+        (spoonacularScore ?? 0) / 20
+    }
+    
     var formattedCookTime: String {
         "\(readyInMinutes) min"
     }
 }
 
 
-
-
+extension FeaturedModel {
+    init(recipe: Recipe) {
+        self.id = recipe.id
+        self.title = recipe.title
+        self.image = recipe.image
+        self.readyInMinutes = 30
+        self.aggregateLikes = Int.random(in: 100...1000)
+        self.spoonacularScore = recipe.spoonacularScore
+        self.nutrition = recipe.nutrition
+    }
+}
