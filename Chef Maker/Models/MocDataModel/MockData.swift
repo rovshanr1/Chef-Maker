@@ -13,15 +13,15 @@ struct MockData {
         title: "Creamy Mushroom Pasta",
         image: "https://spoonacular.com/recipeImages/579247-556x370.jpg",
         readyInMinutes: 45,
-        imageType: "jpg",
-        nutrition: RecipeNutrition(
+        imageType: "jpg", aggregateLikes: 12,
+        spoonacularScore: 5, nutrition: RecipeNutrition(
             nutrients: [
                 RecipeNutrient(name: "Calories", amount: 450, unit: "kcal"),
                 RecipeNutrient(name: "Protein", amount: 12, unit: "g"),
                 RecipeNutrient(name: "Carbohydrates", amount: 56, unit: "g"),
                 RecipeNutrient(name: "Fat", amount: 18, unit: "g")
             ]
-        ), spoonacularScore: 5
+        )
     )
 
     static let sampleIngredient = Ingredient(
@@ -59,15 +59,15 @@ struct MockData {
             title: "Avocado Breakfast Toast",
             image: "https://spoonacular.com/recipeImages/637876-556x370.jpg",
             readyInMinutes: 45,
-            imageType: "jpg",
-            nutrition: RecipeNutrition(
+            imageType: "jpg", aggregateLikes: 123,
+            spoonacularScore: 4, nutrition: RecipeNutrition(
                 nutrients: [
                     RecipeNutrient(name: "Calories", amount: 320, unit: "kcal"),
                     RecipeNutrient(name: "Protein", amount: 8, unit: "g"),
                     RecipeNutrient(name: "Carbohydrates", amount: 30, unit: "g"),
                     RecipeNutrient(name: "Fat", amount: 22, unit: "g")
                 ]
-            ), spoonacularScore: 4
+            )
         ),
         Recipe(
             id: 1003,
@@ -75,6 +75,8 @@ struct MockData {
             image: "https://spoonacular.com/recipeImages/715523-556x370.jpg",
             readyInMinutes: 45,
             imageType: "jpg",
+            aggregateLikes: 2342,
+            spoonacularScore: 3,
             nutrition: RecipeNutrition(
                 nutrients: [
                     RecipeNutrient(name: "Calories", amount: 380, unit: "kcal"),
@@ -82,27 +84,29 @@ struct MockData {
                     RecipeNutrient(name: "Carbohydrates", amount: 15, unit: "g"),
                     RecipeNutrient(name: "Fat", amount: 12, unit: "g")
                 ]
-            ), spoonacularScore: 3
+            )
         ),
         Recipe(
             id: 1004,
             title: "Chocolate Brownie",
             image: "https://spoonacular.com/recipeImages/633547-556x370.jpg", readyInMinutes: 34,
-            imageType: "jpg",
-            nutrition: RecipeNutrition(
+            imageType: "jpg", aggregateLikes: 1212,
+            spoonacularScore: 5, nutrition: RecipeNutrition(
                 nutrients: [
                     RecipeNutrient(name: "Calories", amount: 490, unit: "kcal"),
                     RecipeNutrient(name: "Protein", amount: 5, unit: "g"),
                     RecipeNutrient(name: "Carbohydrates", amount: 68, unit: "g"),
                     RecipeNutrient(name: "Fat", amount: 24, unit: "g")
                 ]
-            ), spoonacularScore: 5
+            )
         ),
         Recipe(
             id: 1005,
             title: "Spicy Thai Noodles",
             image: "https://spoonacular.com/recipeImages/715544-556x370.jpg", readyInMinutes: 55,
             imageType: "jpg",
+            aggregateLikes: 4123,
+            spoonacularScore: 4.5,
             nutrition: RecipeNutrition(
                 nutrients: [
                     RecipeNutrient(name: "Calories", amount: 420, unit: "kcal"),
@@ -110,13 +114,15 @@ struct MockData {
                     RecipeNutrient(name: "Carbohydrates", amount: 65, unit: "g"),
                     RecipeNutrient(name: "Fat", amount: 18, unit: "g")
                 ]
-            ), spoonacularScore: 4.5
+            )
         ),
         Recipe(
             id: 1006,
             title: "Mediterranean Quinoa Bowl",
             image: "https://spoonacular.com/recipeImages/716429-556x370.jpg", readyInMinutes: 28,
             imageType: "jpg",
+            aggregateLikes: 12341243,
+            spoonacularScore: 4.8,
             nutrition: RecipeNutrition(
                 nutrients: [
                     RecipeNutrient(name: "Calories", amount: 350, unit: "kcal"),
@@ -124,13 +130,15 @@ struct MockData {
                     RecipeNutrient(name: "Carbohydrates", amount: 45, unit: "g"),
                     RecipeNutrient(name: "Fat", amount: 16, unit: "g")
                 ]
-            ), spoonacularScore: 4.8
+            )
         ),
         Recipe(
             id: 1007,
             title: "Homemade Pizza Margherita",
             image: "https://spoonacular.com/recipeImages/716381-556x370.jpg", readyInMinutes: 28,
             imageType: "jpg",
+            aggregateLikes: 12341,
+            spoonacularScore: 4.7,
             nutrition: RecipeNutrition(
                 nutrients: [
                     RecipeNutrient(name: "Calories", amount: 280, unit: "kcal"),
@@ -138,21 +146,22 @@ struct MockData {
                     RecipeNutrient(name: "Carbohydrates", amount: 42, unit: "g"),
                     RecipeNutrient(name: "Fat", amount: 8, unit: "g")
                 ]
-            ), spoonacularScore: 4.7
+            )
         ),
         Recipe(
             id: 1008,
             title: "Berry Smoothie Bowl",
             image: "https://spoonacular.com/recipeImages/715497-556x370.jpg", readyInMinutes: 20,
             imageType: "jpg",
-            nutrition: RecipeNutrition(
+            aggregateLikes: 41234,
+            spoonacularScore: 4.2, nutrition: RecipeNutrition(
                 nutrients: [
                     RecipeNutrient(name: "Calories", amount: 240, unit: "kcal"),
                     RecipeNutrient(name: "Protein", amount: 6, unit: "g"),
                     RecipeNutrient(name: "Carbohydrates", amount: 48, unit: "g"),
                     RecipeNutrient(name: "Fat", amount: 4, unit: "g")
                 ]
-            ), spoonacularScore: 4.2
+            )
         )
     ]
 

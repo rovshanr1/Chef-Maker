@@ -9,7 +9,7 @@ import SwiftUI
 import Kingfisher
 
 struct FeaturedCardView: View {
-    var recipe: FeaturedModel
+    var recipe: Recipe
     var namespace: Namespace.ID
     @Binding var show: Bool
     @Environment(\.colorScheme) var colorScheme
@@ -31,11 +31,11 @@ struct FeaturedCardView: View {
                         Text("Time")
                             .font(.custom("Poppins-Regular", size: 16))
                             .foregroundColor(.secondary)
-                            .matchedGeometryEffect(id: "time\(recipe.id)", in: namespace,  isSource: !show)
+                            
                         
                         Text("\(recipe.cookTime) Mins")
                             .font(.custom("Poppins-Regular", size: 14))
-                            .matchedGeometryEffect(id: "cookTime\(recipe.id)", in: namespace,  isSource: !show)
+                            
                     }
                     
                     
@@ -49,7 +49,7 @@ struct FeaturedCardView: View {
                             .resizable()
                             .frame(width: 40, height: 40)
                     }
-                    .matchedGeometryEffect(id: "bookmark\(recipe.id)", in: namespace,  isSource: !show)
+                    
                 }
                 .padding()
             }
@@ -59,7 +59,7 @@ struct FeaturedCardView: View {
                     .fill(.ultraThinMaterial)
                     .mask(RoundedRectangle(cornerRadius: 20, style: .continuous))
                     .blur(radius: 20)
-                    .matchedGeometryEffect(id: "blur\(recipe.id)", in: namespace,  isSource: !show)
+                    
             )
         }
         .background(
@@ -74,7 +74,7 @@ struct FeaturedCardView: View {
                 .aspectRatio(contentMode: .fill)
                 .frame(height: 300)
                 .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-            .matchedGeometryEffect(id: "image\(recipe.id)", in: namespace, isSource: !show)
+                .matchedGeometryEffect(id: "image\(recipe.id)", in: namespace, isSource: !show)
         )
         .mask(
             RoundedRectangle(cornerRadius: 20, style: .continuous)

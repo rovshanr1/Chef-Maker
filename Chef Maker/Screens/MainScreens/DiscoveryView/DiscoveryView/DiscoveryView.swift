@@ -18,7 +18,7 @@ struct DiscoveryView: View {
     @Namespace var namespace
    
     @State var show = false
-    @State var selectedRecipe: FeaturedModel?
+    @State var selectedRecipe: Recipe?
     
     
     @Environment(\.colorScheme) var colorScheme

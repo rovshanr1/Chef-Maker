@@ -9,7 +9,7 @@ import SwiftUI
 import Kingfisher
 
 struct FeaturedContenView: View {
-    var recipe: FeaturedModel
+    var recipe: Recipe
     var namespace: Namespace.ID
     @Binding var show: Bool
     @Environment(\.colorScheme) var colorScheme

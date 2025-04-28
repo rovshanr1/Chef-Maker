@@ -8,7 +8,7 @@ protocol FeatureViewModelProtocol: BaseViewModelProtocol{
 }
 
 @MainActor
-final class FeaturedViewModel: BaseViewModel<FeaturedModel> {
+final class FeaturedViewModel: BaseViewModel<Recipe> {
     private let recipeService: RecipeServiceProtocol
     private let cache: CacheManager
 
@@ -70,7 +70,7 @@ final class FeaturedViewModel: BaseViewModel<FeaturedModel> {
 
 
 
-extension FeaturedModel {
+extension Recipe {
     var shortTitle: String {
         if title.count > 50 {
             return String(title.prefix(47)) + "..."

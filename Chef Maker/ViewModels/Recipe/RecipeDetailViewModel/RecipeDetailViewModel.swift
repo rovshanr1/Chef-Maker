@@ -3,10 +3,10 @@ import FirebaseDatabase
 
 @MainActor
 final class RecipeDetailViewModel: BaseViewModel<FeaturedViewModel> {
-    @Published private(set) var recipe: FeaturedModel
+    @Published private(set) var recipe: Recipe
     @Published private(set) var isFavorite: Bool = false
     
-    init(recipe: FeaturedModel) {
+    init(recipe: Recipe) {
         self.recipe = recipe
         super.init()
     }

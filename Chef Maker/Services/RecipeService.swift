@@ -9,7 +9,7 @@ import Foundation
 
 protocol RecipeServiceProtocol {
     func fetchRecipes(for category: Category) async throws -> [Recipe]
-    func fetchFeaturedRecipes() async throws -> [FeaturedModel]
+    func fetchFeaturedRecipes() async throws -> [Recipe]
 }
 
 
@@ -28,7 +28,7 @@ class RecipeService: RecipeServiceProtocol {
        }
     
     
-    func fetchFeaturedRecipes() async throws -> [FeaturedModel] {
+    func fetchFeaturedRecipes() async throws -> [Recipe] {
         if let cachedData = try await cache.getFeaturedRecipes() {
             return cachedData
         }
@@ -46,7 +46,7 @@ class RecipeService: RecipeServiceProtocol {
                     throw NetworkError.invalidUrl
                 }
                 
-                let response: SpoonacularFeaturedResponse = try await networkService.fetchData(from: url)
+                let response: SpoonacularResponse = try await networkService.fetchData(from: url)
                 let sortedRecipes = response.results.sorted { $0.aggregateLikes > $1.aggregateLikes }
                 
                 

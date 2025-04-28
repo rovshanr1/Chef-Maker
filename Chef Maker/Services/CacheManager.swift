@@ -53,7 +53,7 @@ actor CacheManager {
          return shouldRefresh
     }
     
-    func saveFeaturedRecipes(recipes: [FeaturedModel]) async throws {
+    func saveFeaturedRecipes(recipes: [Recipe]) async throws {
         guard let encoded = try? JSONEncoder().encode(recipes) else {
             
             throw CacheError.encodingError
@@ -64,14 +64,14 @@ actor CacheManager {
         defaults.synchronize()
     }
     
-    func getFeaturedRecipes() async throws -> [FeaturedModel]? {
+    func getFeaturedRecipes() async throws -> [Recipe]? {
         guard let data = defaults.data(forKey: featuredRecipesKey) else {
             
             return nil
         }
         
         do {
-           let decoded = try JSONDecoder().decode([FeaturedModel].self, from: data)
+           let decoded = try JSONDecoder().decode([Recipe].self, from: data)
             
             return decoded
 

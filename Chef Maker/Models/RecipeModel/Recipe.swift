@@ -15,15 +15,19 @@ struct Recipe: Codable, Identifiable {
     let image: String
     let readyInMinutes: Int
     let imageType: String
-    let nutrition: RecipeNutrition
+    let aggregateLikes: Int
     let spoonacularScore: Double?
-
+    let nutrition: RecipeNutrition
     
+
     
     var cookTime: Int {
         readyInMinutes
     }
     
+    var likesCount: Int {
+        aggregateLikes
+    }
     
     var starRating: Int {
         Int( (spoonacularScore ?? 0) / 20)

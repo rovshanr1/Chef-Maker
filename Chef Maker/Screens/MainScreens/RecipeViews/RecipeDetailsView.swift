@@ -19,31 +19,11 @@ struct RecipeDetailsView: View {
             
             VStack(alignment: .leading,spacing: 16) {
                 // Top Bar
-                HStack {
-                    Button(action: {
-                        // Back button action
-                    }) {
-                        Image(systemName: "arrow.backward")
-                            .font(.title2)
-                            .foregroundStyle(Color(AppColors.adaptiveText(for: colorScheme)).opacity(0.5))
-                            .padding(8)
-                    }
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        // More Detail
-                    }) {
-                        Image(systemName: "ellipsis")
-                            .font(.title2)
-                            .foregroundStyle(Color(AppColors.adaptiveText(for: colorScheme)).opacity(0.5))
-                            .padding(8)
-                    }
-                }
-                .padding(.horizontal)
+                headerButton()
                 
                 // Recipe Image Card
                 cardView()
+                
                 //Profile View
                 profileView()
                 
@@ -52,8 +32,77 @@ struct RecipeDetailsView: View {
             }
             
         }
-      
+        
     }
+    
+    @ViewBuilder
+    func headerButton() -> some View{
+        HStack {
+            Button(action: {
+                // Back button action
+            }) {
+                Image(systemName: "arrow.backward")
+                    .font(.title2)
+                    .foregroundStyle(
+                        Color(AppColors.adaptiveText(for: colorScheme)).opacity(0.5)
+                    )
+                    .padding(8)
+            }
+            
+            Spacer()
+            
+            Menu{
+                Button(action: {
+                    // More Detail
+                }) {
+                    Label("Share", image: "share-1")
+                              .font(.title2)
+                              .foregroundStyle(
+                                Color(AppColors.adaptiveText(for: colorScheme)).opacity(0.5)
+                              )
+                }
+                Button(action: {
+                    // More Detail
+                }) {
+                    Label("Rate Recipe ", image: "Star")
+                              .font(.title2)
+                              .foregroundStyle(
+                                Color(AppColors.adaptiveText(for: colorScheme)).opacity(0.5)
+                              )
+                }
+                Button(action: {
+                    // More Detail
+                }) {
+                    Label("Review", image: "message-1")
+                              .font(.title2)
+                              .foregroundStyle(
+                                Color(AppColors.adaptiveText(for: colorScheme)).opacity(0.5)
+                              )
+                }
+                Button(action: {
+                    // More Detail
+                }) {
+                    Label("Unsave", image: "Active")
+                              .font(.title2)
+                              .foregroundStyle(
+                                Color(AppColors.adaptiveText(for: colorScheme)).opacity(0.5)
+                              )
+                }
+                
+            }label: {
+                Label("", systemImage: "ellipsis")
+                    .font(.title2)
+                    .foregroundStyle(
+                        Color(AppColors.adaptiveText(for: colorScheme)).opacity(0.5)
+                    )
+                    .padding(8)
+                   
+            }
+
+        }
+        .padding(.horizontal)
+    }
+    
     
     @ViewBuilder
     func cardView() -> some View {
@@ -88,7 +137,7 @@ struct RecipeDetailsView: View {
                             .resizable()
                             .frame(width: 12, height: 12)
                             .foregroundStyle(AppColors.secondaryColor)
-                        
+                    
                         Text("\(recipe.starRating)")
                             .font(.system(size: 12))
                             .foregroundStyle(.white)
@@ -126,33 +175,26 @@ struct RecipeDetailsView: View {
                         .font(.custom("Poppins-Bold", size: 18))
                         .lineLimit(2)
                         .padding(8)
-                    
+                    Spacer()
                     //Apidan cekilecek
                     Text("(12k reviews)")
                         .foregroundStyle(.secondary)
+                        .padding(8)
                 }
             }
-            .padding(.leading)
+            .padding(.horizontal)
         }
         .frame(height: 260)
     }
     
+   
     @ViewBuilder
     func profileView() -> some View {
         VStack {
             HStack(spacing: 12){
-                Button(action: {
-                    //TODO: - Navigation ProfileView
-                }){
-                    Circle()
-                        .fill(.gray)
-                        .frame(width: 52, height: 52)
-                        .overlay(
-                            Text(profile.initials)
-                                .font(.custom("Poppins-SemiBold", size: 12))
-                                .foregroundStyle(.white)
-                        )
-                }
+                
+                ProfilePhoto(profile: profile)
+                                    
                 VStack(alignment: .leading) {
                     Text(profile.fullName)
                         .font(.custom("Poppins-SemiBold", size: 16))
@@ -188,6 +230,8 @@ struct RecipeDetailsView: View {
                 
                 
             }
+            .padding(8)
+
         }
         .padding(.horizontal)
     }

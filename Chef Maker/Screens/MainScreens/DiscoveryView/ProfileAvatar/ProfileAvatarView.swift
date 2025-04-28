@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 struct ProfileAvatarView: View {
   let profile: ProfileModel
     @Environment(\.colorScheme) var colorScheme
@@ -27,21 +28,17 @@ struct ProfileAvatarView: View {
             
             Spacer()
             
-            //TODO: - NavigationLink ProfileView
-            
-            Circle()
-                .fill(.gray)
-                .frame(width: 52, height: 52)
-                .overlay(
-                    Text(profile.initials)
-                        .font(.custom("Poppins-SemiBold", size: 16))
-                        .foregroundStyle(.white)
-                )
+            //Profile Photo
+            ProfilePhoto(profile: profile)
+
                
         }
         .padding(.horizontal)
     }
 }
+
+
+
 
 
 #Preview {
