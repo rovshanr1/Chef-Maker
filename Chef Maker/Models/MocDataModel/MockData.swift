@@ -24,6 +24,34 @@ struct MockData {
         ), spoonacularScore: 5
     )
 
+    static let sampleIngredient = Ingredient(
+        id: 2,
+        original: "1 avocado",
+        originalName: "avocado",
+        name: "Avocado",
+        amount: 1,
+        unit: "piece",
+        unitShort: "pc",
+        unitLong: "piece",
+        possibleUnits: ["piece", "g"],
+        estimatedCost: Cost(value: 1200, unit: "TRY"),
+        consistency: "solid",
+        shoppingListUnits: ["piece"],
+        aisle: "Produce",
+        image: "https://spoonacular.com/cdn/ingredients_500x500/avocado.jpg",
+        meta: [],
+        nutrition: Nutrition(
+            nutrients: [
+                Nutrient(name: "Calories", amount: 160, unit: "kcal", percentOfDailyNeeds: 8.0),
+                Nutrient(name: "Fat", amount: 15, unit: "g", percentOfDailyNeeds: 23.0)
+            ],
+            properties: [],
+            flavonoids: [],
+            caloricBreakdown: CaloricBreakdown(percentProtein: 4, percentFat: 77, percentCarbs: 19),
+            weightPerServing: WeightPerServing(amount: 100, unit: "g")
+        ),
+        categoryPath: ["Produce", "Fruits", "Avocados"]
+    )
     static let sampleRecipes: [Recipe] = [
         sampleRecipe,
         Recipe(
@@ -128,38 +156,236 @@ struct MockData {
         )
     ]
 
-    static let sampleIngredient = Ingredient(
-        id: 2001,
-        original: "2 tablespoons olive oil",
-        originalName: "olive oil",
-        name: "Olive Oil",
-        amount: 2.0,
-        unit: "tablespoon",
-        unitShort: "tbsp",
-        unitLong: "tablespoon",
-        possibleUnits: ["tablespoon", "gram", "ml"],
-        estimatedCost: Cost(value: 500, unit: "TRY"),
-        consistency: "liquid",
-        shoppingListUnits: ["bottle", "liter"],
-        aisle: "Oils",
-        image: "olive-oil.jpg",
-        meta: [],
-        nutrition: Nutrition(
-            nutrients: [
-                Nutrient(name: "Calories", amount: 120, unit: "kcal", percentOfDailyNeeds: 6.0),
-                Nutrient(name: "Fat", amount: 14, unit: "g", percentOfDailyNeeds: 21.5)
-            ],
-            properties: [NutritionProperty(name: "Glycemic Index", amount: 0, unit: "")],
-            flavonoids: [Flavonoid(name: "Anthocyanins", amount: 0, unit: "mg")],
-            caloricBreakdown: CaloricBreakdown(percentProtein: 0, percentFat: 100, percentCarbs: 0),
-            weightPerServing: WeightPerServing(amount: 27, unit: "g")
-        ),
-        categoryPath: ["Oils", "Vegetable Oils"]
-    )
-
     static let sampleIngredients: [Ingredient] = [
         sampleIngredient,
+        Ingredient(
+            id: 1,
+            original: "200g mushrooms",
+            originalName: "mushrooms",
+            name: "Mushrooms",
+            amount: 200,
+            unit: "g",
+            unitShort: "g",
+            unitLong: "grams",
+            possibleUnits: ["g", "oz"],
+            estimatedCost: Cost(value: 800, unit: "TRY"),
+            consistency: "solid",
+            shoppingListUnits: ["package"],
+            aisle: "Produce",
+            image: "https://spoonacular.com/cdn/ingredients_500x500/mushrooms.jpg",
+            meta: [],
+            nutrition: Nutrition(
+                nutrients: [
+                    Nutrient(name: "Calories", amount: 22, unit: "kcal", percentOfDailyNeeds: 1.0),
+                    Nutrient(name: "Protein", amount: 3.1, unit: "g", percentOfDailyNeeds: 6.2)
+                ],
+                properties: [],
+                flavonoids: [],
+                caloricBreakdown: CaloricBreakdown(percentProtein: 50, percentFat: 10, percentCarbs: 40),
+                weightPerServing: WeightPerServing(amount: 100, unit: "g")
+            ),
+            categoryPath: ["Produce", "Vegetables", "Mushrooms"]
+        ),
+        Ingredient(
+            id: 2,
+            original: "1 avocado",
+            originalName: "avocado",
+            name: "Avocado",
+            amount: 1,
+            unit: "piece",
+            unitShort: "pc",
+            unitLong: "piece",
+            possibleUnits: ["piece", "g"],
+            estimatedCost: Cost(value: 1200, unit: "TRY"),
+            consistency: "solid",
+            shoppingListUnits: ["piece"],
+            aisle: "Produce",
+            image: "https://spoonacular.com/cdn/ingredients_500x500/avocado.jpg",
+            meta: [],
+            nutrition: Nutrition(
+                nutrients: [
+                    Nutrient(name: "Calories", amount: 160, unit: "kcal", percentOfDailyNeeds: 8.0),
+                    Nutrient(name: "Fat", amount: 15, unit: "g", percentOfDailyNeeds: 23.0)
+                ],
+                properties: [],
+                flavonoids: [],
+                caloricBreakdown: CaloricBreakdown(percentProtein: 4, percentFat: 77, percentCarbs: 19),
+                weightPerServing: WeightPerServing(amount: 100, unit: "g")
+            ),
+            categoryPath: ["Produce", "Fruits", "Avocados"]
+        ),
+        Ingredient(
+            id: 3,
+            original: "200g chicken breast",
+            originalName: "chicken breast",
+            name: "Chicken Breast",
+            amount: 200,
+            unit: "g",
+            unitShort: "g",
+            unitLong: "grams",
+            possibleUnits: ["g", "oz"],
+            estimatedCost: Cost(value: 1500, unit: "TRY"),
+            consistency: "solid",
+            shoppingListUnits: ["package"],
+            aisle: "Meat",
+            image: "https://spoonacular.com/cdn/ingredients_500x500/chicken-breast.jpg",
+            meta: [],
+            nutrition: Nutrition(
+                nutrients: [
+                    Nutrient(name: "Calories", amount: 165, unit: "kcal", percentOfDailyNeeds: 8.0),
+                    Nutrient(name: "Protein", amount: 31, unit: "g", percentOfDailyNeeds: 62.0)
+                ],
+                properties: [],
+                flavonoids: [],
+                caloricBreakdown: CaloricBreakdown(percentProtein: 80, percentFat: 20, percentCarbs: 0),
+                weightPerServing: WeightPerServing(amount: 100, unit: "g")
+            ),
+            categoryPath: ["Meat", "Poultry"]
+        ),
+        Ingredient(
+            id: 4,
+            original: "100g dark chocolate",
+            originalName: "dark chocolate",
+            name: "Dark Chocolate",
+            amount: 100,
+            unit: "g",
+            unitShort: "g",
+            unitLong: "grams",
+            possibleUnits: ["g", "oz"],
+            estimatedCost: Cost(value: 1000, unit: "TRY"),
+            consistency: "solid",
+            shoppingListUnits: ["bar"],
+            aisle: "Snacks",
+            image: "https://spoonacular.com/cdn/ingredients_500x500/dark-chocolate-pieces.jpg",
+            meta: [],
+            nutrition: Nutrition(
+                nutrients: [
+                    Nutrient(name: "Calories", amount: 546, unit: "kcal", percentOfDailyNeeds: 27.0),
+                    Nutrient(name: "Fat", amount: 31, unit: "g", percentOfDailyNeeds: 48.0)
+                ],
+                properties: [],
+                flavonoids: [],
+                caloricBreakdown: CaloricBreakdown(percentProtein: 5, percentFat: 50, percentCarbs: 45),
+                weightPerServing: WeightPerServing(amount: 100, unit: "g")
+            ),
+            categoryPath: ["Snacks", "Chocolate"]
+        ),
+        Ingredient(
+            id: 5,
+            original: "200g rice noodles",
+            originalName: "rice noodles",
+            name: "Rice Noodles",
+            amount: 200,
+            unit: "g",
+            unitShort: "g",
+            unitLong: "grams",
+            possibleUnits: ["g", "oz"],
+            estimatedCost: Cost(value: 700, unit: "TRY"),
+            consistency: "solid",
+            shoppingListUnits: ["package"],
+            aisle: "Pasta and Rice",
+            image: "https://spoonacular.com/cdn/ingredients_500x500/rice-noodles.jpg",
+            meta: [],
+            nutrition: Nutrition(
+                nutrients: [
+                    Nutrient(name: "Calories", amount: 192, unit: "kcal", percentOfDailyNeeds: 9.5),
+                    Nutrient(name: "Carbohydrates", amount: 44, unit: "g", percentOfDailyNeeds: 15.0)
+                ],
+                properties: [],
+                flavonoids: [],
+                caloricBreakdown: CaloricBreakdown(percentProtein: 6, percentFat: 1, percentCarbs: 93),
+                weightPerServing: WeightPerServing(amount: 100, unit: "g")
+            ),
+            categoryPath: ["Pasta and Rice", "Noodles"]
+        ),
+        Ingredient(
+            id: 6,
+            original: "150g quinoa",
+            originalName: "quinoa",
+            name: "Quinoa",
+            amount: 150,
+            unit: "g",
+            unitShort: "g",
+            unitLong: "grams",
+            possibleUnits: ["g", "oz"],
+            estimatedCost: Cost(value: 950, unit: "TRY"),
+            consistency: "solid",
+            shoppingListUnits: ["package"],
+            aisle: "Pasta and Rice",
+            image: "https://spoonacular.com/cdn/ingredients_500x500/quinoa-cooked.jpg",
+            meta: [],
+            nutrition: Nutrition(
+                nutrients: [
+                    Nutrient(name: "Calories", amount: 120, unit: "kcal", percentOfDailyNeeds: 6.0),
+                    Nutrient(name: "Protein", amount: 4.1, unit: "g", percentOfDailyNeeds: 8.2)
+                ],
+                properties: [],
+                flavonoids: [],
+                caloricBreakdown: CaloricBreakdown(percentProtein: 15, percentFat: 15, percentCarbs: 70),
+                weightPerServing: WeightPerServing(amount: 100, unit: "g")
+            ),
+            categoryPath: ["Pasta and Rice", "Grains"]
+        ),
+        Ingredient(
+            id: 7,
+            original: "200g pizza dough",
+            originalName: "pizza dough",
+            name: "Pizza Dough",
+            amount: 200,
+            unit: "g",
+            unitShort: "g",
+            unitLong: "grams",
+            possibleUnits: ["g", "oz"],
+            estimatedCost: Cost(value: 400, unit: "TRY"),
+            consistency: "solid",
+            shoppingListUnits: ["package"],
+            aisle: "Refrigerated",
+            image: "https://spoonacular.com/cdn/ingredients_500x500/pizza-dough.jpg",
+            meta: [],
+            nutrition: Nutrition(
+                nutrients: [
+                    Nutrient(name: "Calories", amount: 260, unit: "kcal", percentOfDailyNeeds: 13.0),
+                    Nutrient(name: "Carbohydrates", amount: 50, unit: "g", percentOfDailyNeeds: 17.0)
+                ],
+                properties: [],
+                flavonoids: [],
+                caloricBreakdown: CaloricBreakdown(percentProtein: 8, percentFat: 10, percentCarbs: 82),
+                weightPerServing: WeightPerServing(amount: 100, unit: "g")
+            ),
+            categoryPath: ["Refrigerated", "Dough"]
+        ),
+        Ingredient(
+            id: 8,
+            original: "100g mixed berries",
+            originalName: "mixed berries",
+            name: "Mixed Berries",
+            amount: 100,
+            unit: "g",
+            unitShort: "g",
+            unitLong: "grams",
+            possibleUnits: ["g", "cup"],
+            estimatedCost: Cost(value: 850, unit: "TRY"),
+            consistency: "solid",
+            shoppingListUnits: ["package"],
+            aisle: "Produce",
+            image: "https://spoonacular.com/cdn/ingredients_500x500/mixed-berries.jpg",
+            meta: [],
+            nutrition: Nutrition(
+                nutrients: [
+                    Nutrient(name: "Calories", amount: 57, unit: "kcal", percentOfDailyNeeds: 2.8),
+                    Nutrient(name: "Carbohydrates", amount: 14, unit: "g", percentOfDailyNeeds: 5.0)
+                ],
+                properties: [],
+                flavonoids: [],
+                caloricBreakdown: CaloricBreakdown(percentProtein: 5, percentFat: 5, percentCarbs: 90),
+                weightPerServing: WeightPerServing(amount: 100, unit: "g")
+            ),
+            categoryPath: ["Produce", "Fruits", "Berries"]
+        )
     ]
+
+
+    
 
     static let sampleResponse = SpoonacularResponse(
         results: sampleRecipes,

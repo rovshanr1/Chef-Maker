@@ -4,7 +4,11 @@ import Kingfisher
 struct RecipeDetailsView: View {
     let recipe: Recipe
     let profile: ProfileModel
+    let ingredient: [Ingredient]
+    let nutrition: [RecipeNutrient]
     
+    @State private var selectedTab: DetailTab = .ingredients
+
     @Environment(\.colorScheme) var colorScheme
      
     
@@ -42,8 +46,11 @@ struct RecipeDetailsView: View {
                 cardView()
                 //Profile View
                 profileView()
+                
+                //Detail View
+                detailTabView()
             }
-            .padding()
+            
         }
       
     }
@@ -133,27 +140,33 @@ struct RecipeDetailsView: View {
     @ViewBuilder
     func profileView() -> some View {
         VStack {
-            HStack {
-                Circle()
-                    .fill(.gray)
-                    .frame(width: 52, height: 52)
-                    .overlay(
-                        Text(profile.initials)
-                            .font(.custom("Poppins-SemiBold", size: 12))
-                            .foregroundStyle(.white)
-                    )
-                
+            HStack(spacing: 12){
+                Button(action: {
+                    //TODO: - Navigation ProfileView
+                }){
+                    Circle()
+                        .fill(.gray)
+                        .frame(width: 52, height: 52)
+                        .overlay(
+                            Text(profile.initials)
+                                .font(.custom("Poppins-SemiBold", size: 12))
+                                .foregroundStyle(.white)
+                        )
+                }
                 VStack(alignment: .leading) {
                     Text(profile.fullName)
+                        .font(.custom("Poppins-SemiBold", size: 16))
                     
                     HStack{
                         Image("Location")
-                        
+                            
                         //TODO: - User Location added
                         Text("Lagos, Nigeria")
                             .font(.custom("Poppins-SemiBold", size: 12))
+                            .foregroundStyle(.secondary)
                     }
                 }
+                
                 
                 Spacer()
                 
@@ -161,8 +174,12 @@ struct RecipeDetailsView: View {
                     
                 }){
                     Text("Follow")
+                        .font(.custom("Poppins-Bold", size: 16))
+                        .frame(maxWidth: .infinity)
+                        .padding()
+
+                        
                 }
-                .padding()
                 .background(
                     RoundedRectangle(cornerRadius: 12)
                         .fill(AppColors.filedFilterButtonColor)
@@ -174,10 +191,57 @@ struct RecipeDetailsView: View {
         }
         .padding(.horizontal)
     }
+    
+    @ViewBuilder
+    func detailTabView() -> some View {
+        
+        VStack {
+            HStack{
+                Button(action: {
+                    selectedTab = .ingredients
+                }){
+                    Text("Ingredients")
+                        .font(.custom("Poppins-SemiBold", size: 12))
+                        .foregroundStyle(selectedTab == .ingredients ? .white : AppColors.filedFilterButtonColor)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                       
+                }
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(selectedTab == .ingredients ? AppColors.filedFilterButtonColor : Color.clear)
+                )
+                
+                Button(action: {
+                    selectedTab = .nutrition
+                }){
+                    Text("Nutritions")
+                        .font(.custom("Poppins-SemiBold", size: 12))
+                        .foregroundStyle(selectedTab == .nutrition ? .white : AppColors.filedFilterButtonColor)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                      
+                }
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(selectedTab == .nutrition ? AppColors.filedFilterButtonColor : Color.clear)
+                )
+            }
+       
+            
+            if selectedTab == .ingredients{
+                IngredietsView(ingredient: ingredient)
+            }else if selectedTab == .nutrition{
+                NutritionsView(nutrients: nutrition)
+            }
+        }
+        .padding()
+        
+    }
    
 }
 
 
 #Preview {
-    RecipeDetailsView(recipe: MockData.sampleRecipe, profile: ProfileModel.preview)
+    RecipeDetailsView(recipe: MockData.sampleRecipe, profile: ProfileModel.preview, ingredient: MockData.sampleIngredients, nutrition: MockData.sampleRecipe.nutrition.nutrients)
 }

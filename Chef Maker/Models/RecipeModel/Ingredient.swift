@@ -26,6 +26,9 @@ struct Ingredient: Codable, Identifiable {
     let meta: [String]
     let nutrition: Nutrition
     let categoryPath: [String]
+    
+    
+    
 }
 
 // MARK: - Cost
