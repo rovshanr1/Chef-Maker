@@ -14,7 +14,7 @@ struct SearchView: View {
     @State private var isFilterPresented = false
     @State private var showFilter = false
     @FocusState private var focus: Bool
-    @StateObject private var viewModel = SearchViewModel.preview()
+    @StateObject private var viewModel = SearchViewModel()
     
     @Environment(\.colorScheme) var colorScheme
     

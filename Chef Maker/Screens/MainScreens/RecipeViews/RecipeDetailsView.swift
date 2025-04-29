@@ -2,13 +2,19 @@ import SwiftUI
 import Kingfisher
 
 struct RecipeDetailsView: View {
+    //constants
     let recipe: Recipe
     let profile: ProfileModel
     let ingredient: [Ingredient]
     let nutrition: [RecipeNutrient]
+    var namespace: Namespace.ID
     
+    //States
     @State private var selectedTab: DetailTab = .ingredients
 
+    @Binding var show: Bool
+
+    
     @Environment(\.colorScheme) var colorScheme
      
     
@@ -39,7 +45,10 @@ struct RecipeDetailsView: View {
     func headerButton() -> some View{
         HStack {
             Button(action: {
-                // Back button action
+                withAnimation(.easeInOut(duration: 0.3)){
+                    show = false
+                }
+            
             }) {
                 Image(systemName: "arrow.backward")
                     .font(.title2)
@@ -126,8 +135,9 @@ struct RecipeDetailsView: View {
                             startPoint: .bottom,
                             endPoint: .top
                         )
-                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
                     )
+                    .matchedGeometryEffect(id: "\(recipe.id)  image", in: namespace, isSource: show)
                     .frame(maxWidth: .infinity, alignment: .center)
                 
                 // Top right: rating and bookmark
@@ -168,8 +178,17 @@ struct RecipeDetailsView: View {
             }
             .frame(height: 220)
             
+           
+        }
+        .frame(height: 220)
+
+    }
+    
+   
+    @ViewBuilder
+    func profileView() -> some View {
+        VStack {
             VStack(alignment: .leading){
-                Spacer()
                 HStack {
                     Text(recipe.title)
                         .font(.custom("Poppins-Bold", size: 18))
@@ -182,15 +201,8 @@ struct RecipeDetailsView: View {
                         .padding(8)
                 }
             }
-            .padding(.horizontal)
-        }
-        .frame(height: 260)
-    }
-    
-   
-    @ViewBuilder
-    func profileView() -> some View {
-        VStack {
+            
+            
             HStack(spacing: 12){
                 
                 ProfilePhoto(profile: profile)
@@ -286,6 +298,8 @@ struct RecipeDetailsView: View {
 }
 
 
-#Preview {
-    RecipeDetailsView(recipe: MockData.sampleRecipe, profile: ProfileModel.preview, ingredient: MockData.sampleIngredients, nutrition: MockData.sampleRecipe.nutrition.nutrients)
-}
+//#Preview {
+//    @Previewable @Namespace var namespace
+//    
+//    RecipeDetailsView(recipe: MockData.sampleRecipe, profile: ProfileModel.preview, ingredient: MockData.sampleIngredients, nutrition: MockData.sampleRecipe.nutrition.nutrients, namespace: namespace, show: .constant(true))
+//}

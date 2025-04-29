@@ -41,6 +41,6 @@ struct ProfileAvatarView: View {
 
 
 
-#Preview {
-    ProfileAvatarView(profile: .preview)
-}
+//#Preview {
+//    ProfileAvatarView(profile: .preview)
+//}

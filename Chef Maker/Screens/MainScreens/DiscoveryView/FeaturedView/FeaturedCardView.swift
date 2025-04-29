@@ -23,7 +23,6 @@ struct FeaturedCardView: View {
             VStack {
                 Text("\(recipe.shortTitle)".uppercased())
                     .font(.custom("Poppins-Bold", size: 16))
-                    .matchedGeometryEffect(id: "title\(recipe.id)", in: namespace,  isSource: !show)
                     .frame(width: 300, alignment: .center)
                 
                 HStack{
@@ -37,7 +36,6 @@ struct FeaturedCardView: View {
                             .font(.custom("Poppins-Regular", size: 14))
                             
                     }
-                    
                     
                     Spacer()
                     
@@ -74,11 +72,9 @@ struct FeaturedCardView: View {
                 .aspectRatio(contentMode: .fill)
                 .frame(height: 300)
                 .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-                .matchedGeometryEffect(id: "image\(recipe.id)", in: namespace, isSource: !show)
-        )
+                        )
         .mask(
             RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .matchedGeometryEffect(id: "mask\(recipe.id)", in: namespace,  isSource: !show)
         )
         .frame(height: 300)
         .padding(20)
@@ -88,24 +84,6 @@ struct FeaturedCardView: View {
 
     
 
-//Prewiev
-//struct FeaturedCardView_Prewiews: PreviewProvider {
-//    @Namespace static var namespace
-//    
-//    static var previews: some View {
-//        FeaturedCardView(recipe: FeaturedModel(from: Recipe(
-//            id: 1,
-//            title: "categorically organized list of foods",
-//            image: "https://spoonacular.com/recipeImages/579247-556x370.jpg",
-//            imageType: "jpg",
-//            nutrition: RecipeNutrition(nutrients: [
-//                RecipeNutrient(name: "Calories", amount: 450, unit: "kcal"),
-//                RecipeNutrient(name: "Protein", amount: 20, unit: "g"),
-//                RecipeNutrient(name: "Carbohydrates", amount: 60, unit: "g"),
-//                RecipeNutrient(name: "Fat", amount: 15, unit: "g")
-//            ])
-//        )), namespace: namespace, show: .constant(true))
-//    }
-//}
+
 
 

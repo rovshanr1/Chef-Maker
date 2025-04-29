@@ -31,11 +31,11 @@ class SearchViewModel: BaseViewModel<Recipe>, SearchViewModelProtocol {
     }
     
     // Mock data initializer for preview
-    static func preview() -> SearchViewModel {
-        let viewModel = SearchViewModel()
-        viewModel.data = MockData.sampleRecipes
-        return viewModel
-    }
+//    static func preview() -> SearchViewModel {
+//        let viewModel = SearchViewModel()
+//        viewModel.data = MockData.sampleRecipes
+//        return viewModel
+//    }
     
     private func setupSearchSubscription() {
         $searchText

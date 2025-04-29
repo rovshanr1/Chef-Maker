@@ -42,6 +42,6 @@ struct ProfilePhoto: View {
     }
 }
 
-#Preview {
-    ProfilePhoto(profile: .preview)
-}
+//#Preview {
+//    ProfilePhoto(profile: .preview)
+//}

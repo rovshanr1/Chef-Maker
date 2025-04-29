@@ -8,19 +8,21 @@
 import SwiftUI
 
 struct DiscoveryView: View {
-    @StateObject private var viewModel = DiscoveryViewViewModel()
+    //StateObjects
     @StateObject private var featuredViewModel = FeaturedViewModel()
     @StateObject private var profileViewModel = ProfileViewModel(appState: AppState.shared)
-    @ObservedObject private var searchViewModel = SearchViewModel()
+    @StateObject private var searchViewModel = SearchViewModel()
+    
+    //States
     @State private var scrollOffset: CGFloat = 0
+    @State var show: Bool = false
+    @State var selectedRecipe: Recipe?
+    
+
     
     //Animation
     @Namespace var namespace
    
-    @State var show = false
-    @State var selectedRecipe: Recipe?
-    
-    
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
@@ -35,7 +37,6 @@ struct DiscoveryView: View {
                         await featuredViewModel.forceRefresh()
                     }) {
                         VStack(alignment: .leading, spacing: 16) {
-                            
                             //Avatar
                             ProfileAvatarView(profile: profileViewModel.profile)
                             
@@ -49,9 +50,9 @@ struct DiscoveryView: View {
                                     .matchedGeometryEffect(id: "Search", in: namespace)
                             }
                         }
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                withAnimation(.easeInOut(duration: 0.3)){
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                        withAnimation(.easeInOut(duration: 0.3)){
                                     searchViewModel.searchActive = true
                                 }
                             }
@@ -61,19 +62,9 @@ struct DiscoveryView: View {
                             
                             featuredHeader
                             
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 20) {
-                                    ForEach(featuredViewModel.data) { recipe in
-                                        FeaturedCardView(recipe: recipe, namespace: namespace, show: $show)
-                                            .onTapGesture {
-                                                withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
-                                                    selectedRecipe = recipe
-                                                    show.toggle()
-                                                }
-                                            }
-                                    }
-                                }
-                            }
+                            //Featured card
+                            featuredRecipes()
+                          
                         }
                         .alert("Error", isPresented: .constant(featuredViewModel.error != nil)) {
                             Button("Ok") {
@@ -94,10 +85,6 @@ struct DiscoveryView: View {
                 .coordinateSpace(name: "scroll")
                 .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
                     scrollOffset = value
-                }
-                
-                if show, let recipe = selectedRecipe {
-                    FeaturedContenView(recipe: recipe, namespace: namespace, show: $show)
                 }
             }
             .onAppear{
@@ -128,9 +115,41 @@ struct DiscoveryView: View {
                     }
                 }
             )
+            .overlay(
+                ZStack{
+                    if let selectedRecipe = selectedRecipe, show {
+                        RecipeDetailsView(recipe: selectedRecipe,
+                                          profile: profileViewModel.profile,
+                                          ingredient: [],
+                                          nutrition: selectedRecipe.nutrition.nutrients,
+                                          namespace: namespace,
+                                          show: $show)
+                    }
+                }
+            )
             .onTapGesture{ hideKeyboard() }
-           
         }
+    }
+    
+    
+    @ViewBuilder
+    func featuredRecipes() -> some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 20) {
+                ForEach(featuredViewModel.data) { recipe in
+                    FeaturedCardView(recipe: recipe, namespace: namespace, show: $show)
+                        .onTapGesture {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                selectedRecipe = recipe
+                                show.toggle()
+                            }
+                        }
+                        .matchedGeometryEffect(id: "\(recipe.id)  image", in: namespace, isSource: !show)
+
+                }
+            }
+        }
+        
     }
 }
 
@@ -158,6 +177,9 @@ var featuredHeader: some View {
         .padding(.horizontal)
     }
 }
+
+
+
 
 // Preference key for tracking scroll offset
 struct ScrollOffsetPreferenceKey: PreferenceKey {

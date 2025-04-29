@@ -18,7 +18,6 @@ struct Recipe: Codable, Identifiable {
     let aggregateLikes: Int
     let spoonacularScore: Double?
     let nutrition: RecipeNutrition
-    
 
     
     var cookTime: Int {
@@ -28,6 +27,7 @@ struct Recipe: Codable, Identifiable {
     var likesCount: Int {
         aggregateLikes
     }
+    
     
     var starRating: Int {
         Int( (spoonacularScore ?? 0) / 20)

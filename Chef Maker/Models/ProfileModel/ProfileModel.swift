@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Kingfisher
 
 struct ProfileModel: Identifiable, Codable {
     let id: String

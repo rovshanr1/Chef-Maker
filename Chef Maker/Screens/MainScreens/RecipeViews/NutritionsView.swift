@@ -45,6 +45,6 @@ struct NutritionsView: View {
     }
 }
 
-#Preview {
-    NutritionsView(nutrients: MockData.sampleRecipe.nutrition.nutrients)
-}
+//#Preview {
+//    NutritionsView(nutrients: MockData.sampleRecipe.nutrition.nutrients)
+//}
