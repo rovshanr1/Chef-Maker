@@ -12,7 +12,6 @@ struct RecipeCardView: View {
     let recipe: Recipe
     
     var body: some View {
-        ZStack {
             ZStack {
                 KFImage(URL(string: recipe.image))
                     .targetCache(CacheManager.shared.imageCache)
@@ -72,13 +71,9 @@ struct RecipeCardView: View {
                 
             }
             .frame(width: 170, height: 170)
+            .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 4)
             .cornerRadius(15)
-           
-        }
-        .frame(width: 170, height: 170)
-        .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 4)
-        
-        
+    
     }
         
 }

@@ -57,6 +57,7 @@ enum CodingKeys: String, CodingKey{
 
 struct RecipeNutrition: Codable {
     let nutrients: [RecipeNutrient]
+    let ingredients: [Ingredient]?
 }
 
 struct RecipeNutrient: Codable {
@@ -65,5 +66,11 @@ struct RecipeNutrient: Codable {
     let unit: String
 } 
 
+struct Ingredient: Codable, Identifiable {
+    let id: Int
+    let name: String
+    let amount: Double
+    let image: String?
+}
 
 

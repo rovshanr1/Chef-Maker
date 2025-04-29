@@ -120,7 +120,7 @@ struct DiscoveryView: View {
                     if let selectedRecipe = selectedRecipe, show {
                         RecipeDetailsView(recipe: selectedRecipe,
                                           profile: profileViewModel.profile,
-                                          ingredient: [],
+                                          ingredient: selectedRecipe.nutrition.ingredients ?? [],
                                           nutrition: selectedRecipe.nutrition.nutrients,
                                           namespace: namespace,
                                           show: $show)
@@ -161,7 +161,6 @@ var featuredHeader: some View {
             Text("Chef's Picks")
                 .font(.custom("Poppins-Bold", size: 24))
                 
-            
             Spacer()
             
             Button(action: {

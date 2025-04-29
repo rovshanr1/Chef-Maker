@@ -6,8 +6,15 @@
 //
 
 import Foundation
-
+//Recipe Detail Tab
 enum DetailTab{
     case ingredients
     case nutrition
 }
+
+//Bookmark Status 
+enum BookmarkStatus{
+    case bookmarked
+    case notBookmarked
+}
+

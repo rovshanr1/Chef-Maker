@@ -16,6 +16,7 @@ struct SearchView: View {
     @FocusState private var focus: Bool
     @StateObject private var viewModel = SearchViewModel()
     
+    
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
@@ -81,6 +82,8 @@ struct SearchView: View {
                 
                 //Grid View
                 SearchGridView(viewModel: viewModel)
+                   
+                  
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .background(

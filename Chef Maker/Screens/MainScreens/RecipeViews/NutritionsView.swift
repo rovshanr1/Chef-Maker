@@ -13,7 +13,6 @@ struct NutritionsView: View {
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
-        ScrollView {
             VStack(alignment: .leading, spacing: 12) {
                 ForEach(nutrients, id: \.name) { nutrient in
                     ZStack {
@@ -40,8 +39,7 @@ struct NutritionsView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.top)
-        }
-        .scrollIndicators(.hidden)
+    
     }
 }
 

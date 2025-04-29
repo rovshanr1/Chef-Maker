@@ -22,20 +22,23 @@ struct RecipeDetailsView: View {
         ZStack {
             AppColors.adaptiveMainTabView(for: colorScheme)
                 .ignoresSafeArea()
-            
-            VStack(alignment: .leading,spacing: 16) {
+            VStack(alignment: .leading,spacing: 16){
                 // Top Bar
                 headerButton()
-                
-                // Recipe Image Card
-                cardView()
-                
-                //Profile View
-                profileView()
-                
-                //Detail View
-                detailTabView()
-            }
+                 ScrollView{
+                    VStack{
+                        
+                        // Recipe Image Card
+                        cardView()
+                        
+                        //Profile View
+                        profileView()
+                        
+                        //Detail View
+                        detailTabView()
+                    }
+                }
+        }
             
         }
         
@@ -64,7 +67,7 @@ struct RecipeDetailsView: View {
                 Button(action: {
                     // More Detail
                 }) {
-                    Label("Share", image: "share-1")
+                    Label("Share", systemImage: "square.and.arrow.up")
                               .font(.title2)
                               .foregroundStyle(
                                 Color(AppColors.adaptiveText(for: colorScheme)).opacity(0.5)
@@ -73,7 +76,7 @@ struct RecipeDetailsView: View {
                 Button(action: {
                     // More Detail
                 }) {
-                    Label("Rate Recipe ", image: "Star")
+                    Label("Rate Recipe ", systemImage: "star")
                               .font(.title2)
                               .foregroundStyle(
                                 Color(AppColors.adaptiveText(for: colorScheme)).opacity(0.5)
@@ -82,7 +85,7 @@ struct RecipeDetailsView: View {
                 Button(action: {
                     // More Detail
                 }) {
-                    Label("Review", image: "message-1")
+                    Label("Review", systemImage: "ellipsis.message")
                               .font(.title2)
                               .foregroundStyle(
                                 Color(AppColors.adaptiveText(for: colorScheme)).opacity(0.5)
@@ -91,7 +94,7 @@ struct RecipeDetailsView: View {
                 Button(action: {
                     // More Detail
                 }) {
-                    Label("Unsave", image: "Active")
+                    Label("Unsave", systemImage:"bookmark.slash")
                               .font(.title2)
                               .foregroundStyle(
                                 Color(AppColors.adaptiveText(for: colorScheme)).opacity(0.5)
@@ -228,11 +231,9 @@ struct RecipeDetailsView: View {
                     
                 }){
                     Text("Follow")
-                        .font(.custom("Poppins-Bold", size: 16))
-                        .frame(maxWidth: .infinity)
+                        .font(.custom("Poppins-Bold", size: 12))
                         .padding()
 
-                        
                 }
                 .background(
                     RoundedRectangle(cornerRadius: 12)
@@ -260,11 +261,11 @@ struct RecipeDetailsView: View {
                         .font(.custom("Poppins-SemiBold", size: 12))
                         .foregroundStyle(selectedTab == .ingredients ? .white : AppColors.filedFilterButtonColor)
                         .frame(maxWidth: .infinity)
-                        .padding()
+                        .padding(12)
                        
                 }
                 .background(
-                    RoundedRectangle(cornerRadius: 8)
+                    RoundedRectangle(cornerRadius: 12)
                         .fill(selectedTab == .ingredients ? AppColors.filedFilterButtonColor : Color.clear)
                 )
                 
@@ -275,11 +276,11 @@ struct RecipeDetailsView: View {
                         .font(.custom("Poppins-SemiBold", size: 12))
                         .foregroundStyle(selectedTab == .nutrition ? .white : AppColors.filedFilterButtonColor)
                         .frame(maxWidth: .infinity)
-                        .padding()
+                        .padding(12)
                       
                 }
                 .background(
-                    RoundedRectangle(cornerRadius: 8)
+                    RoundedRectangle(cornerRadius: 12)
                         .fill(selectedTab == .nutrition ? AppColors.filedFilterButtonColor : Color.clear)
                 )
             }
@@ -298,8 +299,8 @@ struct RecipeDetailsView: View {
 }
 
 
-//#Preview {
-//    @Previewable @Namespace var namespace
-//    
-//    RecipeDetailsView(recipe: MockData.sampleRecipe, profile: ProfileModel.preview, ingredient: MockData.sampleIngredients, nutrition: MockData.sampleRecipe.nutrition.nutrients, namespace: namespace, show: .constant(true))
-//}
+#Preview {
+    @Previewable @Namespace var namespace
+    
+    RecipeDetailsView(recipe: MockData.sampleRecipe, profile: ProfileModel.preview, ingredient: MockData.sampleRecipe.nutrition.ingredients ?? [], nutrition: MockData.sampleRecipe.nutrition.nutrients, namespace: namespace, show: .constant(true))
+}

@@ -20,7 +20,6 @@ struct ProfilePhoto: View {
                     .frame(width: 52, height: 52)
                 Group{
                     if let photoURL = profile.photoURL, let url = URL(string: photoURL) {
-                        
                         KFImage(url)
                             .targetCache(CacheManager.shared.imageCache)
                             .fade(duration: 0.5)
