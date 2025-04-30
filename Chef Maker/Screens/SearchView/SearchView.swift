@@ -70,7 +70,7 @@ struct SearchView: View {
                     }
                 }
                 .sheet(isPresented: $showFilter){
-                    FilterView(isFilterPresented: $isFilterPresented)
+                    FilterView(viewModel: viewModel, isFilterPresented: $isFilterPresented)
                         .presentationDetents([.medium, .large])
                         .presentationCornerRadius(12)
                 }

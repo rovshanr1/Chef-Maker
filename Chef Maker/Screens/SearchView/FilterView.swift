@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FilterView: View {
-    @ObservedObject private var viewModel = SearchViewModel()
+    @ObservedObject var viewModel: SearchViewModel
     @Binding var isFilterPresented: Bool
     
     private let columns = Array(repeating: GridItem(.adaptive(minimum: 100)), count: 4)
@@ -60,10 +60,10 @@ struct FilterView: View {
                 }
                 
                 Button(action: {
-                    viewModel.data = viewModel.applyAllFilters(to: viewModel.data )
-                    
-                    isFilterPresented = false
-                    
+                    Task {
+                        viewModel.data = await viewModel.applyAllFilters(to: viewModel.data)
+                        isFilterPresented = false
+                    }
                 }){
                     Text("Filter")
                         .font(.custom("Poppins-Bold", size: 18))

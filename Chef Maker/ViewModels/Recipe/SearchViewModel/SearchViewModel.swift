@@ -63,7 +63,7 @@ class SearchViewModel: BaseViewModel<Recipe>, SearchViewModelProtocol {
         do {
             let url = try createURL(query: query)
             let response: SpoonacularResponse = try await networkService.fetchData(from: url)
-            data = applyAllFilters(to: response.results)
+            data = await applyAllFilters(to: response.results)
         } catch {
             self.error = error as? NetworkError ?? .networkError(error)
         }
@@ -79,7 +79,7 @@ class SearchViewModel: BaseViewModel<Recipe>, SearchViewModelProtocol {
         do {
             let url = try createURL(query: "")
             let response: SpoonacularResponse = try await networkService.fetchData(from: url)
-            data = applyAllFilters(to: response.results)
+            data = await applyAllFilters(to: response.results)
         } catch {
             self.error = error as? NetworkError ?? .networkError(error)
         }
@@ -141,10 +141,12 @@ class SearchViewModel: BaseViewModel<Recipe>, SearchViewModelProtocol {
     
    
     
-    func applyAllFilters(to recipes: [Recipe]) -> [Recipe] {
+    func applyAllFilters(to recipes: [Recipe]) async -> [Recipe] {
         var filtered = recipes
         filtered = applyRateFilter(to: filtered)
-//        filtered = applyCategoryFilter(to: filtered)
+        
+        await fetchAllRecipes()
+        
         return filtered
     }
     func isTimeFilterSelected(_ filter: TimeFilter) -> Bool {
