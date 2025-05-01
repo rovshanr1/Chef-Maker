@@ -16,6 +16,7 @@ struct DiscoveryView: View {
     //States
     @State private var scrollOffset: CGFloat = 0
     @State var selectedRecipe: Recipe?
+    @State var index = 0
 
     //Animation
     @Namespace var namespace
@@ -25,106 +26,114 @@ struct DiscoveryView: View {
     
     var body: some View {
         NavigationStack {
-            ZStack(alignment: .top) {
-                AppColors.adaptiveMainTabView(for: colorScheme)
-                    .ignoresSafeArea()
             
-                ScrollView {
-                    
-                    RefreshableScrollView(onRefresh: {
-                        await featuredViewModel.forceRefresh()
-                    }) {
-                        VStack(alignment: .leading, spacing: 16) {
-                            //Avatar
-                            ProfileAvatarView(profile: profileViewModel.profile)
-                            
-                            //Search
-                            ZStack{
-                            if searchViewModel.searchActive {
-                                SearchBarView()
-                                         
-                            }else{
-                                SearchBarView()
-                                    .matchedGeometryEffect(id: "Search", in: namespace)
-                            }
-                        }
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                        withAnimation(.easeInOut(duration: 0.3)){
-                                    searchViewModel.searchActive = true
+                VStack{
+                    ScrollView {
+                        
+                        RefreshableScrollView(onRefresh: {
+                            await featuredViewModel.forceRefresh()
+                        }) {
+                            VStack(alignment: .leading, spacing: 16) {
+                                //Avatar
+                                ProfileAvatarView(profile: profileViewModel.profile)
+                                
+                                //Search
+                                ZStack{
+                                    if searchViewModel.searchActive {
+                                        SearchBarView()
+                                        
+                                    }else{
+                                        SearchBarView()
+                                            .matchedGeometryEffect(id: "Search", in: namespace)
+                                    }
                                 }
-                            }
-                              
-                            // Categories
-                            ShowCategoryButton()
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    withAnimation(.easeInOut(duration: 0.3)){
+                                        searchViewModel.searchActive = true
+                                    }
+                                }
+                                
+                                // Categories
+                                ShowCategoryButton()
+                                
+                                featuredHeader
+                                
+                                //Featured card
+                                featuredRecipes()
+                                
                             
-                            featuredHeader
-                            
-                            //Featured card
-                            featuredRecipes()
-                          
-                        }
-                        .alert("Error", isPresented: .constant(featuredViewModel.error != nil)) {
-                            Button("Ok") {
-                                featuredViewModel.error = nil
+                                
                             }
-                        } message:{
-                            Text(featuredViewModel.error?.localizedDescription ?? "Unkonwn Error")
+                            .alert("Error", isPresented: .constant(featuredViewModel.error != nil)) {
+                                Button("Ok") {
+                                    featuredViewModel.error = nil
+                                }
+                            } message:{
+                                Text(featuredViewModel.error?.localizedDescription ?? "Unkonwn Error")
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(GeometryReader { geometry in
+                                Color.clear.preference(
+                                    key: ScrollOffsetPreferenceKey.self,
+                                    value: geometry.frame(in: .named("scroll")).minY
+                                )
+                            })
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(GeometryReader { geometry in
-                            Color.clear.preference(
-                                key: ScrollOffsetPreferenceKey.self,
-                                value: geometry.frame(in: .named("scroll")).minY
-                            )
-                        })
+                    }
+                    .coordinateSpace(name: "scroll")
+                    .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
+                        scrollOffset = value
+                    }
+                    
+                    Spacer()
+                    
+                    
+
+                }
+                .background(AppColors.adaptiveMainTabView(for: colorScheme).ignoresSafeArea())
+                .onAppear{
+                    Task{
+                        if featuredViewModel.data.isEmpty{
+                            await featuredViewModel.forceRefresh()
+                        }
+                        print("Data Loaded Successfully: \(featuredViewModel.data.count)")
+                        print("Recipe Loaded Successfully:", featuredViewModel.data.map { $0.title})
                     }
                 }
-                .coordinateSpace(name: "scroll")
-                .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                    scrollOffset = value
-                }
-            }
-            .onAppear{
-                Task{
-                    if featuredViewModel.data.isEmpty{
-                        await featuredViewModel.forceRefresh()
-                    }
-                    print("Data Loaded Successfully: \(featuredViewModel.data.count)")
-                    print("Recipe Loaded Successfully:", featuredViewModel.data.map { $0.title})
-                }
-            }
-            .navigationBarBackButtonHidden(true)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    if scrollOffset < -20 {
-                        Text("Discovery")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .transition(.move(edge: .top).combined(with: .opacity))
+                .navigationBarBackButtonHidden(true)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        if scrollOffset < -20 {
+                            Text("Discovery")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .transition(.move(edge: .top).combined(with: .opacity))
+                        }
                     }
                 }
-            }
-            .overlay(
-                ZStack{
-                    if searchViewModel.searchActive{
-                        SearchView(namespace: namespace, show: $searchViewModel.searchActive)
+                .overlay(
+                    ZStack{
+                        if searchViewModel.searchActive{
+                            SearchView(namespace: namespace, show: $searchViewModel.searchActive)
+                        }
                     }
-                }
-            )
-            .overlay(
-                ZStack{
-                    if let selectedRecipe = selectedRecipe, show {
-                        RecipeDetailsView(recipe: selectedRecipe,
-                                          ingredient: selectedRecipe.nutrition.ingredients ?? [],
-                                          nutrition: selectedRecipe.nutrition.nutrients,
-                                          namespace: namespace,
-                                          show: $show)
+                )
+                .overlay(
+                    ZStack{
+                        if let selectedRecipe = selectedRecipe, show {
+                            RecipeDetailsView(recipe: selectedRecipe,
+                                              ingredient: selectedRecipe.nutrition.ingredients ?? [],
+                                              nutrition: selectedRecipe.nutrition.nutrients,
+                                              namespace: namespace,
+                                              show: $show)
+                        }
                     }
-                }
-            )
-            .onTapGesture{ hideKeyboard() }
+                )
+                .onTapGesture{ hideKeyboard() }
+            
+           
         }
     }
     

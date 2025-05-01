@@ -7,12 +7,35 @@
 
 import SwiftUI
 
-struct MainTabVIew: View {
+struct MainTabView: View {
+    @State var index: Int = 0
+    
+    @Environment(\.colorScheme) var colorScheme
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack{
+            ZStack{
+                
+                if self.index == 0 {
+                     DiscoveryView()
+                }else if self.index == 1 {
+                    Color.black
+                }else if self.index == 2 {
+                    Color.blue
+                }else{
+                    Color.gray
+                }
+                
+            }
+            .background(AppColors.adaptiveMainTabView(for: colorScheme).ignoresSafeArea(.all))
+            
+    
+            TabBarView(index: self.$index)
+                .ignoresSafeArea(.container, edges: .bottom)
+        }
+        .background(AppColors.adaptiveMainTabView(for: colorScheme).ignoresSafeArea(.all))
     }
 }
 
 #Preview {
-    MainTabVIew()
+    MainTabView()
 }

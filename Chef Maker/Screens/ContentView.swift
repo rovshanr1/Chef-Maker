@@ -15,7 +15,7 @@ struct ContentView: View {
         Group{
             if showMainView{
                 if appState.isLoggedIn{
-                    DiscoveryView()
+                    MainTabView()
                 }else if !appState.hasSeenOnboarding{
                     OnboardingView()
                 }
