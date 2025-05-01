@@ -9,30 +9,39 @@ import SwiftUI
 
 struct MainTabView: View {
     @State var index: Int = 0
-    
     @Environment(\.colorScheme) var colorScheme
+   
+    @StateObject private var searchViewModel = SearchViewModel()
+    
+
     var body: some View {
-        VStack{
-            ZStack{
-                
-                if self.index == 0 {
-                     DiscoveryView()
-                }else if self.index == 1 {
-                    Color.black
-                }else if self.index == 2 {
-                    Color.blue
-                }else{
-                    Color.gray
+       
+        GeometryReader { geometry in
+            ZStack(alignment: .bottom){
+                Group{
+                    switch index{
+                    case 0:
+                        DiscoveryView(searchViewModel: searchViewModel)
+                    case 1:
+                        Color.black
+                    case 2:
+                        Color.blue
+                    default:
+                        Color.gray
+                    }
                 }
                 
             }
-            .background(AppColors.adaptiveMainTabView(for: colorScheme).ignoresSafeArea(.all))
-            
-    
-            TabBarView(index: self.$index)
-                .ignoresSafeArea(.container, edges: .bottom)
+            .ignoresSafeArea(.keyboard, edges: .bottom)
+            .safeAreaInset(edge: .bottom) {
+                if !searchViewModel.searchActive{
+                    TabBarView(index: self.$index)
+                        .ignoresSafeArea(.keyboard,edges: .bottom)
+                }
+
+            }
+            .background(AppColors.adaptiveMainTabView(for: colorScheme).ignoresSafeArea())
         }
-        .background(AppColors.adaptiveMainTabView(for: colorScheme).ignoresSafeArea(.all))
     }
 }
 

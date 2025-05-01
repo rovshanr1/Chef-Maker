@@ -48,6 +48,7 @@ struct SearchGridView: View {
             }
             .padding(.top)
         }
+        .ignoresSafeArea(.keyboard, edges: .bottom)
     }
 }
 

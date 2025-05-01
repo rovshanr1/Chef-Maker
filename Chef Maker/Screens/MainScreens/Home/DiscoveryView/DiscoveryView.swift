@@ -11,8 +11,8 @@ struct DiscoveryView: View {
     //StateObjects
     @StateObject private var featuredViewModel = FeaturedViewModel()
     @StateObject private var profileViewModel = ProfileViewModel(appState: AppState.shared)
-    @StateObject private var searchViewModel = SearchViewModel()
-    
+    @ObservedObject var searchViewModel: SearchViewModel
+
     //States
     @State private var scrollOffset: CGFloat = 0
     @State var selectedRecipe: Recipe?
@@ -53,6 +53,7 @@ struct DiscoveryView: View {
                                         searchViewModel.searchActive = true
                                     }
                                 }
+                                
                                 
                                 // Categories
                                 ShowCategoryButton()
@@ -119,6 +120,7 @@ struct DiscoveryView: View {
                             SearchView(namespace: namespace, show: $searchViewModel.searchActive)
                         }
                     }
+                    .ignoresSafeArea(.keyboard, edges: .bottom)
                 )
                 .overlay(
                     ZStack{
@@ -132,6 +134,7 @@ struct DiscoveryView: View {
                     }
                 )
                 .onTapGesture{ hideKeyboard() }
+                .ignoresSafeArea(.keyboard, edges: .bottom)
             
            
         }
@@ -195,6 +198,3 @@ struct ScrollOffsetPreferenceKey: PreferenceKey {
 }
 
 
-#Preview{
-    DiscoveryView()
-}
