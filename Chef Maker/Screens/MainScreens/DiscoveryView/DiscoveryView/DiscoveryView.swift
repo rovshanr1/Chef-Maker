@@ -15,13 +15,11 @@ struct DiscoveryView: View {
     
     //States
     @State private var scrollOffset: CGFloat = 0
-    @State var show: Bool = false
     @State var selectedRecipe: Recipe?
-    
 
-    
     //Animation
     @Namespace var namespace
+    @State var show: Bool = false
    
     @Environment(\.colorScheme) var colorScheme
     
@@ -119,7 +117,6 @@ struct DiscoveryView: View {
                 ZStack{
                     if let selectedRecipe = selectedRecipe, show {
                         RecipeDetailsView(recipe: selectedRecipe,
-                                          profile: profileViewModel.profile,
                                           ingredient: selectedRecipe.nutrition.ingredients ?? [],
                                           nutrition: selectedRecipe.nutrition.nutrients,
                                           namespace: namespace,
@@ -135,7 +132,7 @@ struct DiscoveryView: View {
     @ViewBuilder
     func featuredRecipes() -> some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 20) {
+            LazyHStack(spacing: 20) {
                 ForEach(featuredViewModel.data) { recipe in
                     FeaturedCardView(recipe: recipe, namespace: namespace, show: $show)
                         .onTapGesture {

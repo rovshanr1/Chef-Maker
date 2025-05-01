@@ -9,6 +9,9 @@ import SwiftUI
 
 struct SearchGridView: View {
     @ObservedObject var viewModel: SearchViewModel
+    @State private var selectedRecipe: Recipe?
+    
+    var namespace: Namespace.ID
     
     let columns = [
         GridItem(.flexible()),
@@ -30,16 +33,21 @@ struct SearchGridView: View {
                 ScrollView{
                     LazyVGrid(columns: columns, spacing: 16 ){
                         ForEach(viewModel.data){ recipe in
-                            RecipeCardView(recipe: recipe)
+                            NavigationLink(destination: RecipeDetailsView(
+                                recipe: recipe,
+                                ingredient: recipe.nutrition.ingredients ?? [],
+                                nutrition: recipe.nutrition.nutrients,
+                                namespace: namespace,
+                                show: .constant(true)
+                            )) {
+                                RecipeCardView(recipe: recipe)
+                            }
                         }
-                        
                     }
                 }
-                
             }
             .padding(.top)
         }
-        
     }
 }
 

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct FilterView: View {
     @ObservedObject var viewModel: SearchViewModel
-    @Binding var isFilterPresented: Bool
+    @Binding var showFilter: Bool
     
     private let columns = Array(repeating: GridItem(.adaptive(minimum: 100)), count: 4)
     
@@ -61,8 +61,8 @@ struct FilterView: View {
                 
                 Button(action: {
                     Task {
-                        viewModel.data = await viewModel.applyAllFilters(to: viewModel.data)
-                        isFilterPresented = false
+                        await viewModel.fetchAllRecipes()
+                        showFilter = false
                     }
                 }){
                     Text("Filter")
@@ -105,5 +105,5 @@ struct FilterView: View {
     @Previewable @Namespace var namespace
     @Previewable @State var show = false
     
-    SearchView(namespace: namespace, show: $show)
+    FilterView(viewModel: SearchViewModel.preview(), showFilter: $show)
 }

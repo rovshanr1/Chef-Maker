@@ -4,18 +4,19 @@ import Kingfisher
 struct RecipeDetailsView: View {
     //constants
     let recipe: Recipe
-    let profile: ProfileModel
+   
     let ingredient: [Ingredient]
     let nutrition: [RecipeNutrient]
     var namespace: Namespace.ID
     
     //States
     @State private var selectedTab: DetailTab = .ingredients
-
+    @StateObject private var profileViewMode = ProfileViewModel(appState: AppState.shared)
     @Binding var show: Bool
 
     
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.dismiss) var dismiss
      
     
     var body: some View {
@@ -41,6 +42,7 @@ struct RecipeDetailsView: View {
         }
             
         }
+        .navigationBarBackButtonHidden(true)
         
     }
     
@@ -50,6 +52,10 @@ struct RecipeDetailsView: View {
             Button(action: {
                 withAnimation(.easeInOut(duration: 0.3)){
                     show = false
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    dismiss()
                 }
             
             }) {
@@ -208,10 +214,10 @@ struct RecipeDetailsView: View {
             
             HStack(spacing: 12){
                 
-                ProfilePhoto(profile: profile)
+                ProfilePhoto(profile: profileViewMode.profile)
                                     
                 VStack(alignment: .leading) {
-                    Text(profile.fullName)
+                    Text(profileViewMode.profile.fullName)
                         .font(.custom("Poppins-SemiBold", size: 16))
                     
                     HStack{
@@ -302,5 +308,5 @@ struct RecipeDetailsView: View {
 #Preview {
     @Previewable @Namespace var namespace
     
-    RecipeDetailsView(recipe: MockData.sampleRecipe, profile: ProfileModel.preview, ingredient: MockData.sampleRecipe.nutrition.ingredients ?? [], nutrition: MockData.sampleRecipe.nutrition.nutrients, namespace: namespace, show: .constant(true))
+    RecipeDetailsView(recipe: MockData.sampleRecipe, ingredient: MockData.sampleRecipe.nutrition.ingredients ?? [], nutrition: MockData.sampleRecipe.nutrition.nutrients, namespace: namespace, show: .constant(true))
 }

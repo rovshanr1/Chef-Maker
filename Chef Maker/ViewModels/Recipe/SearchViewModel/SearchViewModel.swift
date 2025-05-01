@@ -25,17 +25,14 @@ class SearchViewModel: BaseViewModel<Recipe>, SearchViewModelProtocol {
     override init(networkService: NetworkServiceProtocol = BaseNetworkService()) {
         super.init(networkService: networkService)
         setupSearchSubscription()
-        Task { [weak self] in
-            await self?.fetchAllRecipes()
-        }
     }
     
     // Mock data initializer for preview
-//    static func preview() -> SearchViewModel {
-//        let viewModel = SearchViewModel()
-//        viewModel.data = MockData.sampleRecipes
-//        return viewModel
-//    }
+    static func preview() -> SearchViewModel {
+        let viewModel = SearchViewModel()
+        viewModel.data = MockData.sampleRecipes
+        return viewModel
+    }
     
     private func setupSearchSubscription() {
         $searchText
@@ -63,15 +60,12 @@ class SearchViewModel: BaseViewModel<Recipe>, SearchViewModelProtocol {
         do {
             let url = try createURL(query: query)
             let response: SpoonacularResponse = try await networkService.fetchData(from: url)
-            data = await applyAllFilters(to: response.results)
+            data = response.results
         } catch {
             self.error = error as? NetworkError ?? .networkError(error)
         }
         
         isLoading = false
-        
-   
-
     }
     
     func fetchAllRecipes() async {
@@ -79,13 +73,11 @@ class SearchViewModel: BaseViewModel<Recipe>, SearchViewModelProtocol {
         do {
             let url = try createURL(query: "")
             let response: SpoonacularResponse = try await networkService.fetchData(from: url)
-            data = await applyAllFilters(to: response.results)
+            data = response.results
         } catch {
             self.error = error as? NetworkError ?? .networkError(error)
         }
         isLoading = false
-    
-
     }
     
     private func createURL(query: String) throws -> URL {
@@ -141,12 +133,9 @@ class SearchViewModel: BaseViewModel<Recipe>, SearchViewModelProtocol {
     
    
     
-    func applyAllFilters(to recipes: [Recipe]) async -> [Recipe] {
+    func applyAllFilters(to recipes: [Recipe]) -> [Recipe] {
         var filtered = recipes
         filtered = applyRateFilter(to: filtered)
-        
-        await fetchAllRecipes()
-        
         return filtered
     }
     func isTimeFilterSelected(_ filter: TimeFilter) -> Bool {
