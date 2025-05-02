@@ -10,8 +10,13 @@ import Foundation
 struct ProfileModel: Identifiable, Codable {
     let id: String
     let fullName: String
+    let userName: String
     var photoURL: String?
     var email: String?
+    var bio: String?
+    var followingCount: Int
+    var followersCount: Int
+    var postCount: Int
     var timeStamp: Date
     
     var initials: String {
@@ -26,14 +31,20 @@ struct ProfileModel: Identifiable, Codable {
     static func fromFirebase(_ data: [String: Any]) -> ProfileModel? {
         guard
             let id = data["id"] as? String,
-            let fullName = data["fullName"] as? String
+            let fullName = data["fullName"] as? String,
+            let userName = data["userName"] as? String
         else { return nil }
         
         return ProfileModel(
             id: id,
             fullName: fullName,
+            userName: userName,
             photoURL: data["photoURL"] as? String,
             email: data["email"] as? String,
+            bio: data["bio"] as? String,
+            followingCount: data["followingCount"] as? Int ?? 0,
+            followersCount: data["followersCount"] as? Int ?? 0,
+            postCount: data["postCount"] as? Int ?? 0,
             timeStamp: (data["timeStamp"] as? TimeInterval).map { Date(timeIntervalSince1970: $0) } ?? Date()
         )
     }
@@ -42,7 +53,11 @@ struct ProfileModel: Identifiable, Codable {
         var data: [String: Any] = [
             "id": id,
             "fullName": fullName,
-            "timeStamp": timeStamp.timeIntervalSince1970
+            "userName": userName,
+            "timeStamp": timeStamp.timeIntervalSince1970,
+            "followersCount": followersCount,
+            "followingCount": followingCount,
+            "postCount": postCount
         ]
         
         if let photoURL = photoURL {
@@ -62,8 +77,13 @@ extension ProfileModel {
     static let preview = ProfileModel(
         id: "user123",
         fullName: "Ayşe Demir",
+        userName: "ayse.02",
         photoURL: "https://picsum.photos/200",
         email: "ayse.demir@example.com",
+        bio: "hi i am a student",
+        followingCount: 3,
+        followersCount: 2,
+        postCount: 4,
         timeStamp: Date()
     )
 }

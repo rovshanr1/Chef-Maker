@@ -19,18 +19,24 @@ class AppState: ObservableObject {
     @Published var hasSeenOnboarding: Bool = UserDefaults.standard.bool(forKey: "onboardingShown")
     
     let authService: AuthServiceProtocol
+    let profileService = ProfileService()
     private let db: Firestore
     var cancellables = Set<AnyCancellable>()
+    
+    
+    private let auth = Auth.auth()
     
     init(authService: AuthServiceProtocol = AuthService.shared,
          db: Firestore = Firestore.firestore()) {
         self.authService = authService
         self.db = db
         checkInitialSession()
+        
     }
     
     func checkInitialSession() {
         Task {
+            
             let result = await authService.checkSession()
             isLoggedIn = result
             

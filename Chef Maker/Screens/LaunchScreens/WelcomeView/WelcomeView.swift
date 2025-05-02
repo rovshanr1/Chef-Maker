@@ -2,7 +2,6 @@ import SwiftUI
 
 struct WelcomeView: View {
     @StateObject private var loginViewModel = LoginViewModel()
-    @StateObject private var searchViewModel = SearchViewModel()
     @Environment(\.colorScheme) var colorScheme
     
     //Navigation State
@@ -149,7 +148,7 @@ struct WelcomeView: View {
                 }
             }
             .navigationDestination(isPresented: $loginViewModel.isLogedIn, destination: {
-                DiscoveryView(searchViewModel: searchViewModel)
+               MainTabView()
             })
             .navigationDestination(isPresented: $navigateToSignUp) {
                     CreateAccountView()

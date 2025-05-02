@@ -120,7 +120,6 @@ struct DiscoveryView: View {
                             SearchView(namespace: namespace, show: $searchViewModel.searchActive)
                         }
                     }
-                    .ignoresSafeArea(.keyboard, edges: .bottom)
                 )
                 .overlay(
                     ZStack{
@@ -134,9 +133,6 @@ struct DiscoveryView: View {
                     }
                 )
                 .onTapGesture{ hideKeyboard() }
-                .ignoresSafeArea(.keyboard, edges: .bottom)
-            
-           
         }
     }
     

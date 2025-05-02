@@ -150,4 +150,18 @@ struct MockData {
         number: 6,
         totalResults: 6
     )
+    
+    static let preview = ProfileModel(
+        id: "user123",
+        fullName: "Ayşe Demir",
+        userName: "ayse.02",
+        photoURL: "https://picsum.photos/200",
+        email: "ayse.demir@example.com",
+        bio: "hi i am a student",
+        followingCount: 3,
+        followersCount: 2,
+        postCount: 4,
+        timeStamp: Date()
+    )
+    
 }

@@ -18,3 +18,8 @@ enum BookmarkStatus{
     case notBookmarked
 }
 
+//Profile button
+enum ProfileButton{
+    case posts
+    case bookmarks
+}

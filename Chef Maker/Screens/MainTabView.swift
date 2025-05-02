@@ -27,7 +27,7 @@ struct MainTabView: View {
                     case 2:
                         Color.blue
                     default:
-                        Color.gray
+                        ProfileView()
                     }
                 }
                 

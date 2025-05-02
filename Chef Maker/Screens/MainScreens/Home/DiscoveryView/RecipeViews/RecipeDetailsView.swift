@@ -261,7 +261,9 @@ struct RecipeDetailsView: View {
         VStack {
             HStack{
                 Button(action: {
-                    selectedTab = .ingredients
+                    withAnimation{
+                        selectedTab = .ingredients
+                    }
                 }){
                     Text("Ingredients")
                         .font(.custom("Poppins-SemiBold", size: 12))
@@ -276,7 +278,9 @@ struct RecipeDetailsView: View {
                 )
                 
                 Button(action: {
-                    selectedTab = .nutrition
+                    withAnimation{
+                        selectedTab = .nutrition
+                    }
                 }){
                     Text("Nutritions")
                         .font(.custom("Poppins-SemiBold", size: 12))

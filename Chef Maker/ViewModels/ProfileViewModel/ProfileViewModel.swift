@@ -8,9 +8,10 @@
 import SwiftUI
 import FirebaseAuth
 
+
 @MainActor
 protocol ProfileViewModelProtocol: BaseViewModelProtocol {
-    func updateProfile(fullName: String) async
+    func updateProfile(profile: ProfileModel) async
 //    func uploadProfileImage(_ image: UIImage) async
     func signOut() async
 }
@@ -19,11 +20,23 @@ protocol ProfileViewModelProtocol: BaseViewModelProtocol {
 final class ProfileViewModel: BaseViewModel<ProfileModel>, ProfileViewModelProtocol {
     private let appState: AppState
     
+    static func preview() -> ProfileViewModel {
+        let viewModel = ProfileViewModel(appState: AppState.shared)
+        viewModel.data = [MockData.preview]
+        return viewModel
+    }
+    
     var profile: ProfileModel {
         appState.currentProfile ?? ProfileModel(
             id: "",
             fullName: "",
+            userName: "",
+            photoURL: "",
             email: "",
+            bio: "",
+            followingCount: 0,
+            followersCount: 0,
+            postCount: 0,
             timeStamp: Date()
         )
     }
@@ -37,12 +50,15 @@ final class ProfileViewModel: BaseViewModel<ProfileModel>, ProfileViewModelProto
         super.init()
     }
     
-    func updateProfile(fullName: String) async {
+ 
+    
+    func updateProfile(profile: ProfileModel) async {
         isLoading = true
         defer { isLoading = false }
         
         do {
-            try await appState.updateUserProfile(fullName: fullName)
+        try await appState.profileService.updateProfile(profile)
+        appState.currentProfile = profile
         } catch {
             self.error = error as? NetworkError ?? .unknown(error)
         }
@@ -73,3 +89,4 @@ final class ProfileViewModel: BaseViewModel<ProfileModel>, ProfileViewModelProto
         }
     }
 }
+

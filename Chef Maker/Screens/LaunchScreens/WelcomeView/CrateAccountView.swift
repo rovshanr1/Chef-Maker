@@ -45,7 +45,14 @@ struct CreateAccountView: View {
                                 textContentType: .name,
                                 submitLabel: .next
                             )
-                            
+                            CustomInputField(
+                                title: "User Name",
+                                placeholder: "Add Your Individual Username",
+                                text: $createAccountViewModel.userName,
+                                keyboardType: .default,
+                                textContentType: .username,
+                                submitLabel: .next
+                            )
                             CustomInputField(
                                 title: "Email",
                                 placeholder: "Enter Your Email",
@@ -64,14 +71,6 @@ struct CreateAccountView: View {
                                 submitLabel: .next
                             )
                             
-                            CustomInputField(
-                                title: "Confirm Password",
-                                placeholder: "Retype Password",
-                                text: $createAccountViewModel.confirmPassword,
-                                isSecure: true,
-                                textContentType: .password,
-                                submitLabel: .done
-                            )
                             
                                 Toggle("I agree to the terms and conditions", isOn: $isOn)
                                 .font(.custom("Poppins-Medium", size: 14))

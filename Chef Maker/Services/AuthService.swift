@@ -12,7 +12,8 @@ import FirebaseFirestore
 protocol AuthServiceProtocol {
     var currentUser: User? { get }
     func login(email: String, password: String) async throws
-    func createAccount(userName: String, email: String, password: String) async throws
+    func createAccount(fullName: String, userName: String, email: String, password: String) async throws
+    func isUsernameTaken(_ username: String) async throws -> Bool
     func resetPassword(email: String) async throws
     func logout() async throws
     
@@ -57,7 +58,7 @@ class AuthService: AuthServiceProtocol{
     }
     
     // account creation func
-    func createAccount(userName: String, email: String, password: String) async throws {
+    func createAccount(fullName: String, userName: String, email: String, password: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, any Error>) in
             auth.createUser(withEmail: email, password: password) { [self] authResult, error in
                 if let error = error {
@@ -81,8 +82,13 @@ class AuthService: AuthServiceProtocol{
                     do {
                         let profile = ProfileModel(
                             id: user.uid,
-                            fullName: userName,
+                            fullName: fullName,
+                            userName: userName,
                             email: email,
+                            bio: "",
+                            followingCount: 0,
+                            followersCount: 0,
+                            postCount: 0,
                             timeStamp: Date()
                         )
                         try await db.collection("users").document(user.uid).setData(profile.toFirebase())
@@ -93,6 +99,11 @@ class AuthService: AuthServiceProtocol{
                 }
             }
         }
+    }
+    
+    func isUsernameTaken(_ username: String) async throws -> Bool {
+        let doc = try await db.collection("usernames").document(username).getDocument()
+        return doc.exists
     }
     
     // reset password func

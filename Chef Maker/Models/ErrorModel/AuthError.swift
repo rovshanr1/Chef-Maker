@@ -19,6 +19,7 @@ enum AuthError: LocalizedError {
     case invalidEmail
     case logoutFailed
     case tokenRefreshFailed
+    case usernameIsTaken
     case unknown(String)
 
     var errorDescription: String? {
@@ -32,7 +33,7 @@ enum AuthError: LocalizedError {
         case .emailAlreadyInUse:
             return "This email is already in use."
         case .weakPassword:
-            return "Your password is too weak. Please use a stronger password."
+            return "Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character."
         case .networkError:
             return "Check your internet connection and try again."
         case .userNameCanNotBeEmpty:
@@ -43,6 +44,8 @@ enum AuthError: LocalizedError {
             return "Logout failed"
         case .tokenRefreshFailed:
             return "Token refresh failed"
+        case .usernameIsTaken:
+            return "This username is already taken. Please choose another one."
         case .unknown(let message):
             return message
        

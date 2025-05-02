@@ -97,7 +97,6 @@ struct SearchView: View {
                     AppColors.adaptiveMainTabView(for: colorScheme)
                 )
             }
-            .ignoresSafeArea(.keyboard)
             .navigationBarBackButtonHidden(true)
         }
     }
