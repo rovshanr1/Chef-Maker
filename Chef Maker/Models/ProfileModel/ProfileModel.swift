@@ -9,8 +9,8 @@ import Foundation
 
 struct ProfileModel: Identifiable, Codable {
     let id: String
-    let fullName: String
-    let userName: String
+    var fullName: String
+    var userName: String
     var photoURL: String?
     var email: String?
     var bio: String?
@@ -57,7 +57,8 @@ struct ProfileModel: Identifiable, Codable {
             "timeStamp": timeStamp.timeIntervalSince1970,
             "followersCount": followersCount,
             "followingCount": followingCount,
-            "postCount": postCount
+            "postCount": postCount,
+            
         ]
         
         if let photoURL = photoURL {
@@ -67,6 +68,10 @@ struct ProfileModel: Identifiable, Codable {
         if let email = email {
             data["email"] = email
         }
+        
+        if let bio = bio {
+                  data["bio"] = bio
+              }
         
         return data
     }

@@ -59,7 +59,7 @@ struct RecipeDetailsView: View {
                 }
             
             }) {
-                Image(systemName: "arrow.backward")
+                Image(systemName: "chevron.backward")
                     .font(.title2)
                     .foregroundStyle(
                         Color(AppColors.adaptiveText(for: colorScheme)).opacity(0.5)

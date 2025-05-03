@@ -11,128 +11,132 @@ struct DiscoveryView: View {
     //StateObjects
     @StateObject private var featuredViewModel = FeaturedViewModel()
     @StateObject private var profileViewModel = ProfileViewModel(appState: AppState.shared)
-    @ObservedObject var searchViewModel: SearchViewModel
-
+    @StateObject private var searchViewModel = SearchViewModel()
+    
     //States
     @State private var scrollOffset: CGFloat = 0
     @State var selectedRecipe: Recipe?
     @State var index = 0
-
+    @Binding var showTabbar: Bool
+    
     //Animation
     @Namespace var namespace
     @State var show: Bool = false
-   
+    
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         NavigationStack {
             
-                VStack{
-                    ScrollView {
-                        
-                        RefreshableScrollView(onRefresh: {
-                            await featuredViewModel.forceRefresh()
-                        }) {
-                            VStack(alignment: .leading, spacing: 16) {
-                                //Avatar
-                                ProfileAvatarView(profile: profileViewModel.profile)
-                                
-                                //Search
-                                ZStack{
-                                    if searchViewModel.searchActive {
-                                        SearchBarView()
-                                        
-                                    }else{
-                                        SearchBarView()
-                                            .matchedGeometryEffect(id: "Search", in: namespace)
-                                    }
-                                }
-                                .contentShape(Rectangle())
-                                .onTapGesture {
-                                    withAnimation(.easeInOut(duration: 0.3)){
-                                        searchViewModel.searchActive = true
-                                    }
-                                }
-                                
-                                
-                                // Categories
-                                ShowCategoryButton()
-                                
-                                featuredHeader
-                                
-                                //Featured card
-                                featuredRecipes()
-                                
+            VStack{
+                ScrollView {
+                    
+                    RefreshableScrollView(onRefresh: {
+                        await featuredViewModel.forceRefresh()
+                    }) {
+                        VStack(alignment: .leading, spacing: 16) {
+                            //Avatar
+                            ProfileAvatarView(profile: profileViewModel.profile)
                             
-                                
-                            }
-                            .alert("Error", isPresented: .constant(featuredViewModel.error != nil)) {
-                                Button("Ok") {
-                                    featuredViewModel.error = nil
+                            //Search
+                            ZStack{
+                                if searchViewModel.searchActive {
+                                    SearchBarView()
+                                    
+                                }else{
+                                    SearchBarView()
+                                        .matchedGeometryEffect(id: "Search", in: namespace)
                                 }
-                            } message:{
-                                Text(featuredViewModel.error?.localizedDescription ?? "Unkonwn Error")
                             }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(GeometryReader { geometry in
-                                Color.clear.preference(
-                                    key: ScrollOffsetPreferenceKey.self,
-                                    value: geometry.frame(in: .named("scroll")).minY
-                                )
-                            })
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                withAnimation(.easeInOut(duration: 0.3)){
+                                    searchViewModel.searchActive = true
+                                }
+                            }
+                            
+                            
+                            // Categories
+                            ShowCategoryButton()
+                            
+                            featuredHeader
+                            
+                            //Featured card
+                            featuredRecipes()
+                            
+                            
+                            
                         }
-                    }
-                    .coordinateSpace(name: "scroll")
-                    .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                        scrollOffset = value
-                    }
-                    
-                    Spacer()
-                    
-                    
-
-                }
-                .background(AppColors.adaptiveMainTabView(for: colorScheme).ignoresSafeArea())
-                .onAppear{
-                    Task{
-                        if featuredViewModel.data.isEmpty{
-                            await featuredViewModel.forceRefresh()
+                        .alert("Error", isPresented: .constant(featuredViewModel.error != nil)) {
+                            Button("Ok") {
+                                featuredViewModel.error = nil
+                            }
+                        } message:{
+                            Text(featuredViewModel.error?.localizedDescription ?? "Unkonwn Error")
                         }
-                        print("Data Loaded Successfully: \(featuredViewModel.data.count)")
-                        print("Recipe Loaded Successfully:", featuredViewModel.data.map { $0.title})
-                    }
-                }
-                .navigationBarBackButtonHidden(true)
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        if scrollOffset < -20 {
-                            Text("Discovery")
-                                .font(.title2)
-                                .fontWeight(.bold)
-                                .transition(.move(edge: .top).combined(with: .opacity))
-                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(GeometryReader { geometry in
+                            Color.clear.preference(
+                                key: ScrollOffsetPreferenceKey.self,
+                                value: geometry.frame(in: .named("scroll")).minY
+                            )
+                        })
                     }
                 }
-                .overlay(
-                    ZStack{
-                        if searchViewModel.searchActive{
-                            SearchView(namespace: namespace, show: $searchViewModel.searchActive)
-                        }
+                .coordinateSpace(name: "scroll")
+                .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
+                    scrollOffset = value
+                }
+                
+                Spacer()
+                
+                
+                
+            }
+            .background(AppColors.adaptiveMainTabView(for: colorScheme).ignoresSafeArea())
+            .onAppear{
+                Task{
+                    if featuredViewModel.data.isEmpty{
+                        await featuredViewModel.forceRefresh()
                     }
-                )
-                .overlay(
-                    ZStack{
-                        if let selectedRecipe = selectedRecipe, show {
-                            RecipeDetailsView(recipe: selectedRecipe,
-                                              ingredient: selectedRecipe.nutrition.ingredients ?? [],
-                                              nutrition: selectedRecipe.nutrition.nutrients,
-                                              namespace: namespace,
-                                              show: $show)
-                        }
+                    print("Data Loaded Successfully: \(featuredViewModel.data.count)")
+                    print("Recipe Loaded Successfully:", featuredViewModel.data.map { $0.title})
+                }
+            }
+            .navigationBarBackButtonHidden(true)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    if scrollOffset < -20 {
+                        Text("Discovery")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .transition(.move(edge: .top).combined(with: .opacity))
                     }
-                )
-                .onTapGesture{ hideKeyboard() }
+                }
+            }
+            .overlay(
+                ZStack{
+                    if searchViewModel.searchActive{
+                        SearchView(namespace: namespace, show: $searchViewModel.searchActive)
+                            .onAppear { showTabbar = false }
+                            .onDisappear { showTabbar = true }
+                        
+                    }
+                }
+            )
+            .overlay(
+                ZStack{
+                    if let selectedRecipe = selectedRecipe, show {
+                        RecipeDetailsView(recipe: selectedRecipe,
+                                          ingredient: selectedRecipe.nutrition.ingredients ?? [],
+                                          nutrition: selectedRecipe.nutrition.nutrients,
+                                          namespace: namespace,
+                                          show: $show)
+                    }
+                }
+            )
+            .onTapGesture{ hideKeyboard() }
         }
     }
     
@@ -150,7 +154,7 @@ struct DiscoveryView: View {
                             }
                         }
                         .matchedGeometryEffect(id: "\(recipe.id)  image", in: namespace, isSource: !show)
-
+                    
                 }
             }
         }
@@ -164,19 +168,9 @@ var featuredHeader: some View {
     VStack(alignment: .leading) {
         HStack(){
             Text("Chef's Picks")
-                .font(.custom("Poppins-Bold", size: 24))
-                
+                .font(.custom("Poppins-Bold", size: 18))
+            
             Spacer()
-            
-            Button(action: {
-                
-            }){
-                Text("See All")
-                    .font(.custom("Poppins-Medium", size: 16))
-                    .foregroundStyle(AppColors.filedFilterButtonColor)
-            }
-            .padding(.trailing, 8)
-            
         }
         .padding(.horizontal)
     }

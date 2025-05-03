@@ -10,13 +10,16 @@ import Kingfisher
 
 
 struct ProfileView: View {
-    @StateObject private var profileViewModel = ProfileViewModel(appState: AppState.shared)
+    @StateObject var profileViewModel = ProfileViewModel(appState: AppState.shared)
     @Environment(\.colorScheme) var colorScheme
     
     @State private var isExpanded: Bool = false
     @State private var navigationEditScreen: Bool = false
     @State private var navigateBurgerMenu: Bool = false
     @State private var stateTab: ProfileButton = .posts
+    
+    @Binding var showTabBar: Bool
+
     
     var body: some View {
         NavigationStack {
@@ -35,7 +38,14 @@ struct ProfileView: View {
             .padding(.horizontal)
             .background(AppColors.adaptiveMainTabView(for: colorScheme))
             .navigationDestination(isPresented: $navigationEditScreen) {
-                EditProfile()
+                EditProfile(profileViewModel: profileViewModel, showTabBar: $showTabBar)
+                    .onAppear { showTabBar = false }
+                    .onChange(of: navigationEditScreen) { oldValue  ,newValue in
+                        if !newValue {
+                            showTabBar = true
+                        }
+                    }
+                   
             }
             .navigationDestination(isPresented: $navigateBurgerMenu) {
                 BurgerMenu()
@@ -183,52 +193,60 @@ struct ProfileView: View {
                 
             }
             
-            HStack{
-                Button(action: {
-                    stateTab = .posts
-                }){
-                    if stateTab == .posts{
-                        Image(systemName: "square.grid.3x3.fill")
-                            .font(.custom("Poppins-Medium", size: 18))
-                            .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
-                            .frame(maxWidth: .infinity)
-                            .padding(12)
-
-                    }else {
-                        Image(systemName: "square.grid.3x3")
-                            .font(.custom("Poppins-Medium", size: 18))
-                            .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
-                            .frame(maxWidth: .infinity)
-                            .padding(12)
-
+            VStack {
+                HStack{
+                    Button(action: {
+                        stateTab = .posts
+                    }){
+                        if stateTab == .posts{
+                            Image(systemName: "square.grid.3x3.fill")
+                                .font(.custom("Poppins-Medium", size: 18))
+                                .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
+                                .frame(maxWidth: .infinity)
+                                .padding(12)
+                            
+                        }else {
+                            Image(systemName: "square.grid.3x3")
+                                .font(.custom("Poppins-Medium", size: 18))
+                                .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
+                                .frame(maxWidth: .infinity)
+                                .padding(12)
+                            
+                        }
                     }
-                }
-               
-                
-                Button(action: {
-                    stateTab = .bookmarks
-                }){
-                    if stateTab == .bookmarks {
-                        Image(systemName: "bookmark.fill")
-                            .font(.custom("Poppins-Medium", size: 18))
-                            .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
-                            .frame(maxWidth: .infinity)
-                            .padding(12)
-
-                            
-                           
-                    }else{
-                        Image(systemName: "bookmark")
-                            .font(.custom("Poppins-Medium", size: 18))
-                            .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
-                            .frame(maxWidth: .infinity)
-                            .padding(12)
+                    
+                    
+                    Button(action: {
+                        stateTab = .bookmarks
+                    }){
+                        if stateTab == .bookmarks {
+                            Image(systemName: "bookmark.fill")
+                                .font(.custom("Poppins-Medium", size: 18))
+                                .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
+                                .frame(maxWidth: .infinity)
+                                .padding(12)
                             
                             
+                            
+                        }else{
+                            Image(systemName: "bookmark")
+                                .font(.custom("Poppins-Medium", size: 18))
+                                .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
+                                .frame(maxWidth: .infinity)
+                                .padding(12)
+                            
+                            
+                        }
+                        
                     }
-                 
+                    
                 }
                 
+                if stateTab == .posts {
+                    PostView()
+                }else if stateTab == .bookmarks {
+                    BookmarkView()
+                }
             }
         }
         .padding([.top, .horizontal])
@@ -239,5 +257,5 @@ struct ProfileView: View {
 
 
 #Preview {
-    ProfileView()
+    ProfileView(showTabBar: .constant(true))
 }

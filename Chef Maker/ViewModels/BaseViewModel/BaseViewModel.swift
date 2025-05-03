@@ -19,6 +19,7 @@ protocol BaseViewModelProtocol: ObservableObject {
 class BaseViewModel<T>: BaseViewModelProtocol {
     @Published var isLoading: Bool = false
     @Published var error: NetworkError?
+    @Published var profileError: ProfileError?
     @Published var data: [T] = []
     
     let networkService: NetworkServiceProtocol
