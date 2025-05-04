@@ -17,6 +17,9 @@ struct EditProfile: View {
     @State private var showSaveAlert = false
     @Binding var showTabBar: Bool
     
+    @State private var showImagePicker = false
+    @State private var selectedImage: UIImage?
+    
     var body: some View {
     
             VStack{
@@ -105,13 +108,25 @@ struct EditProfile: View {
             }
             
             Button(action: {
-                
+                showImagePicker = true
             }){
                 Text("Change Profile Photo")
                     .font(.custom("Poppins-Medium", size: 14))
                     .padding(8)
                 
             }
+            .sheet(isPresented: $showImagePicker) {
+                ImagePicker(image: $selectedImage)
+            }
+            .onChange(of: selectedImage) { oldImage ,newImage in
+                if let image = newImage{
+                    Task{
+                        try? await viewModel.uploadProfilePhoto(image)
+                    }
+                }
+            }
+       
+            
             
         }
         .padding(.top)

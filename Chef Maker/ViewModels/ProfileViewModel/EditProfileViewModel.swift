@@ -5,7 +5,7 @@
 //  Created by Rovshan Rasulov on 03.05.25.
 //
 
-import Foundation
+import UIKit
 
 @MainActor
 protocol EditProfileViewModelProtocol{
@@ -15,17 +15,22 @@ protocol EditProfileViewModelProtocol{
     var userName: String { get set }
     var bio: String { get set }
     
+    func uploadProfilePhoto(_ image: UIImage) async throws
+    
     func updateProfile() async
     func loadProfile()
 }
 
 @MainActor
 class EditProfileViewModel:BaseViewModel<ProfileModel>, EditProfileViewModelProtocol  {
+  
+    
     @Published var email: String = ""
     @Published var changePassword: String = ""
     @Published var name: String = ""
     @Published var userName: String = ""
     @Published var bio: String = ""
+    @Published var photoURL: String = ""
     
     private let appState : AppState
     
@@ -33,6 +38,16 @@ class EditProfileViewModel:BaseViewModel<ProfileModel>, EditProfileViewModelProt
         self.appState = appState
         super.init()
         loadProfile()
+    }
+  
+    func uploadProfilePhoto(_ image: UIImage) async throws {
+        let url = try await ImageUploadService.uploadImageToBackend(image: image, fileName: "profile_\(UUID().uuidString).jpg")
+        print("ImageKit URL: \(url)")
+        self.photoURL = url
+        guard var profile = appState.currentProfile else { return }
+        profile.photoURL = url
+        try await appState.profileService.updateProfile(profile)
+        appState.currentProfile = profile
     }
     
     func updateProfile() async {
@@ -48,6 +63,7 @@ class EditProfileViewModel:BaseViewModel<ProfileModel>, EditProfileViewModelProt
         profile.userName = userName
         profile.email = email
         profile.bio = bio
+        profile.photoURL = self.photoURL
         
         isLoading = true
         defer { isLoading = false }
@@ -68,5 +84,11 @@ class EditProfileViewModel:BaseViewModel<ProfileModel>, EditProfileViewModelProt
         self.userName = profile?.userName ?? ""
         self.email = profile?.email ?? ""
         self.bio = profile?.bio ?? ""
+        self.photoURL = profile?.photoURL ?? ""
     }
+    
+
 }
+
+
+

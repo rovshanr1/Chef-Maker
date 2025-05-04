@@ -39,7 +39,7 @@ class AppState: ObservableObject {
             
             let result = await authService.checkSession()
             isLoggedIn = result
-            
+//            try auth.signOut()
             if isLoggedIn {
                 await loadUserProfile()
             }

@@ -19,7 +19,7 @@ struct ProfileView: View {
     @State private var stateTab: ProfileButton = .posts
     
     @Binding var showTabBar: Bool
-
+    
     
     var body: some View {
         NavigationStack {
@@ -45,7 +45,7 @@ struct ProfileView: View {
                             showTabBar = true
                         }
                     }
-                   
+                
             }
             .navigationDestination(isPresented: $navigateBurgerMenu) {
                 BurgerMenu()
@@ -111,7 +111,7 @@ struct ProfileView: View {
                 Text("\(profileViewModel.profile.postCount)")
                     .font(.custom("Poppins-SemiBold", size: 16))
                 
-                Text("posts")
+                Text("recipes")
                     .font(.custom("Poppins-SemiBold", size: 14))
             }
             
@@ -196,47 +196,45 @@ struct ProfileView: View {
             VStack {
                 HStack{
                     Button(action: {
-                        stateTab = .posts
-                    }){
-                        if stateTab == .posts{
-                            Image(systemName: "square.grid.3x3.fill")
-                                .font(.custom("Poppins-Medium", size: 18))
-                                .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
-                                .frame(maxWidth: .infinity)
-                                .padding(12)
-                            
-                        }else {
-                            Image(systemName: "square.grid.3x3")
-                                .font(.custom("Poppins-Medium", size: 18))
-                                .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
-                                .frame(maxWidth: .infinity)
-                                .padding(12)
-                            
+                        withAnimation{
+                            stateTab = .posts
                         }
+                    }){
+                            VStack {
+                                    Image(systemName: stateTab == .posts ? "square.grid.3x3.fill"
+                                          : "square.grid.3x3")
+                                        .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
+                                        .frame(width: 22, height: 22)
+                                    
+                                    Rectangle()
+                                    .fill(stateTab == .posts ? .gray : .clear)
+                                    .frame(height: 2)
+                                    .padding(.horizontal)
+                                    
+                            }
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                           
                     }
                     
                     
                     Button(action: {
-                        stateTab = .bookmarks
-                    }){
-                        if stateTab == .bookmarks {
-                            Image(systemName: "bookmark.fill")
-                                .font(.custom("Poppins-Medium", size: 18))
-                                .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
-                                .frame(maxWidth: .infinity)
-                                .padding(12)
-                            
-                            
-                            
-                        }else{
-                            Image(systemName: "bookmark")
-                                .font(.custom("Poppins-Medium", size: 18))
-                                .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
-                                .frame(maxWidth: .infinity)
-                                .padding(12)
-                            
-                            
+                        withAnimation{
+                            stateTab = .bookmarks
                         }
+                    }){
+                        VStack {
+                            Image(systemName: stateTab == .bookmarks ? "bookmark.fill" : "bookmark")
+                                .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
+                                .frame(width: 22, height: 22)
+                            
+                            Rectangle()
+                                .fill(stateTab == .bookmarks ? .gray : .clear)
+                                .frame(height: 2)
+                                .padding(.horizontal)
+                        }
+                        .padding()
+                        .frame(maxWidth: .infinity)
                         
                     }
                     

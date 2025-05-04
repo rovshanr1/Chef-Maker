@@ -32,9 +32,9 @@ struct MainTabView: View {
             .safeAreaInset(edge: .bottom) {
                 if showTabBar {
                     TabBarView(index: self.$index)
-                        .ignoresSafeArea(.keyboard,edges: .bottom)
                 }
             }
+            .ignoresSafeArea(.keyboard,edges: .bottom)
             .background(AppColors.adaptiveMainTabView(for: colorScheme).ignoresSafeArea())
         }
     }
