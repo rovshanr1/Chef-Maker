@@ -10,8 +10,8 @@ import PhotosUI
 import Kingfisher
 
 struct ChangePhotoView: View {
-    @ObservedObject  var viewModel: EditProfileViewModel
-    @ObservedObject var profileViewModel: ProfileViewModel
+    @StateObject var viewModel: EditProfileViewModel
+    @StateObject var profileViewModel: ProfileViewModel
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
     
@@ -21,7 +21,10 @@ struct ChangePhotoView: View {
     @State private var selectedItem: PhotosPickerItem?
     @State private var sourceType: UIImagePickerController.SourceType = .camera
     
-    
+    init(appState: AppState) {
+        _viewModel = StateObject(wrappedValue: EditProfileViewModel(appState: appState))
+         _profileViewModel = StateObject(wrappedValue: ProfileViewModel(appState: appState))
+     }
     var body: some View {
         VStack{
             ZStack {
@@ -144,5 +147,5 @@ struct ChangePhotoView: View {
 }
 
 #Preview {
-    EditProfile(viewModel: EditProfileViewModel(appState: AppState()), profileViewModel: ProfileViewModel(appState: AppState()), showTabBar: .constant(true))
+    EditProfile(appState: AppState(), showTabBar: .constant(true))
 }

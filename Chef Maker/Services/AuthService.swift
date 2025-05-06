@@ -11,7 +11,7 @@ import FirebaseFirestore
 
 protocol AuthServiceProtocol {
     var currentUser: User? { get }
-    func login(email: String, password: String) async throws
+    func login(email: String, password: String) async throws -> ProfileModel
     func createAccount(fullName: String, userName: String, email: String, password: String) async throws
     func isUsernameTaken(_ username: String) async throws -> Bool
     func resetPassword(email: String) async throws
@@ -33,17 +33,17 @@ class AuthService: AuthServiceProtocol{
     init() {}
     
     // login func
-    func login(email: String, password: String) async throws {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            auth.signIn(withEmail: email, password: password) { authResult, error in
-                
+    func login(email: String, password: String) async throws -> ProfileModel {
+        try await withCheckedThrowingContinuation { continuation in
+            auth.signIn(withEmail: email, password: password) { [weak self] authResult, error in
                 if let error = error {
                     continuation.resume(throwing: mapFirebaseError(error))
                     return
                 }
                 
-                guard let user = authResult?.user else{
-                    continuation.resume(throwing: AuthError.unknown("An unkown error occured. Please try again"))
+                guard let self = self else { return }
+                guard let user = authResult?.user else {
+                    continuation.resume(throwing: AuthError.unknown("Unknown error"))
                     return
                 }
                 
@@ -51,11 +51,26 @@ class AuthService: AuthServiceProtocol{
                     continuation.resume(throwing: AuthError.emailNotVerified)
                     return
                 }
-                continuation.resume()
+                
+      
+                Task {
+                    do {
+                        let snapshot = try await self.db.collection("users").document(user.uid).getDocument()
+                        guard let data = snapshot.data(),
+                              let profile = ProfileModel.fromFirebase(data) else {
+                            continuation.resume(throwing: AuthError.unknown("Profile not found"))
+                            return
+                        }
+                        
+                        continuation.resume(returning: profile)
+                    } catch {
+                        continuation.resume(throwing: error)
+                    }
+                }
             }
         }
     }
-    
+
     // account creation func
     func createAccount(fullName: String, userName: String, email: String, password: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, any Error>) in

@@ -20,7 +20,7 @@ struct ContentView: View {
                     OnboardingView()
                 }
                 else{
-                    WelcomeView(loginViewModel: LoginViewModel(authService: appState.authService, appState: appState))
+                    WelcomeView(appState: appState)
                 }
                 
             }else{

@@ -44,7 +44,7 @@ struct OnboardingView: View {
                 }
             }
             .navigationDestination(isPresented: $showWelcomeView){
-                WelcomeView(loginViewModel: LoginViewModel(authService: appState.authService, appState: appState))
+                WelcomeView(appState: appState)
             }
             .navigationBarBackButtonHidden(true)
         }

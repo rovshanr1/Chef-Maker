@@ -24,12 +24,16 @@ class CreateAccountViewModel: ObservableObject{
     //Service
     private let profileService: ProfileServiceProtocol
     private let authService: AuthServiceProtocol
+    let appState: AppState
+    
     
     init(authService: AuthServiceProtocol = AuthService(),
-         profileService: ProfileServiceProtocol = ProfileService()
+         profileService: ProfileServiceProtocol = ProfileService(),
+         appState: AppState
     ) {
         self.authService = authService
         self.profileService = profileService
+        self.appState = appState
     }
     
     // password secure

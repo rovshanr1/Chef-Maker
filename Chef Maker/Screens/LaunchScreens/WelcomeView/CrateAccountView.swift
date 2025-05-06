@@ -8,13 +8,16 @@
 import SwiftUI
 
 struct CreateAccountView: View {
-    @StateObject private var createAccountViewModel = CreateAccountViewModel()
+    @StateObject var createAccountViewModel: CreateAccountViewModel
     @EnvironmentObject var appState: AppState
     @Environment(\.colorScheme) var colorScheme
     
     @State private var isOn = false
     @State private var navigateToWelcomeScreen = false
     
+    init(appState: AppState) {
+        _createAccountViewModel = StateObject(wrappedValue: CreateAccountViewModel(appState: appState))
+     }
     var body: some View {
         NavigationStack {
             ZStack {
@@ -135,10 +138,10 @@ struct CreateAccountView: View {
                 }
             }
             .navigationDestination(isPresented: $navigateToWelcomeScreen, destination: {
-                WelcomeView(loginViewModel: LoginViewModel(authService: appState.authService , appState: appState))
+                WelcomeView(appState: appState)
             })
             .navigationDestination(isPresented: $createAccountViewModel.accountCreated, destination: {
-                WelcomeView(loginViewModel: LoginViewModel(authService: appState.authService , appState: appState))
+                WelcomeView(appState: appState)
             })
             .navigationBarBackButtonHidden(true)
         }
@@ -157,6 +160,6 @@ struct CreateAccountView: View {
 }
 
 #Preview {
-    CreateAccountView()
+    CreateAccountView(appState: AppState())
         .preferredColorScheme(.dark)
 }

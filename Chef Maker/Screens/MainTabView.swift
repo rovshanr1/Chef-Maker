@@ -19,7 +19,7 @@ struct MainTabView: View {
                 Group{
                     switch index{
                     case 0:
-                        DiscoveryView(showTabbar: self.$showTabBar)
+                        DiscoveryView(appState: appState, showTabbar: self.$showTabBar)
                     case 1:
                         Color.black
                     case 2:

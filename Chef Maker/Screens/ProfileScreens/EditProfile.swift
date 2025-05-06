@@ -9,6 +9,7 @@ import SwiftUI
 import Kingfisher
 
 struct EditProfile: View {
+    @EnvironmentObject var appState : AppState
     @StateObject  var viewModel: EditProfileViewModel
     @StateObject var profileViewModel: ProfileViewModel
     @Environment(\.colorScheme) var colorScheme
@@ -17,6 +18,13 @@ struct EditProfile: View {
     @State private var showSaveAlert = false
     @State private var showChangeImageSheet = false
     @Binding var showTabBar: Bool
+    
+    
+    init(appState: AppState, showTabBar: Binding<Bool>) {
+         _profileViewModel = StateObject(wrappedValue: ProfileViewModel(appState: appState))
+         _viewModel = StateObject(wrappedValue: EditProfileViewModel(appState: appState))
+         self._showTabBar = showTabBar
+     }
     
     var body: some View {
     
@@ -47,7 +55,7 @@ struct EditProfile: View {
                 dismiss()
             }){
                 Image(systemName: "chevron.backward")
-                    .font(.custom("Poppins-Medium", size: 18))
+                    .font(.headline)
                     .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
             }
             
@@ -65,6 +73,9 @@ struct EditProfile: View {
                     .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
             }
             .alert("are you sure you want to save changes?", isPresented: $showSaveAlert){
+                
+                Button("No!", role: .cancel){}
+                
                 Button(action: {
                     Task{
                        await viewModel.updateProfile()
@@ -72,7 +83,7 @@ struct EditProfile: View {
                 }){
                     Text("Yes im sure!")
                 }
-                Button("No!", role: .cancel) {}
+              
             }
             
         }
@@ -116,7 +127,7 @@ struct EditProfile: View {
                 
             }
             .sheet(isPresented: $showChangeImageSheet) {
-                ChangePhotoView(viewModel: viewModel, profileViewModel: profileViewModel)
+                ChangePhotoView(appState: appState,)
                     .presentationDetents([.height(350)])
                     .presentationDragIndicator(.visible)
                     .presentationCornerRadius(22)
@@ -131,7 +142,7 @@ struct EditProfile: View {
         VStack(alignment: .leading, spacing: 16) {
             VStack(alignment: .leading, spacing: 4){
                 Text("Name")
-                    .font(.custom("Poppins-Medium", size: 16))
+                    .font(.custom("Poppins-Regular", size: 16))
 
                 TextField("Name", text: $viewModel.name)
                     .font(.custom("Poppins-Medium", size: 14))
@@ -146,7 +157,7 @@ struct EditProfile: View {
             
             VStack(alignment: .leading, spacing: 4){
                 Text("Username")
-                    .font(.custom("Poppins-Medium", size: 16))
+                    .font(.custom("Poppins-Regular", size: 16))
 
                 TextField("Username", text: $viewModel.userName)
                     .font(.custom("Poppins-Medium", size: 14))
@@ -162,7 +173,7 @@ struct EditProfile: View {
             
             VStack(alignment: .leading, spacing: 4){
                 Text("Bio")
-                    .font(.custom("Poppins-Medium", size: 16))
+                    .font(.custom("Poppins-Regular", size: 16))
                 
                 TextField("Bio", text: $viewModel.bio)
                     .font(.custom("Poppins-Medium", size: 14))
@@ -182,6 +193,6 @@ struct EditProfile: View {
 }
 
 #Preview {
-    EditProfile(viewModel: EditProfileViewModel(appState: AppState()), profileViewModel: ProfileViewModel(appState: AppState()), showTabBar: .constant(true))
+    EditProfile(appState: AppState(), showTabBar: .constant(true))
     
 }

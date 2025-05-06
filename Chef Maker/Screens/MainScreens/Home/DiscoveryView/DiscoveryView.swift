@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct DiscoveryView: View {
+    @EnvironmentObject var appState: AppState
+    
     //StateObjects
     @StateObject private var featuredViewModel = FeaturedViewModel()
-    @StateObject private var profileViewModel = ProfileViewModel(appState: AppState())
+    @StateObject var profileViewModel: ProfileViewModel
     @StateObject private var searchViewModel = SearchViewModel()
     
     //States
@@ -24,6 +26,13 @@ struct DiscoveryView: View {
     @State var show: Bool = false
     
     @Environment(\.colorScheme) var colorScheme
+    
+    
+    init(appState: AppState, showTabbar: Binding<Bool>) {
+         _profileViewModel = StateObject(wrappedValue: ProfileViewModel(appState: appState))
+         self._showTabbar = showTabbar
+     }
+    
     
     var body: some View {
         NavigationStack {
@@ -131,7 +140,7 @@ struct DiscoveryView: View {
                         RecipeDetailsView(recipe: selectedRecipe,
                                           ingredient: selectedRecipe.nutrition.ingredients ?? [],
                                           nutrition: selectedRecipe.nutrition.nutrients,
-                                          namespace: namespace,
+                                          namespace: namespace, appState: appState,
                                           show: $show)
                     }
                 }

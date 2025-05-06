@@ -40,8 +40,10 @@ class LoginViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
         defer { isLoading = false}
+        
         do{
-            try await authService.login(email: email, password: password)
+            let profile = try await authService.login(email: email, password: password)
+            appState.currentProfile = profile
             appState.isLoggedIn = true
             return true
         } catch {

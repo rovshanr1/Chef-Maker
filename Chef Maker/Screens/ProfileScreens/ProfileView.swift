@@ -10,6 +10,7 @@ import Kingfisher
 
 
 struct ProfileView: View {
+    @EnvironmentObject var appState: AppState
     @StateObject var profileViewModel: ProfileViewModel
     @StateObject var editProfileViewModel: EditProfileViewModel
     @Environment(\.colorScheme) var colorScheme
@@ -45,7 +46,7 @@ struct ProfileView: View {
             .padding(.horizontal)
             .background(AppColors.adaptiveMainTabView(for: colorScheme))
             .navigationDestination(isPresented: $navigationEditScreen) {
-                EditProfile(viewModel: editProfileViewModel, profileViewModel: profileViewModel, showTabBar: $showTabBar)
+                EditProfile(appState: appState, showTabBar: $showTabBar)
                     .onAppear { showTabBar = false }
                     .onChange(of: navigationEditScreen) { oldValue  ,newValue in
                         if !newValue {

@@ -46,17 +46,30 @@ struct ImageKitService {
     }
     
     static func deleteFile(fileId: String, token: String) async throws {
-        let url = URL(string: "https://api.imagekit.io/v1/files/\(fileId)")!
+        let url = URL(string: "https://chef-maker-back-bbeksrye8-rovshans-projects-4e30a7e2.vercel.app/api/delete")!
         var request = URLRequest(url: url)
         request.httpMethod = "DELETE"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        // Debug log: Request details
+        print("DELETE Request URL: \(url)")
+        print("Authorization header: Bearer \(token)")
         
-        let (_, response) = try await URLSession.shared.data(for: request)
+        let body: [String: Any] = ["fileId": fileId]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+
+        let (data, response) = try await URLSession.shared.data(for: request)
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
             throw ImageError.failedToDelete
         }
+
+        // Debug: Response
+        print("Response data: \(String(data: data, encoding: .utf8) ?? "No response")")
     }
+
+
+
 }
 
 

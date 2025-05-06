@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SearchGridView: View {
+    @EnvironmentObject var appState: AppState
     @ObservedObject var viewModel: SearchViewModel
     @State private var selectedRecipe: Recipe?
     
@@ -37,7 +38,7 @@ struct SearchGridView: View {
                                 recipe: recipe,
                                 ingredient: recipe.nutrition.ingredients ?? [],
                                 nutrition: recipe.nutrition.nutrients,
-                                namespace: namespace,
+                                namespace: namespace, appState: appState,
                                 show: .constant(true)
                             )) {
                                 RecipeCardView(recipe: recipe)

@@ -11,13 +11,28 @@ struct RecipeDetailsView: View {
     
     //States
     @State private var selectedTab: DetailTab = .ingredients
-    @StateObject private var profileViewMode = ProfileViewModel(appState: AppState())
+    @StateObject var profileViewModel: ProfileViewModel
     @Binding var show: Bool
 
     
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
      
+    init(
+          recipe: Recipe,
+          ingredient: [Ingredient],
+          nutrition: [RecipeNutrient],
+          namespace: Namespace.ID,
+          appState: AppState,
+          show: Binding<Bool>
+      ) {
+          self.recipe = recipe
+          self.ingredient = ingredient
+          self.nutrition = nutrition
+          self.namespace = namespace
+          _profileViewModel = StateObject(wrappedValue: ProfileViewModel(appState: appState))
+          self._show = show
+      }
     
     var body: some View {
         ZStack {
@@ -214,10 +229,10 @@ struct RecipeDetailsView: View {
             
             HStack(spacing: 12){
                 
-                ProfilePhoto(profile: profileViewMode.profile)
+                ProfilePhoto(profile: profileViewModel.profile)
                                     
                 VStack(alignment: .leading) {
-                    Text(profileViewMode.profile.fullName)
+                    Text(profileViewModel.profile.fullName)
                         .font(.custom("Poppins-SemiBold", size: 16))
                     
                     HStack{
@@ -309,8 +324,4 @@ struct RecipeDetailsView: View {
 }
 
 
-#Preview {
-    @Previewable @Namespace var namespace
-    
-    RecipeDetailsView(recipe: MockData.sampleRecipe, ingredient: MockData.sampleRecipe.nutrition.ingredients ?? [], nutrition: MockData.sampleRecipe.nutrition.nutrients, namespace: namespace, show: .constant(true))
-}
+

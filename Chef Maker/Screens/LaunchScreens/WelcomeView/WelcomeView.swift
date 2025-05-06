@@ -2,7 +2,7 @@ import SwiftUI
 
 struct WelcomeView: View {
     @EnvironmentObject var appState: AppState
-    @ObservedObject var loginViewModel: LoginViewModel
+    @StateObject var loginViewModel: LoginViewModel
     @Environment(\.colorScheme) var colorScheme
     
     //Navigation State
@@ -10,6 +10,9 @@ struct WelcomeView: View {
     @State private var navigateToForgotPassword: Bool = false
     @State private var navigateToDiscoveryView: Bool = false
     
+    init(appState: AppState) {
+        _loginViewModel = StateObject(wrappedValue: LoginViewModel(appState: appState))
+     }
     var body: some View {
         
         NavigationStack {
@@ -145,7 +148,7 @@ struct WelcomeView: View {
                 }
             }
             .navigationDestination(isPresented: $navigateToSignUp) {
-                    CreateAccountView()
+                CreateAccountView(appState: appState)
             }
             .navigationBarBackButtonHidden(true)
         }
