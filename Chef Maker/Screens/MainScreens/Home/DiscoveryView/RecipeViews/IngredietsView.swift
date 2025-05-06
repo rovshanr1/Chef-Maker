@@ -20,7 +20,7 @@ struct IngredietsView: View {
                                 .ignoresSafeArea()
                             HStack{
 //                                KFImage(ingredient.imageUrl)
-//                                    .targetCache(CacheManager.shared.imageCache)
+//                                    .targetCache(CacheManager().imageCache)
 //                                    .placeholder {
 //                                        RoundedRectangle(cornerRadius: 12, style: .continuous)
 //                                            .foregroundStyle(AppColors.cardBackground)

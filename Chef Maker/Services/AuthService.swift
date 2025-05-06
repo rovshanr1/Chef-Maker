@@ -22,9 +22,8 @@ protocol AuthServiceProtocol {
 
 
 class AuthService: AuthServiceProtocol{
-    static let shared = AuthService()
     
-    private let auth = Auth.auth()
+    private  let auth = Auth.auth()
     private let db = Firestore.firestore()
     
     var currentUser: User? {
@@ -84,6 +83,8 @@ class AuthService: AuthServiceProtocol{
                             id: user.uid,
                             fullName: fullName,
                             userName: userName,
+                            photoURL: "",
+                            fileId: "",
                             email: email,
                             bio: "",
                             followingCount: 0,
@@ -139,5 +140,5 @@ class AuthService: AuthServiceProtocol{
         
         return true
     }
-
+    
 }

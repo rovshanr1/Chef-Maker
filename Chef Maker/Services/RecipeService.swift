@@ -17,7 +17,7 @@ class RecipeService: RecipeServiceProtocol {
     
     private let networkService: NetworkServiceProtocol
     private let baseURL = "https://api.spoonacular.com/recipes/complexSearch"
-    private let cache = CacheManager.shared
+    private let cache = CacheManager()
     
     init(networService: NetworkServiceProtocol = BaseNetworkService()) {
         self.networkService = networService

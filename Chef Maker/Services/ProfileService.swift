@@ -24,7 +24,7 @@ final class ProfileService: ProfileServiceProtocol{
     private let authService: AuthServiceProtocol
     private let db: Firestore
 
-    init(authService: AuthServiceProtocol = AuthService.shared,
+    init(authService: AuthServiceProtocol = AuthService(),
             db: Firestore = Firestore.firestore()) {
             self.authService = authService
             self.db = db

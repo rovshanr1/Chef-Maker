@@ -12,6 +12,7 @@ enum ImageError: Error, LocalizedError{
     case invalidResponse
     case serverError(statusCode: Int)
     case decodingError
+    case failedToDelete
     case unknown(Error)
     
     var errorDescription: String? {
@@ -24,6 +25,8 @@ enum ImageError: Error, LocalizedError{
             return "Server error: \(code)"
         case .decodingError:
             return "Error decoding image data"
+        case .failedToDelete:
+            return "Image deletion failed"
         case .unknown(let error):
             return "Unknown error: \(error)"
         }

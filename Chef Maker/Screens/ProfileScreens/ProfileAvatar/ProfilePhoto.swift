@@ -21,7 +21,7 @@ struct ProfilePhoto: View {
                 Group{
                     if let photoURL = profile.photoURL, let url = URL(string: photoURL) {
                         KFImage(url)
-                            .targetCache(CacheManager.shared.imageCache)
+                            .targetCache(CacheManager().imageCache)
                             .fade(duration: 0.5)
                             .resizable()
                             .aspectRatio(contentMode: .fill)

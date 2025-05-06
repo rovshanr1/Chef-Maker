@@ -10,7 +10,7 @@ import SwiftUI
 struct DiscoveryView: View {
     //StateObjects
     @StateObject private var featuredViewModel = FeaturedViewModel()
-    @StateObject private var profileViewModel = ProfileViewModel(appState: AppState.shared)
+    @StateObject private var profileViewModel = ProfileViewModel(appState: AppState())
     @StateObject private var searchViewModel = SearchViewModel()
     
     //States

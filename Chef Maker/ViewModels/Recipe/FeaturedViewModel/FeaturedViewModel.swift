@@ -14,7 +14,7 @@ final class FeaturedViewModel: BaseViewModel<Recipe> {
 
     init(recipeService: RecipeServiceProtocol = RecipeService()) {
         self.recipeService = recipeService
-        self.cache = CacheManager.shared
+        self.cache = CacheManager()
         super.init()
     }
     

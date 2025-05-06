@@ -12,6 +12,7 @@ struct ProfileModel: Identifiable, Codable {
     var fullName: String
     var userName: String
     var photoURL: String?
+    var fileId: String?
     var email: String?
     var bio: String?
     var followingCount: Int
@@ -40,6 +41,7 @@ struct ProfileModel: Identifiable, Codable {
             fullName: fullName,
             userName: userName,
             photoURL: data["photoURL"] as? String,
+            fileId: data["fileId"] as? String,
             email: data["email"] as? String,
             bio: data["bio"] as? String,
             followingCount: data["followingCount"] as? Int ?? 0,
@@ -61,6 +63,9 @@ struct ProfileModel: Identifiable, Codable {
             
         ]
         
+        if let fileID = fileId {
+            data["fileId"] = fileID
+        }
         if let photoURL = photoURL {
             data["photoURL"] = photoURL
         }
@@ -84,6 +89,7 @@ extension ProfileModel {
         fullName: "Ayşe Demir",
         userName: "ayse.02",
         photoURL: "https://picsum.photos/200",
+        fileId: "",
         email: "ayse.demir@example.com",
         bio: "hi i am a student",
         followingCount: 3,

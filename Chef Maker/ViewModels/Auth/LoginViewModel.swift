@@ -13,17 +13,19 @@ class LoginViewModel: ObservableObject {
     //UI-State
     @Published var errorMessage: String?
     @Published var isLoading: Bool = false
-    @Published var isLogedIn: Bool = false
+    
     
     //Service
-    private let authService: AuthServiceProtocol
+    let authService: AuthServiceProtocol
+    let appState: AppState
     
-    init(authService: AuthServiceProtocol = AuthService.shared){
+    init(authService: AuthServiceProtocol = AuthService(), appState: AppState ) {
         self.authService = authService
-    } 
+        self.appState = appState
+    }
     
     func login() async -> Bool {
-       //TextFields cannot be empty
+        //TextFields cannot be empty
         guard !email.isEmpty, !password.isEmpty else {
             errorMessage = "Please fill in all fields."
             return false
@@ -35,23 +37,20 @@ class LoginViewModel: ObservableObject {
             return false
         }
         
-            isLoading = true
-            errorMessage = nil
-            defer { isLogedIn = false}
-            
-            do{
-                try await authService.login(email: email, password: password)
-                isLogedIn = true
-                return true
-            } catch {
-                if let authError = error as? AuthError {
-                    errorMessage = authError.localizedDescription
-                } else {
-                    errorMessage = mapFirebaseError(error).localizedDescription
-                }
-                return false
+        isLoading = true
+        errorMessage = nil
+        defer { isLoading = false}
+        do{
+            try await authService.login(email: email, password: password)
+            appState.isLoggedIn = true
+            return true
+        } catch {
+            if let authError = error as? AuthError {
+                errorMessage = authError.localizedDescription
+            } else {
+                errorMessage = mapFirebaseError(error).localizedDescription
             }
-           
-        
+            return false
+        }
     }
 } 

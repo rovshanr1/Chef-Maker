@@ -11,7 +11,7 @@ struct RecipeDetailsView: View {
     
     //States
     @State private var selectedTab: DetailTab = .ingredients
-    @StateObject private var profileViewMode = ProfileViewModel(appState: AppState.shared)
+    @StateObject private var profileViewMode = ProfileViewModel(appState: AppState())
     @Binding var show: Bool
 
     
@@ -127,7 +127,7 @@ struct RecipeDetailsView: View {
         GeometryReader { proxy in
             ZStack(alignment: .topTrailing) {
                 KFImage(URL(string: recipe.image))
-                    .targetCache(CacheManager.shared.imageCache)
+                    .targetCache(CacheManager().imageCache)
                     .placeholder {
                         RoundedRectangle(cornerRadius: 20, style: .continuous)
                             .foregroundStyle(AppColors.cardBackground)

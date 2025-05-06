@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct MainTabView: View {
+    @EnvironmentObject private var appState: AppState
     @State var index: Int = 0
     @State private var showTabBar: Bool = true
     @Environment(\.colorScheme) var colorScheme
@@ -24,7 +25,7 @@ struct MainTabView: View {
                     case 2:
                         Color.blue
                     default:
-                        ProfileView(showTabBar: self.$showTabBar)
+                        ProfileView(appState: appState, showTabBar: self.$showTabBar )
                     }
                 }
                

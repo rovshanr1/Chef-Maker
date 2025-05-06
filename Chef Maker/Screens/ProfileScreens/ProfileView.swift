@@ -10,7 +10,8 @@ import Kingfisher
 
 
 struct ProfileView: View {
-    @StateObject var profileViewModel = ProfileViewModel(appState: AppState.shared)
+    @StateObject var profileViewModel: ProfileViewModel
+    @StateObject var editProfileViewModel: EditProfileViewModel
     @Environment(\.colorScheme) var colorScheme
     
     @State private var isExpanded: Bool = false
@@ -19,6 +20,12 @@ struct ProfileView: View {
     @State private var stateTab: ProfileButton = .posts
     
     @Binding var showTabBar: Bool
+    
+    init(appState: AppState, showTabBar: Binding<Bool>) {
+         _profileViewModel = StateObject(wrappedValue: ProfileViewModel(appState: appState))
+         _editProfileViewModel = StateObject(wrappedValue: EditProfileViewModel(appState: appState))
+         self._showTabBar = showTabBar
+     }
     
     
     var body: some View {
@@ -38,7 +45,7 @@ struct ProfileView: View {
             .padding(.horizontal)
             .background(AppColors.adaptiveMainTabView(for: colorScheme))
             .navigationDestination(isPresented: $navigationEditScreen) {
-                EditProfile(profileViewModel: profileViewModel, showTabBar: $showTabBar)
+                EditProfile(viewModel: editProfileViewModel, profileViewModel: profileViewModel, showTabBar: $showTabBar)
                     .onAppear { showTabBar = false }
                     .onChange(of: navigationEditScreen) { oldValue  ,newValue in
                         if !newValue {
@@ -48,7 +55,7 @@ struct ProfileView: View {
                 
             }
             .navigationDestination(isPresented: $navigateBurgerMenu) {
-                BurgerMenu()
+                BurgerMenu(viewModel: profileViewModel)
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -88,7 +95,7 @@ struct ProfileView: View {
                 Group{
                     if let photoURL = profileViewModel.profile.photoURL, let url = URL(string: photoURL) {
                         KFImage(url)
-                            .targetCache(CacheManager.shared.imageCache)
+                            .targetCache(CacheManager().imageCache)
                             .fade(duration: 0.5)
                             .resizable()
                             .aspectRatio(contentMode: .fill)
@@ -255,5 +262,5 @@ struct ProfileView: View {
 
 
 #Preview {
-    ProfileView(showTabBar: .constant(true))
+    ProfileView(appState: AppState(), showTabBar: .constant(true))
 }

@@ -12,8 +12,6 @@ import Combine
 
 @MainActor
 class AppState: ObservableObject {
-    static let shared = AppState()
-    
     @Published var isLoggedIn: Bool = false
     @Published var currentProfile: ProfileModel?
     @Published var hasSeenOnboarding: Bool = UserDefaults.standard.bool(forKey: "onboardingShown")
@@ -24,22 +22,19 @@ class AppState: ObservableObject {
     var cancellables = Set<AnyCancellable>()
     
     
-    private let auth = Auth.auth()
+    let auth = Auth.auth()
     
-    init(authService: AuthServiceProtocol = AuthService.shared,
-         db: Firestore = Firestore.firestore()) {
+    init(authService: AuthServiceProtocol = AuthService(),
+        db: Firestore = Firestore.firestore()) {
         self.authService = authService
         self.db = db
         checkInitialSession()
-        
     }
     
     func checkInitialSession() {
         Task {
-            
             let result = await authService.checkSession()
             isLoggedIn = result
-//            try auth.signOut()
             if isLoggedIn {
                 await loadUserProfile()
             }
@@ -65,7 +60,7 @@ class AppState: ObservableObject {
             currentProfile = nil
         } catch {
             print("Logout Error: \(error.localizedDescription)")
-            // TODO: Error handeling
+        
         }
     }
     

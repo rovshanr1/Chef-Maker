@@ -1,14 +1,14 @@
 import SwiftUI
 
 struct WelcomeView: View {
-    @StateObject private var loginViewModel = LoginViewModel()
+    @EnvironmentObject var appState: AppState
+    @ObservedObject var loginViewModel: LoginViewModel
     @Environment(\.colorScheme) var colorScheme
     
     //Navigation State
     @State private var navigateToSignUp: Bool = false
     @State private var navigateToForgotPassword: Bool = false
     @State private var navigateToDiscoveryView: Bool = false
-    
     
     var body: some View {
         
@@ -70,14 +70,11 @@ struct WelcomeView: View {
                             Button(action: {
                                 UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                                 Task{
-                                    let succes = await loginViewModel.login()
-                                    if succes{
-                                        loginViewModel.isLogedIn = true
-                                    }
+                                     await loginViewModel.login()
                                     }
                                     
                                 }) {
-                                if loginViewModel.isLoading{
+                                    if loginViewModel.isLoading{
                                     ProgressView()
                                         .progressViewStyle(.circular)
                                         .frame(maxWidth: .infinity)
@@ -147,9 +144,6 @@ struct WelcomeView: View {
                     hideKeyboard()
                 }
             }
-            .navigationDestination(isPresented: $loginViewModel.isLogedIn, destination: {
-               MainTabView()
-            })
             .navigationDestination(isPresented: $navigateToSignUp) {
                     CreateAccountView()
             }
@@ -187,6 +181,3 @@ struct WelcomeView: View {
     }
 }
 
-#Preview {
-    WelcomeView()
-} 

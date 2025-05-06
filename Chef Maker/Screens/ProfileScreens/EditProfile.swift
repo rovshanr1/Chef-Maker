@@ -9,16 +9,14 @@ import SwiftUI
 import Kingfisher
 
 struct EditProfile: View {
-    @StateObject  var viewModel = EditProfileViewModel(appState: AppState.shared)
-    @ObservedObject var profileViewModel: ProfileViewModel
+    @StateObject  var viewModel: EditProfileViewModel
+    @StateObject var profileViewModel: ProfileViewModel
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
     
     @State private var showSaveAlert = false
+    @State private var showChangeImageSheet = false
     @Binding var showTabBar: Bool
-    
-    @State private var showImagePicker = false
-    @State private var selectedImage: UIImage?
     
     var body: some View {
     
@@ -53,16 +51,17 @@ struct EditProfile: View {
                     .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
             }
             
-
-            
            Text("Edit Profile")
                 .font(.custom("Poppins-SemiBold", size: 16))
+                .padding(.leading, 26)
                 .frame(maxWidth: .infinity, alignment: .center)
+               
             
             Button(action: {
                 showSaveAlert = true
             }){
                 Text("done")
+                    .font(.custom("Poppins-Regular", size: 18))
                     .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
             }
             .alert("are you sure you want to save changes?", isPresented: $showSaveAlert){
@@ -77,6 +76,7 @@ struct EditProfile: View {
             }
             
         }
+        .frame(maxWidth: .infinity, alignment: .center)
       
     }
     
@@ -90,7 +90,7 @@ struct EditProfile: View {
                 Group{
                     if let photoURL = profileViewModel.profile.photoURL, let url = URL(string: photoURL) {
                         KFImage(url)
-                            .targetCache(CacheManager.shared.imageCache)
+                            .targetCache(CacheManager().imageCache)
                             .fade(duration: 0.5)
                             .resizable()
                             .aspectRatio(contentMode: .fill)
@@ -108,25 +108,19 @@ struct EditProfile: View {
             }
             
             Button(action: {
-                showImagePicker = true
+                showChangeImageSheet = true
             }){
                 Text("Change Profile Photo")
                     .font(.custom("Poppins-Medium", size: 14))
                     .padding(8)
                 
             }
-            .sheet(isPresented: $showImagePicker) {
-                ImagePicker(image: $selectedImage)
+            .sheet(isPresented: $showChangeImageSheet) {
+                ChangePhotoView(viewModel: viewModel, profileViewModel: profileViewModel)
+                    .presentationDetents([.height(350)])
+                    .presentationDragIndicator(.visible)
+                    .presentationCornerRadius(22)
             }
-            .onChange(of: selectedImage) { oldImage ,newImage in
-                if let image = newImage{
-                    Task{
-                        try? await viewModel.uploadProfilePhoto(image)
-                    }
-                }
-            }
-       
-            
             
         }
         .padding(.top)
@@ -188,6 +182,6 @@ struct EditProfile: View {
 }
 
 #Preview {
-    EditProfile(profileViewModel: ProfileViewModel(appState: AppState.shared), showTabBar: .constant(true))
+    EditProfile(viewModel: EditProfileViewModel(appState: AppState()), profileViewModel: ProfileViewModel(appState: AppState()), showTabBar: .constant(true))
     
 }

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CreateAccountView: View {
     @StateObject private var createAccountViewModel = CreateAccountViewModel()
+    @EnvironmentObject var appState: AppState
     @Environment(\.colorScheme) var colorScheme
     
     @State private var isOn = false
@@ -134,10 +135,10 @@ struct CreateAccountView: View {
                 }
             }
             .navigationDestination(isPresented: $navigateToWelcomeScreen, destination: {
-                WelcomeView()
+                WelcomeView(loginViewModel: LoginViewModel(authService: appState.authService , appState: appState))
             })
             .navigationDestination(isPresented: $createAccountViewModel.accountCreated, destination: {
-                WelcomeView()
+                WelcomeView(loginViewModel: LoginViewModel(authService: appState.authService , appState: appState))
             })
             .navigationBarBackButtonHidden(true)
         }

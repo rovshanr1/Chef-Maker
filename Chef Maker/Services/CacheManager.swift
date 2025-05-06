@@ -9,7 +9,6 @@ import Foundation
 import Kingfisher
 
 actor CacheManager {
-    static let shared = CacheManager()
     
     private let defaults = UserDefaults.standard
     private let featuredRecipesKey = "featuredRecipes"

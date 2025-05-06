@@ -62,7 +62,7 @@ struct FeaturedCardView: View {
         }
         .background(
             KFImage(URL(string: recipe.image))
-                .targetCache(CacheManager.shared.imageCache)
+                .targetCache(CacheManager().imageCache)
                 .placeholder{
                     RoundedRectangle(cornerRadius: 20, style: .continuous)
                         .foregroundStyle(AppColors.adaptiveCardBackground(for: colorScheme))

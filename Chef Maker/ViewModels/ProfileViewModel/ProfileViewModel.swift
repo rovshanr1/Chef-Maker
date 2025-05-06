@@ -12,7 +12,6 @@ import FirebaseAuth
 @MainActor
 protocol ProfileViewModelProtocol: BaseViewModelProtocol {
     func updateProfile(profile: ProfileModel) async
-//    func uploadProfileImage(_ image: UIImage) async
     func signOut() async
 }
 
@@ -21,7 +20,7 @@ final class ProfileViewModel: BaseViewModel<ProfileModel>, ProfileViewModelProto
     private let appState: AppState
     
     static func preview() -> ProfileViewModel {
-        let viewModel = ProfileViewModel(appState: AppState.shared)
+        let viewModel = ProfileViewModel(appState: AppState())
         viewModel.data = [MockData.preview]
         return viewModel
     }
@@ -64,19 +63,6 @@ final class ProfileViewModel: BaseViewModel<ProfileModel>, ProfileViewModelProto
         }
     }
     
-//    func uploadProfileImage(_ image: UIImage) async {
-//        isLoading = true
-//        defer { isLoading = false }
-//        
-//        do {
-//            if let user = appState.authService.currentUser {
-//                // TODO: try await uploadImageToStorage(image, for: user.uid)
-//                print("Profile image upload will be implemented")
-//            }
-//        } catch {
-//            self.error = error as? NetworkError ?? .unknown(error)
-//        }
-//    }
     
     func signOut() async {
         isLoading = true

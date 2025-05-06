@@ -3,6 +3,7 @@ import SwiftUI
 struct OnboardingView: View {
     @State private var currentPage = 0
     @State private var showWelcomeView: Bool = false
+    @EnvironmentObject var appState: AppState
     @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
@@ -43,7 +44,7 @@ struct OnboardingView: View {
                 }
             }
             .navigationDestination(isPresented: $showWelcomeView){
-                WelcomeView()
+                WelcomeView(loginViewModel: LoginViewModel(authService: appState.authService, appState: appState))
             }
             .navigationBarBackButtonHidden(true)
         }

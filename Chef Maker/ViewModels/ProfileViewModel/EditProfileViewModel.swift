@@ -31,6 +31,8 @@ class EditProfileViewModel:BaseViewModel<ProfileModel>, EditProfileViewModelProt
     @Published var userName: String = ""
     @Published var bio: String = ""
     @Published var photoURL: String = ""
+    @Published var isDeletingPhoto = false
+
     
     private let appState : AppState
     
@@ -41,13 +43,36 @@ class EditProfileViewModel:BaseViewModel<ProfileModel>, EditProfileViewModelProt
     }
   
     func uploadProfilePhoto(_ image: UIImage) async throws {
-        let url = try await ImageUploadService.uploadImageToBackend(image: image, fileName: "profile_\(UUID().uuidString).jpg")
-        print("ImageKit URL: \(url)")
-        self.photoURL = url
+        let token = try await appState.getIdToken()
+        let result = try await ImageKitService.uploadImageToBackend(image: image, fileName: "profile_\(UUID().uuidString).jpg", token: token)
+        self.photoURL = result.url
         guard var profile = appState.currentProfile else { return }
-        profile.photoURL = url
+        profile.photoURL = result.url
+        profile.fileId = result.fileId 
         try await appState.profileService.updateProfile(profile)
         appState.currentProfile = profile
+    }
+    
+    func deleteProfilePhoto() async {
+        guard let fileId = appState.currentProfile?.fileId else { return }
+        
+        isDeletingPhoto = true
+        defer { isDeletingPhoto = false }
+        
+        do{
+            let token = try await appState.getIdToken()
+            
+            try await ImageKitService.deleteFile(fileId: fileId, token: token)
+            
+            var profile = appState.currentProfile
+            profile?.photoURL = ""
+            profile?.fileId = ""
+            
+            try await appState.profileService.updateProfile(profile!)
+            appState.currentProfile = profile
+        } catch{
+            self.error = error as? NetworkError ?? .unknown(error)
+        }
     }
     
     func updateProfile() async {
@@ -79,7 +104,6 @@ class EditProfileViewModel:BaseViewModel<ProfileModel>, EditProfileViewModelProt
     
     func loadProfile() {
         let profile = appState.currentProfile
-        
         self.name = profile?.fullName ?? ""
         self.userName = profile?.userName ?? ""
         self.email = profile?.email ?? ""

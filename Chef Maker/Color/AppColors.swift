@@ -27,6 +27,7 @@ struct AppColors {
     static let secondaryColor = Color(hex: "FF9C00")
     static let filedFilterButtonColor = Color(hex: "#129575")
     static let emptyFilterButtonColor = Color(hex: "#71B1A1")
+    static let deleteButtonColor = Color(hex: "#FF1B1C")
     
     // Adaptive Colors Functions
     static func adaptiveBackground(for colorScheme: ColorScheme) -> Color {

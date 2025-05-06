@@ -14,7 +14,7 @@ struct RecipeCardView: View {
     var body: some View {
             ZStack {
                 KFImage(URL(string: recipe.image))
-                    .targetCache(CacheManager.shared.imageCache)
+                    .targetCache(CacheManager().imageCache)
                     .placeholder{
                         RoundedRectangle(cornerRadius: 20, style: .continuous)
                             .foregroundStyle(AppColors.cardBackground)

@@ -25,7 +25,7 @@ class CreateAccountViewModel: ObservableObject{
     private let profileService: ProfileServiceProtocol
     private let authService: AuthServiceProtocol
     
-    init(authService: AuthServiceProtocol = AuthService.shared,
+    init(authService: AuthServiceProtocol = AuthService(),
          profileService: ProfileServiceProtocol = ProfileService()
     ) {
         self.authService = authService

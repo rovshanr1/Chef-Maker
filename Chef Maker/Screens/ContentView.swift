@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var appState = AppState()
+    @EnvironmentObject var appState: AppState
     @State private var showMainView: Bool = false
     
     var body: some View {
@@ -20,7 +20,7 @@ struct ContentView: View {
                     OnboardingView()
                 }
                 else{
-                    WelcomeView()
+                    WelcomeView(loginViewModel: LoginViewModel(authService: appState.authService, appState: appState))
                 }
                 
             }else{
