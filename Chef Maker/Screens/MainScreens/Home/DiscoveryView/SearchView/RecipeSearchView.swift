@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SearchView: View {
+struct RecipeSearchView: View {
     var namespace: Namespace.ID
     @Binding var show: Bool
     
@@ -20,10 +20,6 @@ struct SearchView: View {
     
     var body: some View {
         NavigationStack {
-            ZStack {
-                AppColors.adaptiveMainTabView(for: colorScheme)
-                    .ignoresSafeArea()
-                
                 VStack{
                     HStack{
                         Button(action:{
@@ -55,7 +51,7 @@ struct SearchView: View {
                                 )
                         )
                         .matchedGeometryEffect(id: "Search", in: namespace)
-                        
+
                         
                         Button(action:{
                             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
@@ -84,20 +80,19 @@ struct SearchView: View {
                             viewModel.data = []
                         }
                     }
-                    
                     //Grid View
                     if viewModel.data.isEmpty, viewModel.searchText.isEmpty{
                         EmptySearchView()
+                            .ignoresSafeArea(.keyboard, edges: .bottom)
                     }else{
-                        SearchGridView(viewModel: viewModel, namespace: namespace)
+                        RecipeSearchGridView(viewModel: viewModel, namespace: namespace)
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 .background(
                     AppColors.adaptiveMainTabView(for: colorScheme)
-                )
-            }
-            .navigationBarBackButtonHidden(true)
+                        .ignoresSafeArea()
+                ).navigationBarBackButtonHidden(true)
         }
     }
 }
@@ -106,5 +101,5 @@ struct SearchView: View {
     @Previewable @Namespace var namespace
     @Previewable @State var show = true
     
-    SearchView(namespace: namespace, show: $show)
+    RecipeSearchView(namespace: namespace, show: $show)
 }

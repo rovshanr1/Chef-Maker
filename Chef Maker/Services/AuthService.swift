@@ -10,10 +10,9 @@ import FirebaseAuth
 import FirebaseFirestore
 
 protocol AuthServiceProtocol {
-    var currentUser: User? { get }
+    var  currentUser: User? { get }
     func login(email: String, password: String) async throws -> ProfileModel
     func createAccount(fullName: String, userName: String, email: String, password: String) async throws
-    func isUsernameTaken(_ username: String) async throws -> Bool
     func resetPassword(email: String) async throws
     func logout() async throws
     
@@ -29,6 +28,7 @@ class AuthService: AuthServiceProtocol{
     var currentUser: User? {
         auth.currentUser
     }
+    
     
     init() {}
     
@@ -100,14 +100,16 @@ class AuthService: AuthServiceProtocol{
                             userName: userName,
                             photoURL: "",
                             fileId: "",
-                            email: email,
+                            email: user.email ?? "",
                             bio: "",
                             followingCount: 0,
                             followersCount: 0,
                             postCount: 0,
                             timeStamp: Date()
                         )
+                        
                         try await db.collection("users").document(user.uid).setData(profile.toFirebase())
+                        try await db.collection("usernames").document(userName).setData(["uid": user.uid])
                         continuation.resume()
                     } catch {
                         continuation.resume(throwing: error)
@@ -117,10 +119,6 @@ class AuthService: AuthServiceProtocol{
         }
     }
     
-    func isUsernameTaken(_ username: String) async throws -> Bool {
-        let doc = try await db.collection("usernames").document(username).getDocument()
-        return doc.exists
-    }
     
     // reset password func
     func resetPassword(email: String)  async throws {

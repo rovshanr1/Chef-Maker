@@ -36,7 +36,7 @@ struct TabBarView: View {
                         self.index = 1
                     }
                 }) {
-                    Image(systemName: "bookmark")
+                    Image(systemName: "magnifyingglass")
                         .font(.headline)
                 }
                 .foregroundStyle(AppColors.adaptiveText(for: colorSheme).opacity(self.index == 1 ? 1 : 0.2))

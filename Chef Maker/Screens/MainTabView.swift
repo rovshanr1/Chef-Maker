@@ -19,13 +19,17 @@ struct MainTabView: View {
                 Group{
                     switch index{
                     case 0:
-                        DiscoveryView(appState: appState, showTabbar: self.$showTabBar)
+                        if appState.currentProfile != nil {
+                            DiscoveryView(appState: appState, showTabbar: self.$showTabBar)
+                        } else {
+                            ProgressView("Loading profile...")
+                        }
                     case 1:
-                        Color.black
+                        SearchView(showTabbar: self.$showTabBar)
                     case 2:
-                        Color.blue
+                        NotificationView()
                     default:
-                        ProfileView(appState: appState, showTabBar: self.$showTabBar )
+                        MyProfileView(appState: appState, showTabBar: self.$showTabBar )
                     }
                 }
                
@@ -43,4 +47,5 @@ struct MainTabView: View {
 
 #Preview {
     MainTabView()
+        .environmentObject(AppState())
 }

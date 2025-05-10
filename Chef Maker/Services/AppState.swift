@@ -8,7 +8,6 @@
 import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
-import Combine
 
 @MainActor
 class AppState: ObservableObject {
@@ -18,11 +17,8 @@ class AppState: ObservableObject {
     
     let authService: AuthServiceProtocol
     let profileService = ProfileService()
-    private let db: Firestore
-    var cancellables = Set<AnyCancellable>()
-    
-    
     let auth = Auth.auth()
+    private let db: Firestore
     
     init(authService: AuthServiceProtocol = AuthService(),
         db: Firestore = Firestore.firestore()) {

@@ -7,7 +7,9 @@
 
 import Foundation
 
+
 extension AppState{
+   
     func getIdToken() async throws -> String {
         guard let user = auth.currentUser else {
             throw AuthError.unknown("Current user not found")

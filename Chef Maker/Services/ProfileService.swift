@@ -13,12 +13,15 @@ protocol ProfileServiceProtocol{
    func fetchProfile(for userId: String) async throws -> ProfileModel
     func updateProfile(_ profile: ProfileModel) async throws
     func isUsernameTaken(_ username: String) async throws -> Bool
+    func followUser(currentUserID: String, targetUserID: String) async throws
+    func unfollowUser(currentUserID: String, targetUserID: String) async throws
+//    func followOrUnfollow(targetUserID: String) async
     func signOut() async throws
 
-//    func uploadProfileImage(_ image: UIImage) async throws -> URL
 }
 
 final class ProfileService: ProfileServiceProtocol{
+ 
    
     
     private let authService: AuthServiceProtocol
@@ -29,6 +32,54 @@ final class ProfileService: ProfileServiceProtocol{
             self.authService = authService
             self.db = db
         }
+    
+    func followUser(currentUserID: String, targetUserID: String) async throws {
+        let followersRef = db.collection("followers").document(targetUserID).collection("userFollowers").document(currentUserID)
+        let followingRef = db.collection("following").document(currentUserID).collection("userFollowing").document(targetUserID)
+        
+        try await followersRef.setData(["timestamp": Timestamp()])
+        try await followingRef.setData(["timestamp": Timestamp()])
+        
+        try await incrementFollowCounts(userID: currentUserID, targetID: targetUserID, isFollow: true)
+
+    }
+    
+    func unfollowUser(currentUserID: String, targetUserID: String) async throws {
+        let followersRef = db.collection("followers").document(targetUserID).collection("userFollowers").document(currentUserID)
+        let followingRef = db.collection("following").document(currentUserID).collection("userFollowing").document(targetUserID)
+        
+        try await followersRef.delete()
+        try await followingRef.delete()
+        
+        try await incrementFollowCounts(userID: currentUserID, targetID: targetUserID, isFollow: false)
+    }
+    
+ 
+    
+    private func incrementFollowCounts(userID: String, targetID: String, isFollow: Bool) async throws {
+        let currentUserRef = db.collection("users").document(userID)
+        let targetUserRef = db.collection("users").document(targetID)
+
+        let increment: Int64 = isFollow ? 1 : -1
+        
+        try await currentUserRef.updateData([
+            "followingCount": FieldValue.increment(increment)
+        ])
+        
+        try await targetUserRef.updateData([
+            "followersCount": FieldValue.increment(increment)
+        ])
+    }
+    
+    func isFollowing(currentUserID: String, targetUserID: String) async throws -> Bool {
+        let docRef = db.collection("following")
+            .document(currentUserID)
+            .collection("userFollowing")
+            .document(targetUserID)
+        
+        let snapshot = try await docRef.getDocument()
+        return snapshot.exists
+    }
     
     func fetchProfile(for userId: String) async throws -> ProfileModel {
         let document = try await db.collection("users").document(userId).getDocument()
@@ -55,9 +106,5 @@ final class ProfileService: ProfileServiceProtocol{
            try await authService.logout()
        }
     
-//    func uploadProfileImage(_ image: UIImage) async throws -> URL {
-//        print("")
-//    }
-    
-    
 }
+

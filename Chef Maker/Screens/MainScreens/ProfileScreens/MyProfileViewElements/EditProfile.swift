@@ -21,7 +21,7 @@ struct EditProfile: View {
     
     
     init(appState: AppState, showTabBar: Binding<Bool>) {
-         _profileViewModel = StateObject(wrappedValue: ProfileViewModel(appState: appState))
+        _profileViewModel = StateObject(wrappedValue: ProfileViewModel(appState: appState, profileUser: appState.currentProfile!))
          _viewModel = StateObject(wrappedValue: EditProfileViewModel(appState: appState))
          self._showTabBar = showTabBar
      }

@@ -29,7 +29,7 @@ struct DiscoveryView: View {
     
     
     init(appState: AppState, showTabbar: Binding<Bool>) {
-         _profileViewModel = StateObject(wrappedValue: ProfileViewModel(appState: appState))
+        _profileViewModel = StateObject(wrappedValue: ProfileViewModel(appState: appState, profileUser: appState.currentProfile!))
          self._showTabbar = showTabbar
      }
     
@@ -64,7 +64,6 @@ struct DiscoveryView: View {
                                 }
                             }
                             
-                            
                             // Categories
                             ShowCategoryButton()
                             
@@ -72,9 +71,6 @@ struct DiscoveryView: View {
                             
                             //Featured card
                             featuredRecipes()
-                            
-                            
-                            
                         }
                         .alert("Error", isPresented: .constant(featuredViewModel.error != nil)) {
                             Button("Ok") {
@@ -127,7 +123,7 @@ struct DiscoveryView: View {
             .overlay(
                 ZStack{
                     if searchViewModel.searchActive{
-                        SearchView(namespace: namespace, show: $searchViewModel.searchActive)
+                        RecipeSearchView(namespace: namespace, show: $searchViewModel.searchActive)
                             .onAppear { showTabbar = false }
                             .onDisappear { showTabbar = true }
                         
@@ -137,7 +133,7 @@ struct DiscoveryView: View {
             .overlay(
                 ZStack{
                     if let selectedRecipe = selectedRecipe, show {
-                        RecipeDetailsView(recipe: selectedRecipe,
+                        RecipeDetailsView(recipe: selectedRecipe, profile: profileViewModel.profile,
                                           ingredient: selectedRecipe.nutrition.ingredients ?? [],
                                           nutrition: selectedRecipe.nutrition.nutrients,
                                           namespace: namespace, appState: appState,
@@ -184,8 +180,6 @@ var featuredHeader: some View {
         .padding(.horizontal)
     }
 }
-
-
 
 
 // Preference key for tracking scroll offset

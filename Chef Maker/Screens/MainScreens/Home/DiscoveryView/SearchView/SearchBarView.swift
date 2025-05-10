@@ -10,7 +10,7 @@ import SwiftUI
 struct SearchBarView: View {
     @Environment(\.colorScheme) var colorScheme
     var body: some View {
-        HStack(spacing: 20){
+        HStack{
             HStack{
                 Image("search-normal")
                 TextField("Search", text: .constant(""))
@@ -30,3 +30,8 @@ struct SearchBarView: View {
     }
 }
 
+
+#Preview{
+    SearchBarView()
+        .environmentObject(AppState())
+}

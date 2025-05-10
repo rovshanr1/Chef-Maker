@@ -20,6 +20,7 @@ struct RecipeDetailsView: View {
      
     init(
           recipe: Recipe,
+          profile: ProfileModel,
           ingredient: [Ingredient],
           nutrition: [RecipeNutrient],
           namespace: Namespace.ID,
@@ -30,7 +31,7 @@ struct RecipeDetailsView: View {
           self.ingredient = ingredient
           self.nutrition = nutrition
           self.namespace = namespace
-          _profileViewModel = StateObject(wrappedValue: ProfileViewModel(appState: appState))
+          _profileViewModel = StateObject(wrappedValue: ProfileViewModel(appState: appState, profileUser: profile))
           self._show = show
       }
     
@@ -325,3 +326,7 @@ struct RecipeDetailsView: View {
 
 
 
+//#Preview{
+//    RecipeCardView(recipe: MockData.sampleRecipes[0])
+//        .environmentObject(AppState())
+//}

@@ -17,7 +17,7 @@ struct BackendUploadResponse: Decodable {
 }
 
 struct ImageKitService {
-    static func uploadImageToBackend(image: UIImage, fileName: String, token: String) async throws -> BackendUploadResponse {
+    static func uploadImageToBackend(image: UIImage, fileName: String, token: String ) async throws -> BackendUploadResponse {
         guard let imageData = image.jpegData(compressionQuality: 0.8) else {
             throw ImageError.invalidImageData
         }
@@ -40,8 +40,8 @@ struct ImageKitService {
         print("Backend cevabı: \(responseString ?? "veri yok")")
         let decoded = try JSONDecoder().decode(BackendUploadResponse.self, from: data)
         print("Backend'den dönen URL: \(decoded.url)")
-        print("Backend'den dönen URL: \(String(describing: decoded.fileId))")
-
+        print("Backend'den dönen fileId: \(String(describing: decoded.fileId))")
+        
         return decoded
     }
     
@@ -63,7 +63,7 @@ struct ImageKitService {
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
             throw ImageError.failedToDelete
         }
-
+        
         // Debug: Response
         print("Response data: \(String(data: data, encoding: .utf8) ?? "No response")")
     }

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SearchGridView: View {
+struct RecipeSearchGridView: View {
     @EnvironmentObject var appState: AppState
     @ObservedObject var viewModel: SearchViewModel
     @State private var selectedRecipe: Recipe?
@@ -35,7 +35,7 @@ struct SearchGridView: View {
                     LazyVGrid(columns: columns, spacing: 16 ){
                         ForEach(viewModel.data){ recipe in
                             NavigationLink(destination: RecipeDetailsView(
-                                recipe: recipe,
+                                recipe: recipe, profile: appState.currentProfile!,
                                 ingredient: recipe.nutrition.ingredients ?? [],
                                 nutrition: recipe.nutrition.nutrients,
                                 namespace: namespace, appState: appState,
@@ -57,5 +57,5 @@ struct SearchGridView: View {
     @Previewable @Namespace var namespace
     @Previewable @State var show = true
     
-    SearchView(namespace: namespace, show: $show)
+    RecipeSearchView(namespace: namespace, show: $show)
 }

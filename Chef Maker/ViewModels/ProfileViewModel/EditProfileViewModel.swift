@@ -24,7 +24,6 @@ protocol EditProfileViewModelProtocol{
 @MainActor
 class EditProfileViewModel:BaseViewModel<ProfileModel>, EditProfileViewModelProtocol  {
   
-    
     @Published var email: String = ""
     @Published var changePassword: String = ""
     @Published var name: String = ""
@@ -44,8 +43,14 @@ class EditProfileViewModel:BaseViewModel<ProfileModel>, EditProfileViewModelProt
   
     func uploadProfilePhoto(_ image: UIImage) async throws {
         let token = try await appState.getIdToken()
+//        
+//        if let oldFileId = appState.currentProfile?.fileId {
+//            try await ImageKitService.deleteFile(fileId: oldFileId, token: token)
+//        }
+        
         let result = try await ImageKitService.uploadImageToBackend(image: image, fileName: "profile_\(UUID().uuidString).jpg", token: token)
         self.photoURL = result.url
+        
         guard var profile = appState.currentProfile else { return }
         profile.photoURL = result.url
         profile.fileId = result.fileId 
@@ -54,14 +59,12 @@ class EditProfileViewModel:BaseViewModel<ProfileModel>, EditProfileViewModelProt
     }
     
     func deleteProfilePhoto() async {
-        guard let fileId = appState.currentProfile?.fileId else { return }
-        
+        guard let fileId = appState.currentProfile?.fileId, !fileId.isEmpty else { return }
         isDeletingPhoto = true
         defer { isDeletingPhoto = false }
         
         do{
             let token = try await appState.getIdToken()
-            
             try await ImageKitService.deleteFile(fileId: fileId, token: token)
             
             var profile = appState.currentProfile
@@ -83,7 +86,6 @@ class EditProfileViewModel:BaseViewModel<ProfileModel>, EditProfileViewModelProt
         guard var profile = appState.currentProfile else {
             return
         }
-        
         profile.fullName = name
         profile.userName = userName
         profile.email = email

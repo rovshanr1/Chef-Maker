@@ -103,5 +103,5 @@ struct BurgerMenu: View {
 }
 
 #Preview {
-    BurgerMenu(viewModel: ProfileViewModel(appState: AppState()))
+    BurgerMenu(viewModel: ProfileViewModel(appState: AppState(), profileUser: MockData.preview))
 }

@@ -26,7 +26,6 @@ class CreateAccountViewModel: ObservableObject{
     private let authService: AuthServiceProtocol
     let appState: AppState
     
-    
     init(authService: AuthServiceProtocol = AuthService(),
          profileService: ProfileServiceProtocol = ProfileService(),
          appState: AppState
@@ -42,14 +41,17 @@ class CreateAccountViewModel: ObservableObject{
         return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: password)
     }
     
+    func getNormalizedEmail() -> String {
+        return email.replacingOccurrences(of: ".", with: "").lowercased()
+    }
+    
     func usernameIsValid(_ userName: String) async -> Bool {
         do{
             let result = try await !profileService.isUsernameTaken(userName)
-            print("usernameIsValid result: \(result)")
             return result
 
         }catch{
-            print("usernameIsValid error: \(error)")
+            errorMessage = AuthError.usernameIsTaken.localizedDescription
             return false
         }
     }

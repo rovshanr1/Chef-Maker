@@ -9,21 +9,28 @@ import SwiftUI
 import Kingfisher
 
 
-struct ProfileView: View {
+struct MyProfileView: View {
+    
     @EnvironmentObject var appState: AppState
     @StateObject var profileViewModel: ProfileViewModel
     @StateObject var editProfileViewModel: EditProfileViewModel
+    
     @Environment(\.colorScheme) var colorScheme
     
     @State private var isExpanded: Bool = false
+    
+    @State private var stateTab: ProfileButton = .posts
+    
+    //Navigations
     @State private var navigationEditScreen: Bool = false
     @State private var navigateBurgerMenu: Bool = false
-    @State private var stateTab: ProfileButton = .posts
+    @State private var navigationToFollowers: Bool = false
+    @State private var navigationToFollowing: Bool = false
     
     @Binding var showTabBar: Bool
     
     init(appState: AppState, showTabBar: Binding<Bool>) {
-         _profileViewModel = StateObject(wrappedValue: ProfileViewModel(appState: appState))
+        _profileViewModel = StateObject(wrappedValue: ProfileViewModel(appState: appState, profileUser: appState.currentProfile!))
          _editProfileViewModel = StateObject(wrappedValue: EditProfileViewModel(appState: appState))
          self._showTabBar = showTabBar
      }
@@ -125,24 +132,40 @@ struct ProfileView: View {
             
             Spacer(minLength: 0)
             
-            VStack(alignment: .leading){
-                Text("\(profileViewModel.profile.followersCount)")
-                    .font(.custom("Poppins-SemiBold", size: 16))
-                
-                Text("followers")
-                    .font(.custom("Poppins-SemiBold", size: 14))
+            Button(action: {
+                navigationToFollowers = true
+            }) {
+                VStack(alignment: .leading){
+                    Text("\(profileViewModel.profile.followersCount)")
+                        .font(.custom("Poppins-SemiBold", size: 16))
+                    
+                    Text("followers")
+                        .font(.custom("Poppins-SemiBold", size: 14))
+                }
+            }
+            .foregroundStyle(AppColors.adaptiveText(for: colorScheme))
+            .navigationDestination(isPresented: $navigationToFollowers) {
+                FollowersView()
             }
             
             Spacer(minLength: 0)
             
-            VStack(alignment: .leading){
-                Text("\(profileViewModel.profile.followingCount)")
-                    .font(.custom("Poppins-SemiBold", size: 16))
-                
-                Text("following")
-                    .font(.custom("Poppins-SemiBold", size: 14))
-                
-                
+            Button(action:{
+                navigationToFollowing = true
+            }) {
+                VStack(alignment: .leading){
+                    Text("\(profileViewModel.profile.followingCount)")
+                        .font(.custom("Poppins-SemiBold", size: 16))
+                    
+                    Text("following")
+                        .font(.custom("Poppins-SemiBold", size: 14))
+                    
+                    
+                }
+                .foregroundStyle(AppColors.adaptiveText(for: colorScheme))
+                .navigationDestination(isPresented: $navigationToFollowing) {
+                    FollowingView()
+                }
             }
             
         }
@@ -263,5 +286,6 @@ struct ProfileView: View {
 
 
 #Preview {
-    ProfileView(appState: AppState(), showTabBar: .constant(true))
+    MyProfileView(appState: AppState(), showTabBar: .constant(true))
+        .environmentObject(AppState())
 }

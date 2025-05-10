@@ -23,7 +23,7 @@ struct ChangePhotoView: View {
     
     init(appState: AppState) {
         _viewModel = StateObject(wrappedValue: EditProfileViewModel(appState: appState))
-         _profileViewModel = StateObject(wrappedValue: ProfileViewModel(appState: appState))
+        _profileViewModel = StateObject(wrappedValue: ProfileViewModel(appState: appState, profileUser: appState.currentProfile!))
      }
     var body: some View {
         VStack{
