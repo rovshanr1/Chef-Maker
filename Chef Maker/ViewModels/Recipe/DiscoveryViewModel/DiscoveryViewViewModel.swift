@@ -22,8 +22,20 @@ protocol DiscoveryViewModelProtocol: BaseViewModelProtocol {
 class DiscoveryViewViewModel: BaseViewModel<Recipe>, DiscoveryViewModelProtocol {
     @Published var selectedCategories: Set<Category> = []
     @Published var searchText: String = ""
+    @Published var userRecipes: [PostModel] = []
+    @Published var userProfiles: [String: ProfileModel] = [:]
+    @Published var isLoadingMore = false
+    
+    
     
     private var allCategories: [Category] = Category.allCases.sorted { $0.rawValue < $1.rawValue }
+    private let profileService: ProfileServiceProtocol
+    private var lastPostId: String?
+    
+    init(profileService: ProfileServiceProtocol = ProfileService()){
+        self.profileService = profileService
+        super.init()
+    }
     
     var filteredCategories: [Category] {
         searchText.isEmpty ? allCategories : allCategories.filter { $0.rawValue.localizedCaseInsensitiveContains(searchText) }
@@ -43,6 +55,52 @@ class DiscoveryViewViewModel: BaseViewModel<Recipe>, DiscoveryViewModelProtocol 
         
         isLoading = false
     }
+    
+    
+    
+    func fetchUserRecipes() async {
+         do {
+             let posts = try await profileService.fetchUserPosts(limit: 10, lastPostId: lastPostId)
+             userRecipes = posts
+             lastPostId = posts.last?.id
+         } catch {
+             self.error = error as? NetworkError ?? .networkError(error)
+         }
+     }
+    
+    func loadMorePosts() async {
+        guard !isLoadingMore, let lastPostId = lastPostId else { return }
+        isLoadingMore = true
+        
+        do {
+            let newPosts = try await profileService.fetchUserPosts(limit: 10, lastPostId: lastPostId)
+            userRecipes.append(contentsOf: newPosts)
+            self.lastPostId = newPosts.last?.id
+        } catch {
+            self.error = error as? NetworkError ?? .networkError(error)
+        }
+        
+        isLoadingMore = false
+    }
+    
+    func getProfile(for userId: String) -> ProfileModel {
+         if let cachedProfile = userProfiles[userId] {
+             return cachedProfile
+         }
+         
+         Task {
+             do {
+                 let profile = try await profileService.fetchProfile(for: userId)
+                 userProfiles[userId] = profile
+             } catch {
+                 print("Error fetching profile: \(error)")
+             }
+         }
+         
+        return ProfileModel.preview
+     }
+    
+    
     
     private func createURL(category: Category) throws -> URL {
         var components = URLComponents(string: "https://api.spoonacular.com/recipes/complexSearch")

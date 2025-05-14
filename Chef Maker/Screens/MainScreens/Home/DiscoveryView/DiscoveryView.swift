@@ -11,6 +11,7 @@ struct DiscoveryView: View {
     @EnvironmentObject var appState: AppState
     
     //StateObjects
+    @StateObject private var viewModel = DiscoveryViewViewModel()
     @StateObject private var featuredViewModel = FeaturedViewModel()
     @StateObject var profileViewModel: ProfileViewModel
     @StateObject private var searchViewModel = SearchViewModel()
@@ -47,22 +48,6 @@ struct DiscoveryView: View {
                             //Avatar
                             ProfileAvatarView(profile: profileViewModel.profile)
                             
-                            //Search
-                            ZStack{
-                                if searchViewModel.searchActive {
-                                    SearchBarView()
-                                    
-                                }else{
-                                    SearchBarView()
-                                        .matchedGeometryEffect(id: "Search", in: namespace)
-                                }
-                            }
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                withAnimation(.easeInOut(duration: 0.3)){
-                                    searchViewModel.searchActive = true
-                                }
-                            }
                             
                             // Categories
                             ShowCategoryButton()
@@ -70,7 +55,10 @@ struct DiscoveryView: View {
                             featuredHeader
                             
                             //Featured card
-                            featuredRecipes()
+                            hero()
+                            
+                            //User Recipe
+                            userRecipesSection
                         }
                         .alert("Error", isPresented: .constant(featuredViewModel.error != nil)) {
                             Button("Ok") {
@@ -122,16 +110,6 @@ struct DiscoveryView: View {
             }
             .overlay(
                 ZStack{
-                    if searchViewModel.searchActive{
-                        RecipeSearchView(namespace: namespace, show: $searchViewModel.searchActive)
-                            .onAppear { showTabbar = false }
-                            .onDisappear { showTabbar = true }
-                        
-                    }
-                }
-            )
-            .overlay(
-                ZStack{
                     if let selectedRecipe = selectedRecipe, show {
                         RecipeDetailsView(recipe: selectedRecipe, profile: profileViewModel.profile,
                                           ingredient: selectedRecipe.nutrition.ingredients ?? [],
@@ -147,9 +125,9 @@ struct DiscoveryView: View {
     
     
     @ViewBuilder
-    func featuredRecipes() -> some View {
+    func hero() -> some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            LazyHStack(spacing: 20) {
+            LazyHStack {
                 ForEach(featuredViewModel.data) { recipe in
                     FeaturedCardView(recipe: recipe, namespace: namespace, show: $show)
                         .onTapGesture {
@@ -165,21 +143,53 @@ struct DiscoveryView: View {
         }
         
     }
-}
-
-
-//Featured Header
-var featuredHeader: some View {
-    VStack(alignment: .leading) {
-        HStack(){
-            Text("Chef's Picks")
-                .font(.custom("Poppins-Bold", size: 18))
-            
-            Spacer()
+    
+    
+    //Featured Header
+    var featuredHeader: some View {
+        VStack(alignment: .leading) {
+            HStack(){
+                Text("Chef's Picks")
+                    .font(.custom("Poppins-Bold", size: 18))
+                
+                Spacer()
+            }
+            .padding(.horizontal)
         }
-        .padding(.horizontal)
+    }
+
+    private var userRecipesSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("New Recipes")
+                .font(.custom("Poppins-Bold", size: 18))
+                .padding(.horizontal)
+            
+            ForEach(viewModel.userRecipes) { post in
+                UserRecipe(
+                    userRecipe: post,
+                    profile: viewModel.getProfile(for: post.authorId)
+                )
+                .onAppear {
+                    if post.id == viewModel.userRecipes.last?.id {
+                        Task {
+                            await viewModel.loadMorePosts()
+                        }
+                    }
+                }
+            }
+            
+            if viewModel.isLoadingMore {
+                ProgressView()
+                    .padding()
+            }
+        }
     }
 }
+
+
+
+
+
 
 
 // Preference key for tracking scroll offset
@@ -188,6 +198,11 @@ struct ScrollOffsetPreferenceKey: PreferenceKey {
     static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
         value = nextValue()
     }
+}
+
+#Preview{
+  ContentView()
+        .environmentObject(AppState())
 }
 
 

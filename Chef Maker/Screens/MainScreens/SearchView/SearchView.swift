@@ -32,16 +32,23 @@ struct SearchView: View {
                     
                     Spacer()
                 }
+               
                 
+
+            }
+            .overlay{
                 if searchViewModel.searchActive {
                     RecipeSearchView(namespace: namespace, show: $searchViewModel.searchActive)
                         .onAppear {
-                                showTabbar = false
+                            showTabbar = false
                         }
                         .onDisappear {
-                                showTabbar = true
+                            showTabbar = true
                         }
                 }
+            }
+            .onTapGesture {
+                hideKeyboard()
             }
             .navigationBarBackButtonHidden(true)
         }

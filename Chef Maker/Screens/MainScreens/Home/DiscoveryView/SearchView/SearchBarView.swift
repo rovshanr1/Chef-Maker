@@ -25,6 +25,7 @@ struct SearchBarView: View {
                             .stroke(Color.gray.opacity(0.3), lineWidth: 1)
                     )
             )
+            
             .padding(.horizontal)
         }
     }

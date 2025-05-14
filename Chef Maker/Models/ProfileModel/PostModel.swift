@@ -8,18 +8,29 @@
 import Foundation
 
 struct PostModel: Identifiable, Codable {
-    var id: String
-    var title: String
-    var postImage: String?
-    var description: String
-    var ingredients: [String]
-    var cookingTime: String
-    var category: String
-    var difficulty: String
-    var nutrients: String
+    let id: String
+    let title: String
+    let description: String
     
-    var authorId: String
-    var createdAt: Date
+    let postImage: String?
+    
+    let ingredients: [String]
+    let cookingTime: String
+    let category: String
+    let difficulty: String
+    let nutrients: String
+    
+    let authorId: String
+    let createdAt: Date
+    
+    var likes: Int
+    var comments: Int
+    var saves: Int
+    
+    var isLiked: Bool?
+    var isSaved: Bool?
+    
+    
     
 }
 
@@ -41,15 +52,20 @@ extension PostModel {
         return PostModel(
             id: id,
             title: title,
-            postImage: data["postImage"] as? String,
             description: description,
+            postImage: data["postImage"] as? String,
             ingredients: ingredients,
             cookingTime: cookingTime,
             category: category,
             difficulty: difficulty,
             nutrients: nutrients,
             authorId: authorId,
-            createdAt: Date(timeIntervalSince1970: createdAt)
+            createdAt: Date(timeIntervalSince1970: createdAt),
+            likes: data["likes"] as? Int ?? 0,
+            comments: data["comments"] as? Int ?? 0,
+            saves: data["saves"] as? Int ?? 0,
+            isLiked: data["isLiked"] as? Bool,
+            isSaved: data["isSaved"] as? Bool
         )
     }
 
@@ -64,13 +80,24 @@ extension PostModel {
             "difficulty": difficulty,
             "nutrients": nutrients,
             "authorId": authorId,
-            "createdAt": createdAt.timeIntervalSince1970
+            "createdAt": createdAt.timeIntervalSince1970,
+            "likes": likes,
+            "comments": comments,
+            "saves": saves
         ]
 
         if let postImage = postImage {
             data["postImage"] = postImage
         }
-
+        
+        if let isLiked = isLiked {
+            data["isLiked"] = isLiked
+        }
+        
+        if let isSaved = isSaved {
+            data["isSaved"] = isSaved
+        }
+        
         return data
     }
 }
@@ -78,18 +105,23 @@ extension PostModel {
 
 #if DEBUG
 extension PostModel {
-    static let previews = PostModel (
+    static let previews = PostModel(
         id: "post001",
-              title: "Nefis Lazanya",
-              postImage: "https://picsum.photos/300",
-              description: "Kat kat nefis bir ev yapımı lazanya!",
-              ingredients: ["Domates", "Kıyma", "Soğan", "Lazanya hamuru"],
-              cookingTime: "45 dk",
-              category: "Akşam Yemeği",
-              difficulty: "Orta",
-              nutrients: "500 kcal",
-              authorId: "user123",
-              createdAt: Date()
+        title: "Creamy Mushroom Pasta",
+        description: "A delicious homemade lasagna with layers!",
+        postImage: "https://spoonacular.com/recipeImages/579247-556x370.jpg",
+        ingredients: ["Mushrooms", "Pasta", "Cream"],
+        cookingTime: "45 m",
+        category: "Akşam Yemeği",
+        difficulty: "Medium",
+        nutrients: "500 kcal",
+        authorId: "user123",
+        createdAt: Date(),
+        likes: 0,
+        comments: 0,
+        saves: 0,
+        isLiked: false,
+        isSaved: false
     )
 }
 #endif
