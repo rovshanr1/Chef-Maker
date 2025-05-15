@@ -272,7 +272,7 @@ struct MyProfileView: View {
                 }
                 
                 if stateTab == .posts {
-                    PostView()
+                    MyPostView()
                 }else if stateTab == .bookmarks {
                     BookmarkView()
                 }

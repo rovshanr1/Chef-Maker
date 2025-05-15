@@ -10,7 +10,6 @@ import SwiftUI
 struct SearchView: View {
     @StateObject private var searchViewModel = SearchViewModel()
     @Namespace var namespace
-    @State var show: Bool = false
     @Binding var showTabbar: Bool
     @Environment(\.colorScheme) var colorScheme
 
@@ -22,7 +21,7 @@ struct SearchView: View {
                 
                 VStack {
                     SearchBarView()
-                        .matchedGeometryEffect(id: "Search", in: namespace)
+                        .matchedGeometryEffect(id: "Search", in: namespace, isSource: !searchViewModel.searchActive)
                         .contentShape(Rectangle())
                         .onTapGesture {
                             withAnimation(.easeInOut(duration: 0.3)) {
@@ -38,7 +37,7 @@ struct SearchView: View {
             }
             .overlay{
                 if searchViewModel.searchActive {
-                    RecipeSearchView(namespace: namespace, show: $searchViewModel.searchActive)
+                    RecipeSearchView(namespace: namespace, show: $searchViewModel.searchActive, viewModel: searchViewModel)
                         .onAppear {
                             showTabbar = false
                         }

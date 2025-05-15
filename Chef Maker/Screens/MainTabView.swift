@@ -11,10 +11,12 @@ struct MainTabView: View {
     @EnvironmentObject private var appState: AppState
     @State var index: Int = 0
     @State private var showTabBar: Bool = true
+    @State private var showPostView: Bool = false
     @Environment(\.colorScheme) var colorScheme
    
     var body: some View {
        
+        NavigationStack{
             ZStack(alignment: .bottom){
                 Group{
                     switch index{
@@ -32,15 +34,19 @@ struct MainTabView: View {
                         MyProfileView(appState: appState, showTabBar: self.$showTabBar )
                     }
                 }
-               
+                
             }
             .safeAreaInset(edge: .bottom) {
                 if showTabBar {
-                    TabBarView(index: self.$index)
+                    TabBarView(index: self.$index, showPostView: self.$showPostView)
                 }
             }
             .ignoresSafeArea(.keyboard,edges: .bottom)
             .background(AppColors.adaptiveMainTabView(for: colorScheme).ignoresSafeArea())
+            .navigationDestination(isPresented: $showPostView){
+                PostView()
+            }
+        }
         }
     }
 

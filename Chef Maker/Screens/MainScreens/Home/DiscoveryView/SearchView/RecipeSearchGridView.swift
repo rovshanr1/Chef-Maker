@@ -57,5 +57,5 @@ struct RecipeSearchGridView: View {
     @Previewable @Namespace var namespace
     @Previewable @State var show = true
     
-    RecipeSearchView(namespace: namespace, show: $show)
+    RecipeSearchView(namespace: namespace, show: $show, viewModel: SearchViewModel())
 }

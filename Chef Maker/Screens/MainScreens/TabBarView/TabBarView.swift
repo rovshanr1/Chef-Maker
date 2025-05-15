@@ -10,6 +10,8 @@ import SwiftUI
 
 struct TabBarView: View {
     @Binding var index: Int
+    @Binding var showPostView: Bool 
+    
     
     @Environment(\.colorScheme) var colorSheme
     var body: some View {
@@ -45,7 +47,7 @@ struct TabBarView: View {
                 Spacer(minLength: 0)
                 
                 Button(action: {
-                    
+                    showPostView = true
                 }){
                     Image(systemName: "plus")
                         .font(.headline)
@@ -57,7 +59,7 @@ struct TabBarView: View {
                         .foregroundStyle(AppColors.filedFilterButtonColor)
                 )
                 .offset(y: -20)
-                
+               
                 Spacer(minLength: 0)
                 
                 Button(action: {
@@ -111,7 +113,7 @@ struct CShape: Shape {
             path.addLine(to: CGPoint(x: rect.width, y: rect.height))
             path.addLine(to: CGPoint(x: rect.width, y: 35))
             
-            path.addArc(center: CGPoint(x: (rect.width / 2) + 2, y: 35), radius: 30 , startAngle: .zero, endAngle: .degrees(180), clockwise: false)
+            path.addArc(center: CGPoint(x: (rect.width / 2) + 3, y: 35), radius: 30 , startAngle: .zero, endAngle: .degrees(180), clockwise: false)
         }
     }
     
@@ -120,4 +122,5 @@ struct CShape: Shape {
 
 #Preview {
     MainTabView()
+        .environmentObject(AppState())
 }

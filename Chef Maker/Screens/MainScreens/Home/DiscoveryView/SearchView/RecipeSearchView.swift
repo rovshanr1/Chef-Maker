@@ -14,7 +14,7 @@ struct RecipeSearchView: View {
     @State private var isFilterPresented = false
     @State private var showFilter = false
     @FocusState private var focus: Bool
-    @StateObject private var viewModel = SearchViewModel()
+    @ObservedObject var viewModel: SearchViewModel
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -24,7 +24,7 @@ struct RecipeSearchView: View {
                     HStack{
                         Button(action:{
                             withAnimation(.easeInOut(duration: 0.3)){
-                                show = false
+                                viewModel.searchActive = false
                                 focus = false
                             }
                         }){
@@ -50,7 +50,7 @@ struct RecipeSearchView: View {
                                         .stroke(AppColors.filedFilterButtonColor.opacity(0.5), lineWidth: 1)
                                 )
                         )
-                        .matchedGeometryEffect(id: "Search", in: namespace)
+                        .matchedGeometryEffect(id: "Search", in: namespace, isSource: viewModel.searchActive)
 
                         
                         Button(action:{
@@ -101,5 +101,5 @@ struct RecipeSearchView: View {
     @Previewable @Namespace var namespace
     @Previewable @State var show = true
     
-    RecipeSearchView(namespace: namespace, show: $show)
+    RecipeSearchView(namespace: namespace, show: $show, viewModel: SearchViewModel())
 }
