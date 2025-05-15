@@ -14,24 +14,33 @@ struct PostView: View {
     
     @State var showAddNewPostTitleView: Bool = false
     @StateObject private var service = PhotoLibraryManager()
+    @State private var croppedImage: UIImage? = nil
+    
     var body: some View {
         
-        VStack(spacing: 16){
-            //Header Section
-            header()
-            
-            photoPreview()
-            
+        NavigationStack {
+            VStack(spacing: 16){
+                //Header Section
+                header()
+                
+                photoPreview()
+                
+            }
+            .background(
+                AppColors.adaptiveMainTabView(for: colorScheme)
+                    .ignoresSafeArea(edges: .all)
+            )
+            .onAppear{
+                requestPhotoLibraryAccess()
+            }
+            .navigationBarBackButtonHidden(true)
+            .navigationDestination(isPresented: $showAddNewPostTitleView) {
+                if let croppedImage = croppedImage{
+                    PostTitleView(selectedImage: croppedImage)
+                }
+            }
         }
-        .padding(.horizontal)
-        .background(
-            AppColors.adaptiveMainTabView(for: colorScheme)
-                .ignoresSafeArea(edges: .all)
-        )
-        .onAppear{
-            requestPhotoLibraryAccess()
-        }
-        .navigationBarBackButtonHidden(true)
+        
     }
     
     
@@ -61,14 +70,14 @@ struct PostView: View {
             }
             .foregroundStyle(AppColors.adaptiveText(for: colorScheme).opacity(0.7))
         }
-        .padding(.top)
+        .padding([.top, .horizontal])
      
     }
     
     @ViewBuilder
     func photoPreview() -> some View {
-        VStack(spacing: 16){
-            SelectedImagePreview(service: service)
+        VStack{
+            SelectedImagePreview(service: service, croppedImage: $croppedImage)
             Divider()
             CustomImagePickerGridView(viewModel: service)
         }

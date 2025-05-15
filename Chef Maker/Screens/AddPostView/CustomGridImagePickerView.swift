@@ -9,27 +9,33 @@ import SwiftUI
 
 struct CustomImagePickerGridView: View {
     @ObservedObject var viewModel: PhotoLibraryManager
-    let columns = [GridItem(.adaptive(minimum: 100), spacing: 8)]
-
+    let columns = [GridItem(.adaptive(minimum: 100), spacing: 4)]
+    
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: columns, spacing: 8) {
-                ForEach(viewModel.allImages, id: \.self) { image in
-                    Image(uiImage: image)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 100, height: 100)
-                        .clipped()
-                        .cornerRadius(8)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(viewModel.selectedImage == image ? Color.blue : Color.clear, lineWidth: 3)
-                        )
-                        .onTapGesture {
-                            withAnimation {
-                                viewModel.selectedImage = image
-                            }
-                        }
+            LazyVGrid(columns: columns, spacing: 4) {
+                ForEach(Array(viewModel.allImages.enumerated()), id: \.offset) { index, image in
+                    
+                    ZStack{
+                        Rectangle()
+                            .fill(Color.white.opacity(0.3))
+                            .frame(width: 100, height: 100)
+                        
+                        Image(uiImage: image)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 100, height: 100)
+                            .clipped()
+                    }
+                    .frame(width: 100, height: 100)
+                    .overlay(
+                        Rectangle()
+                            .stroke(viewModel.selectedImage == image ? Color.blue : Color.clear, lineWidth: 3)
+                    )
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        viewModel.selectedImage = image
+                    }
                 }
             }
             .padding()
@@ -38,5 +44,5 @@ struct CustomImagePickerGridView: View {
 }
 
 #Preview {
-    CustomImagePickerGridView(viewModel: PhotoLibraryManager())
+    PostView()
 }
