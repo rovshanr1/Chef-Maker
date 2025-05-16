@@ -13,6 +13,7 @@ enum ImageError: Error, LocalizedError{
     case serverError(statusCode: Int)
     case decodingError
     case failedToDelete
+    case selectImage
     case unknown(Error)
     
     var errorDescription: String? {
@@ -27,8 +28,11 @@ enum ImageError: Error, LocalizedError{
             return "Error decoding image data"
         case .failedToDelete:
             return "Image deletion failed"
+        case .selectImage:
+            return "Please select an image"
         case .unknown(let error):
             return "Unknown error: \(error)"
+
         }
     }
 }

@@ -9,37 +9,41 @@ import SwiftUI
 
 struct SelectedImagePreview: View {
     @ObservedObject var service: PhotoLibraryManager
+    
     @State private var scale: CGFloat = 1.0
     @State private var lastScale: CGFloat = 1.0
     @State private var offset: CGSize = .zero
     @State private var lastOffset: CGSize = .zero
-    @Binding var croppedImage: UIImage?
     @State private var geometrySize: CGSize = .zero
+    
+    @State private var isInitialPositioned = false
+
+    @Binding var croppedImage: UIImage?
+    @Binding var finalScale: CGFloat
+    @Binding var finalOffset: CGSize
+
     
     var body: some View {
         VStack {
             if let image = service.selectedImage {
                 GeometryReader { geometry in
                     ZStack {
-                        
                         Rectangle()
                             .foregroundStyle(.gray.opacity(0.2))
                             .frame(width: geometry.size.width, height: 300)
-                        
-                        
-                        Rectangle()
-                            .frame(width: geometry.size.width, height: 300)
-                        
-                        
+
                         Image(uiImage: image)
                             .resizable()
-                            .scaledToFit()
-                            .frame(width: geometry.size.width, height: 300)
+                            .aspectRatio(contentMode: .fill)
+                            .frame(maxWidth: geometry.size.width, maxHeight: 300)
                             .scaleEffect(scale)
                             .offset(offset)
                             .onAppear {
                                 geometrySize = geometry.size
-                                autoPositionImage(in: geometry.size)
+                                if !isInitialPositioned {
+                                    autoPositionImage(in: geometry.size)
+                                    isInitialPositioned = true
+                                }
                             }
                             .gesture(
                                 SimultaneousGesture(
@@ -51,8 +55,11 @@ struct SelectedImagePreview: View {
                                         }
                                         .onEnded { _ in
                                             lastScale = 1.0
+                                            finalScale = scale
+                                            finalOffset = offset
+
                                             if let image = service.selectedImage {
-                                                croppedImage = cropImage(image, size: geometry.size)
+                                                croppedImage = cropImage(image, in: geometry.size, scale: scale, offset: offset)
                                             }
                                         },
                                     DragGesture()
@@ -71,9 +78,13 @@ struct SelectedImagePreview: View {
                                             )
                                         }
                                         .onEnded { _ in
+                                            lastScale = 1.0
+                                            finalScale = scale
+                                            finalOffset = offset
                                             lastOffset = offset
+
                                             if let image = service.selectedImage {
-                                                croppedImage = cropImage(image, size: geometry.size)
+                                                croppedImage = cropImage(image, in: geometry.size, scale: scale, offset: offset)
                                             }
                                         }
                                 )
@@ -93,8 +104,9 @@ struct SelectedImagePreview: View {
                     scale = 1.0
                     offset = .zero
                     lastOffset = .zero
+                    isInitialPositioned = false
                     if let image = service.selectedImage {
-                        croppedImage = cropImage(image, size: geometrySize)
+                        croppedImage = cropImage(image, in: geometrySize, scale: scale, offset: offset)
                     }
                 }) {
                     Image(systemName: "aspectratio")
@@ -111,50 +123,34 @@ struct SelectedImagePreview: View {
         }
         .padding()
     }
-    
-    private func cropImage(_ image: UIImage, size: CGSize) -> UIImage? {
-        let renderer = UIGraphicsImageRenderer(size: CGSize(width: size.width, height: 300))
+
+    func cropImage(_ image: UIImage, in containerSize: CGSize, scale: CGFloat, offset: CGSize) -> UIImage? {
+        let cropWidth = containerSize.width / scale
+        let cropHeight = 300 / scale
+
+        var originX = ((image.size.width - cropWidth) / 2) - (offset.width / scale)
+        var originY = ((image.size.height - cropHeight) / 2) - (offset.height / scale)
+
         
-        return renderer.image { context in
-            // Kırpma alanını temizle
-            UIColor.clear.set()
-            context.fill(CGRect(origin: .zero, size: CGSize(width: size.width, height: 300)))
-            
-            // Görüntüyü çiz
-            let drawRect = CGRect(
-                x: -offset.width,
-                y: -offset.height,
-                width: size.width * scale,
-                height: 300 * scale
-            )
-            
-            image.draw(in: drawRect)
+        originX = max(0, min(originX, image.size.width - cropWidth))
+        originY = max(0, min(originY, image.size.height - cropHeight))
+
+        let cropRect = CGRect(x: originX, y: originY, width: cropWidth, height: cropHeight)
+
+        guard let cgImage = image.cgImage?.cropping(to: cropRect) else {
+            return nil
         }
+
+        return UIImage(cgImage: cgImage, scale: image.scale, orientation: image.imageOrientation)
     }
-        
+
     private func autoPositionImage(in containerSize: CGSize) {
-        guard let image = service.selectedImage else { return }
-        
-        let imageAspectRatio = image.size.width / image.size.height
-        let containerAspectRatio = containerSize.width / 300
-        
-        if imageAspectRatio > containerAspectRatio {
-            
-            scale = 1.0
-            offset = .zero
-        } else {
-            
-            let newScale = containerSize.width / image.size.width
-            scale = newScale
-            
-            let scaledHeight = image.size.height * newScale
-            let verticalOffset = (scaledHeight - 300) / 2
-            offset = CGSize(width: 0, height: -verticalOffset)
-        }
-        
-        lastOffset = offset
+        scale = 1.0
+        offset = .zero
+        lastOffset = .zero
     }
 }
+
 
 
 #Preview {

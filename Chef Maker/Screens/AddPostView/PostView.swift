@@ -12,9 +12,14 @@ struct PostView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
     
-    @State var showAddNewPostTitleView: Bool = false
+    @EnvironmentObject var appState: AppState
+    
     @StateObject private var service = PhotoLibraryManager()
+    
+    @State var showAddNewPostTitleView: Bool = false
     @State private var croppedImage: UIImage? = nil
+    @State private var finalScale: CGFloat = 1.0
+    @State private var finalOffset: CGSize = .zero
     
     var body: some View {
         
@@ -36,7 +41,7 @@ struct PostView: View {
             .navigationBarBackButtonHidden(true)
             .navigationDestination(isPresented: $showAddNewPostTitleView) {
                 if let croppedImage = croppedImage{
-                    PostTitleView(selectedImage: croppedImage)
+                    PostTitleView(appState: appState, selectedImage: croppedImage)
                 }
             }
         }
@@ -77,7 +82,12 @@ struct PostView: View {
     @ViewBuilder
     func photoPreview() -> some View {
         VStack{
-            SelectedImagePreview(service: service, croppedImage: $croppedImage)
+            SelectedImagePreview(
+                service: service,
+                croppedImage: $croppedImage,
+                finalScale: $finalScale,
+                finalOffset: $finalOffset
+            )
             Divider()
             CustomImagePickerGridView(viewModel: service)
         }

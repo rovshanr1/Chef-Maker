@@ -11,6 +11,7 @@ import Photos
 class PhotoLibraryManager: ObservableObject {
     @Published var selectedImage: UIImage?
     @Published var allImages: [UIImage] = []
+    @Published var errorMessge: String?
     
     
     func fetchImages() {
@@ -19,9 +20,9 @@ class PhotoLibraryManager: ObservableObject {
 
          let result = PHAsset.fetchAssets(with: .image, options: fetchOptions)
          let imageManager = PHImageManager.default()
-
+        
          result.enumerateObjects { asset, _, _ in
-             let targetSize = CGSize(width: 200, height: 200)
+             let targetSize = CGSize(width: 300, height: 300)
              let options = PHImageRequestOptions()
              options.isSynchronous = false
              options.deliveryMode = .highQualityFormat
