@@ -12,6 +12,7 @@ struct PostTitleView: View {
     @Environment(\.colorScheme) var colorScheme
     
     let selectedImage: UIImage
+    @State private var backImagePickerView: Bool = false
     
     @State private var title: String = ""
     @State private var description: String = ""
@@ -33,29 +34,42 @@ struct PostTitleView: View {
     
     
     var body: some View {
-        
-        VStack(spacing: 16){
-            header()
-            
-            ScrollView{
-                imageView()
-                Divider()
+        NavigationStack{
+            VStack(spacing: 16){
+                header()
                 
+                ScrollView{
+                    VStack(spacing: 16){
+                        imageView()
+                        Divider()
+                        textFieldSection()
+                    }
+                }
+            }
+            .background(
+                AppColors.adaptiveMainTabView(for: colorScheme)
+                    .ignoresSafeArea(edges: .all)
+            )
+            .navigationDestination(isPresented: $backImagePickerView, destination: {
+                PostView()
+            })
+            .navigationBarBackButtonHidden(true)
+            .alert("Opps", isPresented: Binding(get: { errorMessage != nil }, set: { _ in errorMessage = nil })) {
+                Button("Okay", role: .cancel){}
+            }message: {
+                Text(errorMessage ?? "")
+            }
+            .onTapGesture {
+                hideKeyboard()
             }
         }
-        .background(
-            AppColors.adaptiveMainTabView(for: colorScheme)
-                .ignoresSafeArea(edges: .all)
-        )
-        .navigationBarBackButtonHidden(true)
-       
     }
     
     @ViewBuilder
     func header() -> some View {
         HStack {
             Button(action: {
-                dismiss()
+                backImagePickerView = true
             }){
                 Image(systemName: "chevron.backward")
                     .font(.custom("Poppins-Regular", size: 14))
@@ -94,9 +108,42 @@ struct PostTitleView: View {
             Image(uiImage: selectedImage)
                 .resizable()
                 .scaledToFill()
-                .foregroundStyle(.gray.opacity(0.2))
                 .frame(height: 300)
                 .clipped()
+        }
+        .background(
+            Color(.gray.opacity(0.1))
+                
+        )
+        .padding(.horizontal)
+    }
+    
+    @ViewBuilder
+    func textFieldSection() -> some View {
+        VStack(alignment: .leading, spacing: 12){
+            Text("Your Recipe Title")
+                .font(.custom("Poopins-Medium", size: 14))
+                .foregroundStyle(AppColors.adaptiveText(for: colorScheme).opacity(0.6))
+            TextField("Title", text: $title)
+                .padding()
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(Color.gray.opacity(0.4), lineWidth: 1)
+                )
+            
+            Text("Your Recipe Description")
+                .font(.custom("Poopins-Medium", size: 14))
+                .foregroundStyle(AppColors.adaptiveText(for: colorScheme).opacity(0.6))
+            
+            TextEditor(text: $description)
+                .frame(height: 140)
+                .padding(10)
+                .cornerRadius(12)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(AppColors.adaptiveText(for: colorScheme).opacity(0.2), lineWidth: 1)
+                )
+                .font(.custom("Poppins-Regular", size: 14))
         }
         .padding(.horizontal)
     }
@@ -137,3 +184,6 @@ struct PostTitleView: View {
 }
 
 
+#Preview {
+    PostTitleView(appState: AppState(), selectedImage: UIImage())
+}
