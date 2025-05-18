@@ -13,21 +13,23 @@ struct PostTitleView: View {
     
     let selectedImage: UIImage
     
-    
-    
-    
+    //Paramater States
     @State private var title: String = ""
     @State private var description: String = ""
     @State private var ingredients: String = ""
     @State private var category: String = ""
     @State private var difficulty: String = ""
     @State private var nutrients: String = ""
-    @State var hour = Array(1...24)
-    @State var minute = Array(1...59)
-    @State private var backImagePickerView: Bool = false
+    @State var selectedHour: Int = 0
+    @State var selectedMinute: Int = 1
     @State private var selectTime: Int = 0
-    @State private var isLoading = false
     @State private var errorMessage: String?
+    @State private var isLoading = false
+
+    //Navigation States
+    @State private var backImagePickerView: Bool = false
+    @State private var showHourPicker: Bool = false
+    @State private var showMinutePicker: Bool = false
     
     @StateObject private var viewModel: PostViewModel
     
@@ -42,7 +44,7 @@ struct PostTitleView: View {
             VStack(spacing: 16){
                 header()
                 
-                ScrollView{
+                ScrollView(showsIndicators: false){
                     VStack(spacing: 16){
                         imageView()
                         Divider()
@@ -152,19 +154,52 @@ struct PostTitleView: View {
                 .font(.custom("Poppins-Regular", size: 14))
             
             
-            HStack{
-                Text("Choose your cooking time")
+            VStack(spacing: 16){
+                
+                Text("How long will your delicious dish take to cook?")
                     .font(.custom("Poppins-Regular", size: 14))
                     .foregroundStyle(AppColors.adaptiveText(for: colorScheme).opacity(0.6))
-                
-                Picker("Hour", selection: $selectTime){
-                    ForEach(0..<24, id: \.self){ hour in
-                        Text("\(hour)h")
-                            .foregroundStyle(AppColors.adaptiveText(for: colorScheme))
+
+                HStack(spacing: 8) {
+                    Button(action:{
+                        showHourPicker = true
+                    }) {
+                        Text(("Hour: \(selectedHour)h"))
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .fill(.ultraThinMaterial)
+                            )
+                        
                     }
-                    .pickerStyle(.wheel)
-                    .foregroundStyle(.gray)
+                    .foregroundStyle(AppColors.adaptiveText(for: colorScheme).opacity(0.6))
+                    .sheet(isPresented: $showHourPicker) {
+                        HourSheet(hour: $selectedHour)
+                            .presentationDetents([.height(350)])
+                            .presentationDragIndicator(.visible)
+                    }
+                    .padding(.trailing)
+                    
+                    Button(action:{
+                        showMinutePicker = true
+                    }) {
+                        Text(("Hour: \(selectedMinute)m"))
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .fill(.ultraThinMaterial)
+                            )
+                        
+                    }
+                    .foregroundStyle(AppColors.adaptiveText(for: colorScheme).opacity(0.6))
+                    .sheet(isPresented: $showMinutePicker) {
+                        MinuteSheet(minute: $selectedMinute)
+                            .presentationDetents([.height(350)])
+                            .presentationDragIndicator(.visible)
+                    }
+                    .padding(.leading)
                 }
+                .frame(maxWidth: .infinity, alignment: .center)
             }
         }
         .padding(.horizontal)
@@ -183,7 +218,7 @@ struct PostTitleView: View {
             title: title,
             description: description,
             ingredients: ingredients.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) },
-            cookingTime: "\(hour)h \(minute)m",
+            cookingTime: "\(selectedHour)h \(selectedMinute)m",
             category: category,
             difficulty: difficulty,
             nutrients: nutrients

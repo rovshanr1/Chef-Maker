@@ -8,11 +8,40 @@
 import SwiftUI
 
 struct MinuteSheet: View {
+    @Binding var minute: Int
+    
+    @Environment(\.dismiss) var dismiss
+    @Environment(\.colorScheme) var colorScheme
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack{
+            Text("Minute!")
+                .font(.custom("Poppins-Medium", size: 16))
+            
+            Picker("Minute", selection: $minute){
+                ForEach(1..<60, id: \.self){ minute in
+                    Text("\(minute)m")
+                        .foregroundStyle(AppColors.adaptiveText(for: colorScheme))
+                }
+            }
+            .pickerStyle(.inline)
+            .foregroundStyle(.gray)
+            
+            Button(action: {
+                dismiss()
+            }){
+                Text("Done")
+                    .foregroundStyle(AppColors.adaptiveText(for: colorScheme))
+                    .font(.custom("Poppins-Medium", size: 16))
+            }
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(AppColors.filedFilterButtonColor)
+            )
+        }
     }
 }
 
 #Preview {
-    MinuteSheet()
+    MinuteSheet(minute: .constant(0))
 }

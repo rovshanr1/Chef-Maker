@@ -9,11 +9,16 @@ import SwiftUI
 
 struct HourSheet: View {
     @Binding var hour: Int
-    @Binding var minute: Int
-    
+  
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.dismiss) var dismiss
     var body: some View {
-        HStack {
+        VStack {
+            Text("Hour!")
+                .font(.custom("Poppins-Medium", size: 16))
+                .foregroundStyle(AppColors.adaptiveText(for: colorScheme))
+                .padding([.top, .horizontal])
+            
             Picker("Hour", selection: $hour){
                 ForEach(0..<24, id: \.self){ hour in
                     Text("\(hour)h")
@@ -23,19 +28,25 @@ struct HourSheet: View {
             .pickerStyle(.wheel)
             .foregroundStyle(.gray)
             
-            Picker("Minute", selection: $minute){
-                ForEach(1..<59, id: \.self){ minute in
-                    Text("\(minute)m")
-                        .foregroundStyle(AppColors.adaptiveText(for: colorScheme))
-                }
+            Button(action: {
+                dismiss()
+            }){
+                Text("Done")
+                    .font(.custom("Poppins-Medium", size: 16))
             }
-            .pickerStyle(.inline)
-            .foregroundStyle(.gray)
+            .padding()
+            .foregroundStyle(AppColors.adaptiveText(for: colorScheme))
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(AppColors.filedFilterButtonColor)
+                    
+            )
         }
     }
 }
 
 #Preview {
-    PostTitleView(appState: AppState(), selectedImage: UIImage())
-        .environmentObject(AppState())
+//    PostTitleView(appState: AppState(), selectedImage: UIImage())
+//        .environmentObject(AppState())
+    HourSheet(hour: .constant(Array(0..<24).first ?? 0))
 }
