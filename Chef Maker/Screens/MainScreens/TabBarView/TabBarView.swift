@@ -113,7 +113,7 @@ struct CShape: Shape {
             path.addLine(to: CGPoint(x: rect.width, y: rect.height))
             path.addLine(to: CGPoint(x: rect.width, y: 35))
             
-            path.addArc(center: CGPoint(x: (rect.width / 2) + 3, y: 35), radius: 30 , startAngle: .zero, endAngle: .degrees(180), clockwise: false)
+            path.addArc(center: CGPoint(x: (rect.width / 2) + 3, y: 35), radius: 30 , startAngle: .zero, endAngle: .degrees(180), clockwise: true)
         }
     }
     

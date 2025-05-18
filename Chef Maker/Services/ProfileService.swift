@@ -52,12 +52,12 @@ final class ProfileService: ProfileServiceProtocol{
         var query = db.collection("posts")
             .order(by: "createdAt", descending: true)
         
-        // Eğer limit belirtilmişse, sorguya ekle
+        
         if let limit = limit {
             query = query.limit(to: limit)
         }
         
-        // Eğer son post ID'si belirtilmişse, o posttan sonraki postları getir
+        
         if let lastPostId = lastPostId {
             let lastPostDoc = try await db.collection("posts").document(lastPostId).getDocument()
             if let lastPostData = lastPostDoc.data(),

@@ -12,16 +12,20 @@ struct PostTitleView: View {
     @Environment(\.colorScheme) var colorScheme
     
     let selectedImage: UIImage
-    @State private var backImagePickerView: Bool = false
+    
+    
+    
     
     @State private var title: String = ""
     @State private var description: String = ""
     @State private var ingredients: String = ""
-    @State private var cookingTime: String = ""
     @State private var category: String = ""
     @State private var difficulty: String = ""
     @State private var nutrients: String = ""
-    
+    @State var hour = Array(1...24)
+    @State var minute = Array(1...59)
+    @State private var backImagePickerView: Bool = false
+    @State private var selectTime: Int = 0
     @State private var isLoading = false
     @State private var errorMessage: String?
     
@@ -30,7 +34,7 @@ struct PostTitleView: View {
     init(appState: AppState, selectedImage: UIImage) {
         _viewModel = StateObject(wrappedValue: PostViewModel(appState: appState))
         self.selectedImage = selectedImage
-     }
+    }
     
     
     var body: some View {
@@ -113,7 +117,7 @@ struct PostTitleView: View {
         }
         .background(
             Color(.gray.opacity(0.1))
-                
+            
         )
         .padding(.horizontal)
     }
@@ -136,14 +140,32 @@ struct PostTitleView: View {
                 .foregroundStyle(AppColors.adaptiveText(for: colorScheme).opacity(0.6))
             
             TextEditor(text: $description)
+                .foregroundStyle(.gray)
+                .scrollContentBackground(.hidden)
                 .frame(height: 140)
                 .padding(10)
-                .cornerRadius(12)
+                .background(AppColors.adaptiveMainTabView(for: colorScheme))
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(AppColors.adaptiveText(for: colorScheme).opacity(0.2), lineWidth: 1)
                 )
                 .font(.custom("Poppins-Regular", size: 14))
+            
+            
+            HStack{
+                Text("Choose your cooking time")
+                    .font(.custom("Poppins-Regular", size: 14))
+                    .foregroundStyle(AppColors.adaptiveText(for: colorScheme).opacity(0.6))
+                
+                Picker("Hour", selection: $selectTime){
+                    ForEach(0..<24, id: \.self){ hour in
+                        Text("\(hour)h")
+                            .foregroundStyle(AppColors.adaptiveText(for: colorScheme))
+                    }
+                    .pickerStyle(.wheel)
+                    .foregroundStyle(.gray)
+                }
+            }
         }
         .padding(.horizontal)
     }
@@ -161,7 +183,7 @@ struct PostTitleView: View {
             title: title,
             description: description,
             ingredients: ingredients.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) },
-            cookingTime: cookingTime,
+            cookingTime: "\(hour)h \(minute)m",
             category: category,
             difficulty: difficulty,
             nutrients: nutrients
@@ -182,6 +204,7 @@ struct PostTitleView: View {
     }
     
 }
+
 
 
 #Preview {

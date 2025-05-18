@@ -18,9 +18,11 @@ struct DiscoveryView: View {
     
     //States
     @State private var scrollOffset: CGFloat = 0
-    @State var selectedRecipe: Recipe?
     @State var index = 0
+    @State var selectedRecipe: Recipe?
+    @State private var isRefreshing = false
     @Binding var showTabbar: Bool
+    
     
     //Animation
     @Namespace var namespace
@@ -38,23 +40,20 @@ struct DiscoveryView: View {
     var body: some View {
         NavigationStack {
             
-            VStack{
-                ScrollView {
+            VStack(alignment: .leading, spacing: 16){
+                //Avatar
+                ProfileAvatarView(profile: profileViewModel.profile)
+                
                     
-                    RefreshableScrollView(onRefresh: {
-                        await featuredViewModel.forceRefresh()
+                    RefreshableScrollView(isRefreshing: $isRefreshing, onRefresh: {
+                        await refreshData()
                     }) {
-                        VStack(alignment: .leading, spacing: 16) {
-                            //Avatar
-                            ProfileAvatarView(profile: profileViewModel.profile)
-                            
-                            
+                        VStack {
                             // Categories
                             ShowCategoryButton()
                             
-                            featuredHeader
-                            
                             //Featured card
+                            featuredHeader
                             hero()
                             
                             //User Recipe
@@ -75,22 +74,21 @@ struct DiscoveryView: View {
                             )
                         })
                     }
-                }
-                .coordinateSpace(name: "scroll")
-                .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                    scrollOffset = value
-                }
-                
-                Spacer()
-                
-                
-                
+                    .coordinateSpace(name: "scroll")
+                    .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
+                        scrollOffset = value
+                    }
             }
+            
             .background(AppColors.adaptiveMainTabView(for: colorScheme).ignoresSafeArea())
             .onAppear{
-                Task{
-                    if featuredViewModel.data.isEmpty{
+                Task {
+                    if featuredViewModel.data.isEmpty {
                         await featuredViewModel.forceRefresh()
+                    }
+
+                    if viewModel.userRecipes.isEmpty {
+                        await viewModel.fetchUserRecipes()
                     }
                     print("Data Loaded Successfully: \(featuredViewModel.data.count)")
                     print("Recipe Loaded Successfully:", featuredViewModel.data.map { $0.title})
@@ -162,7 +160,6 @@ struct DiscoveryView: View {
         VStack(alignment: .leading, spacing: 16) {
             Text("New Recipes")
                 .font(.custom("Poppins-Bold", size: 18))
-                .padding(.horizontal)
             
             ForEach(viewModel.userRecipes) { post in
                 UserRecipe(
@@ -183,7 +180,14 @@ struct DiscoveryView: View {
                     .padding()
             }
         }
+        
     }
+    
+    func refreshData() async {
+        await featuredViewModel.forceRefresh()
+        await viewModel.fetchUserRecipes()
+    }
+
 }
 
 
