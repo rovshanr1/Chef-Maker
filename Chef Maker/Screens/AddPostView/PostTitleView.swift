@@ -183,7 +183,7 @@ struct PostTitleView: View {
                     Button(action:{
                         showMinutePicker = true
                     }) {
-                        Text(("Hour: \(selectedMinute)m"))
+                        Text(("Minute: \(selectedMinute)m"))
                             .padding()
                             .background(
                                 RoundedRectangle(cornerRadius: 8)

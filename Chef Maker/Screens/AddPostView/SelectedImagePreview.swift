@@ -44,6 +44,10 @@ struct SelectedImagePreview: View {
                                     autoPositionImage(in: geometry.size)
                                     isInitialPositioned = true
                                 }
+                                
+                                if croppedImage == nil {
+                                    croppedImage = cropImage(image, in: geometry.size, scale: scale, offset: offset)
+                                }
                             }
                             .gesture(
                                 SimultaneousGesture(

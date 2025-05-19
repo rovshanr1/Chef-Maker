@@ -48,17 +48,22 @@ struct DiscoveryView: View {
                     RefreshableScrollView(isRefreshing: $isRefreshing, onRefresh: {
                         await refreshData()
                     }) {
-                        VStack {
+                        VStack(alignment: .leading, spacing: 16) {
                             // Categories
                             ShowCategoryButton()
                             
                             //Featured card
-                            featuredHeader
                             hero()
                             
                             //User Recipe
                             userRecipesSection
                         }
+                        .background(GeometryReader { geometry in
+                            Color.clear.preference(
+                                key: ScrollOffsetPreferenceKey.self,
+                                value: geometry.frame(in: .named("scroll")).minY
+                            )
+                        })
                         .alert("Error", isPresented: .constant(featuredViewModel.error != nil)) {
                             Button("Ok") {
                                 featuredViewModel.error = nil
@@ -66,20 +71,12 @@ struct DiscoveryView: View {
                         } message:{
                             Text(featuredViewModel.error?.localizedDescription ?? "Unkonwn Error")
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(GeometryReader { geometry in
-                            Color.clear.preference(
-                                key: ScrollOffsetPreferenceKey.self,
-                                value: geometry.frame(in: .named("scroll")).minY
-                            )
-                        })
                     }
                     .coordinateSpace(name: "scroll")
                     .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
                         scrollOffset = value
                     }
             }
-            
             .background(AppColors.adaptiveMainTabView(for: colorScheme).ignoresSafeArea())
             .onAppear{
                 Task {
@@ -124,42 +121,36 @@ struct DiscoveryView: View {
     
     @ViewBuilder
     func hero() -> some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            LazyHStack {
-                ForEach(featuredViewModel.data) { recipe in
-                    FeaturedCardView(recipe: recipe, namespace: namespace, show: $show)
-                        .onTapGesture {
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                selectedRecipe = recipe
-                                show.toggle()
+        VStack(alignment: .leading, spacing: 16){
+            Text("Chef's Picks")
+                .font(.custom("Poppins-Bold", size: 18))
+                .padding(.leading)
+                
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHStack {
+                    ForEach(featuredViewModel.data) { recipe in
+                        FeaturedCardView(recipe: recipe, namespace: namespace, show: $show)
+                            .onTapGesture {
+                                withAnimation(.easeInOut(duration: 0.3)) {
+                                    selectedRecipe = recipe
+                                    show.toggle()
+                                }
                             }
-                        }
-                        .matchedGeometryEffect(id: "\(recipe.id)  image", in: namespace, isSource: !show)
-                    
+                            .matchedGeometryEffect(id: "\(recipe.id)  image", in: namespace, isSource: !show)
+                    }
                 }
             }
         }
-        
+        .padding([.top])
     }
     
-    
-    //Featured Header
-    var featuredHeader: some View {
-        VStack(alignment: .leading) {
-            HStack(){
-                Text("Chef's Picks")
-                    .font(.custom("Poppins-Bold", size: 18))
-                
-                Spacer()
-            }
-            .padding(.horizontal)
-        }
-    }
 
     private var userRecipesSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("New Recipes")
                 .font(.custom("Poppins-Bold", size: 18))
+                .padding(.leading)
             
             ForEach(viewModel.userRecipes) { post in
                 UserRecipe(
@@ -180,11 +171,9 @@ struct DiscoveryView: View {
                     .padding()
             }
         }
-        
     }
     
     func refreshData() async {
-        await featuredViewModel.forceRefresh()
         await viewModel.fetchUserRecipes()
     }
 

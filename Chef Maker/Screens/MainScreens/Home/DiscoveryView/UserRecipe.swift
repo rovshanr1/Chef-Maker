@@ -24,8 +24,7 @@ struct UserRecipe: View {
                 .fade(duration: 0.5)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-                .frame(width: 370, height: 270)
-                .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                .frame(width: 345, height: 300)
             
             
             LinearGradient(
@@ -63,13 +62,17 @@ struct UserRecipe: View {
             
             
         }
-        .frame(width: 370, height: 270)
+        .frame(width: 345, height: 300)
+        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .padding(.horizontal)
         .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 4)
-        .cornerRadius(15)
+       
+        
         
     }
 }
 
 #Preview {
-    UserRecipe(userRecipe: PostModel.previews, profile: ProfileModel.preview )
+   ContentView()
+        .environmentObject(AppState())
 }

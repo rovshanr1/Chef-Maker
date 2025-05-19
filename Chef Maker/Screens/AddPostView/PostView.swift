@@ -68,6 +68,7 @@ struct PostView: View {
             Spacer(minLength: 0)
             
             Button(action: {
+
                 showAddNewPostTitleView = true
             }){
                 Text("Next")

@@ -77,7 +77,7 @@ struct FeaturedCardView: View {
             RoundedRectangle(cornerRadius: 20, style: .continuous)
         )
         .frame(height: 300)
-        .padding(20)
+        .padding(.horizontal, 20)
         
     }
 }

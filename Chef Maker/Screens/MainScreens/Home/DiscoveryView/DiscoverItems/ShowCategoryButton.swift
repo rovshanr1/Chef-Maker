@@ -24,9 +24,9 @@ struct ShowCategoryButton: View {
                             }
                         }
                     }
-                    .padding(.horizontal)
                 }
             }
+            .padding(.leading)
         }
     }
 
