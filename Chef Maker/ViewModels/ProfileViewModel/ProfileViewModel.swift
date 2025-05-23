@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Combine
+
 
 
 @MainActor
@@ -21,9 +21,17 @@ final class ProfileViewModel: BaseViewModel<ProfileModel>, ProfileViewModelProto
     
     private let appState: AppState
     private let profileUser: ProfileModel
+    let service = ProfileService()
     
+    private var lastPostId: String?
+
+
+    @Published var isLoadingMore = false
     @Published var isFollowingUser: Bool = false
-    @State private var isCurrentUserProfile: Bool = true 
+    @Published var userRecipes: [PostModel] = []
+    @Published var userProfiles: [String: ProfileModel] = [:]
+    
+    @State private var isCurrentUserProfile: Bool = true
     
     static func preview() -> ProfileViewModel {
         let viewModel = ProfileViewModel(appState: AppState(), profileUser: ProfileModel.preview)
@@ -53,6 +61,45 @@ final class ProfileViewModel: BaseViewModel<ProfileModel>, ProfileViewModelProto
  
    
 
+    func fetchUserRecipes() async {
+        isLoading = true
+        defer { isLoading = false }
+        
+        do {
+            let posts = try await service.fetchUserPosts(userId: profileUser.id, limit: 10)
+            self.userRecipes = posts
+            self.lastPostId = posts.last?.id
+        } catch {
+            self.error = error as? NetworkError ?? .networkError(error)
+            self.userRecipes = []
+        }
+    }
+    
+    func getProfile(for userId: String) async throws -> ProfileModel {
+        if let cachedProfile = userProfiles[userId] {
+            return cachedProfile
+        }
+        
+        let profile = try await service.fetchProfile(for: userId)
+        userProfiles[userId] = profile
+        return profile
+    }
+    
+    func loadMorePosts() async {
+        guard !isLoadingMore, let lastPostId = lastPostId else { return }
+        isLoadingMore = true
+        
+        do {
+            let newPosts = try await service.fetchUserPosts(userId: profileUser.id, limit: 10, lastPostId: lastPostId)
+            userRecipes.append(contentsOf: newPosts)
+            self.lastPostId = newPosts.last?.id
+        } catch {
+            self.error = error as? NetworkError ?? .networkError(error)
+        }
+        
+        isLoadingMore = false
+    }
+    
     func checkFollowingStatus(targetUserID: String) async {
         guard let currentUserID = appState.currentProfile?.id else { return }
 
@@ -80,7 +127,6 @@ final class ProfileViewModel: BaseViewModel<ProfileModel>, ProfileViewModelProto
             self.error = error as? NetworkError ?? .unknown(error)
         }
     }
-    
     
     func signOut() async {
         isLoading = true

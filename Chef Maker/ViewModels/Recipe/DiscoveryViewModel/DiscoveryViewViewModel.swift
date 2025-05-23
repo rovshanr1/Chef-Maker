@@ -60,7 +60,7 @@ class DiscoveryViewViewModel: BaseViewModel<Recipe>, DiscoveryViewModelProtocol 
     
     func fetchUserRecipes() async {
          do {
-             let posts = try await profileService.fetchUserPosts(limit: 10, lastPostId: lastPostId)
+             let posts = try await profileService.fetchAllPosts(limit: 10, lastPostId: lastPostId)
              userRecipes = posts
              lastPostId = posts.last?.id
          } catch {
@@ -73,7 +73,7 @@ class DiscoveryViewViewModel: BaseViewModel<Recipe>, DiscoveryViewModelProtocol 
         isLoadingMore = true
         
         do {
-            let newPosts = try await profileService.fetchUserPosts(limit: 10, lastPostId: lastPostId)
+            let newPosts = try await profileService.fetchAllPosts(limit: 10, lastPostId: lastPostId)
             userRecipes.append(contentsOf: newPosts)
             self.lastPostId = newPosts.last?.id
         } catch {

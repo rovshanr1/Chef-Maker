@@ -29,11 +29,13 @@ struct MyProfileView: View {
     
     @Binding var showTabBar: Bool
     
+    let columns = [GridItem(.adaptive(minimum: 100), spacing: 4)]
+    
     init(appState: AppState, showTabBar: Binding<Bool>) {
         _profileViewModel = StateObject(wrappedValue: ProfileViewModel(appState: appState, profileUser: appState.currentProfile!))
-         _editProfileViewModel = StateObject(wrappedValue: EditProfileViewModel(appState: appState))
-         self._showTabBar = showTabBar
-     }
+        _editProfileViewModel = StateObject(wrappedValue: EditProfileViewModel(appState: appState))
+        self._showTabBar = showTabBar
+    }
     
     
     var body: some View {
@@ -41,7 +43,7 @@ struct MyProfileView: View {
             VStack(alignment: .leading, spacing: 0){
                 headerView()
                 
-                ScrollView{
+                ScrollView(showsIndicators: false ){
                     
                     profileContent()
                     
@@ -65,6 +67,16 @@ struct MyProfileView: View {
             .navigationDestination(isPresented: $navigateBurgerMenu) {
                 BurgerMenu(viewModel: profileViewModel)
             }
+            .onAppear{
+                Task{
+                    if profileViewModel.userRecipes.isEmpty{
+                        await profileViewModel.fetchUserRecipes()
+                    }
+                    
+                    print("recipe loaded:", profileViewModel.userRecipes.count)
+                }
+            }
+            
         }
         .navigationBarBackButtonHidden(true)
     }
@@ -231,21 +243,21 @@ struct MyProfileView: View {
                             stateTab = .posts
                         }
                     }){
-                            VStack {
-                                    Image(systemName: stateTab == .posts ? "square.grid.3x3.fill"
-                                          : "square.grid.3x3")
-                                        .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
-                                        .frame(width: 22, height: 22)
-                                    
-                                    Rectangle()
-                                    .fill(stateTab == .posts ? .gray : .clear)
-                                    .frame(height: 2)
-                                    .padding(.horizontal)
-                                    
-                            }
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                           
+                        VStack {
+                            Image(systemName: stateTab == .posts ? "square.grid.3x3.fill"
+                                  : "square.grid.3x3")
+                            .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
+                            .frame(width: 22, height: 22)
+                            
+                            Rectangle()
+                                .fill(stateTab == .posts ? .gray : .clear)
+                                .frame(height: 2)
+                                .padding(.horizontal)
+                            
+                        }
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        
                     }
                     
                     
@@ -266,13 +278,27 @@ struct MyProfileView: View {
                         }
                         .padding()
                         .frame(maxWidth: .infinity)
-                        
                     }
                     
                 }
                 
                 if stateTab == .posts {
-                    MyPostView()
+                    
+                    LazyVGrid(columns: columns) {
+                        ForEach(profileViewModel.userRecipes){ post in
+                            MyPostView(
+                                userRecipe: post,
+                            )
+                            .onAppear {
+                                if post.id == profileViewModel.userRecipes.last?.id {
+                                    Task {
+                                        await profileViewModel.fetchUserRecipes()
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
                 }else if stateTab == .bookmarks {
                     BookmarkView()
                 }
@@ -286,6 +312,6 @@ struct MyProfileView: View {
 
 
 #Preview {
-    MyProfileView(appState: AppState(), showTabBar: .constant(true))
+    ContentView()
         .environmentObject(AppState())
 }

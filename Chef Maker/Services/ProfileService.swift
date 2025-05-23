@@ -13,7 +13,8 @@ protocol ProfileServiceProtocol{
     func fetchProfile(for userId: String) async throws -> ProfileModel
     func updateProfile(_ profile: ProfileModel) async throws
     func isUsernameTaken(_ username: String) async throws -> Bool
-    func fetchUserPosts(limit: Int?, lastPostId: String?) async throws -> [PostModel]
+    func fetchUserPosts(userId: String, limit: Int?, lastPostId: String?) async throws -> [PostModel]
+    func fetchAllPosts(limit: Int?, lastPostId: String?) async throws -> [PostModel] 
     func getFollowStatus(currentUser: ProfileModel, targetUser: ProfileModel) async throws -> FollowStatus
     func signOut() async throws
     
@@ -34,6 +35,7 @@ final class ProfileService: ProfileServiceProtocol{
     
     func createUserPosts() async throws -> [PostModel] {
         let snapshot = try await db.collection("posts")
+        
             .order(by: "createdAt", descending: true)
             .getDocuments()
         
@@ -48,8 +50,10 @@ final class ProfileService: ProfileServiceProtocol{
         return posts
     }
     
-    func fetchUserPosts(limit: Int? = nil, lastPostId: String? = nil) async throws -> [PostModel] {
+    
+    func fetchUserPosts(userId: String, limit: Int? = nil, lastPostId: String? = nil) async throws -> [PostModel] {
         var query = db.collection("posts")
+            .whereField("authorId", isEqualTo: userId)
             .order(by: "createdAt", descending: true)
         
         
@@ -57,6 +61,34 @@ final class ProfileService: ProfileServiceProtocol{
             query = query.limit(to: limit)
         }
         
+        
+        if let lastPostId = lastPostId {
+            let lastPostDoc = try await db.collection("posts").document(lastPostId).getDocument()
+            if let lastPostData = lastPostDoc.data(),
+               let lastPost = PostModel.fromFirebase(lastPostData) {
+                query = query.whereField("createdAt", isLessThan: lastPost.createdAt)
+            }
+        }
+        
+        let snapshot = try await query.getDocuments()
+        var posts: [PostModel] = []
+        
+        for document in snapshot.documents {
+            if let post = PostModel.fromFirebase(document.data()) {
+                posts.append(post)
+            }
+        }
+        
+        return posts
+    }
+    
+    func fetchAllPosts(limit: Int? = nil, lastPostId: String? = nil) async throws -> [PostModel] {
+        var query = db.collection("posts")
+            .order(by: "createdAt", descending: true)
+        
+        if let limit = limit {
+            query = query.limit(to: limit)
+        }
         
         if let lastPostId = lastPostId {
             let lastPostDoc = try await db.collection("posts").document(lastPostId).getDocument()
