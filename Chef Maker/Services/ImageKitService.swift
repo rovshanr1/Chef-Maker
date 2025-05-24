@@ -18,20 +18,21 @@ struct BackendUploadResponse: Decodable {
 
 struct ImageKitService {
     static func uploadImageToBackend(image: UIImage, fileName: String, token: String ) async throws -> BackendUploadResponse {
+       
         guard let imageData = image.jpegData(compressionQuality: 0.8) else {
             throw ImageError.invalidImageData
         }
         let base64String = imageData.base64EncodedString()
- 
-        let url = URL(string: "https://chef-maker-back-bbeksrye8-rovshans-projects-4e30a7e2.vercel.app/api/upload")!
+        
+        let url = URL(string: "http://192.168.1.70:3000/upload")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-
+        
         let body: [String: Any] = [
             "file": base64String,
-            "fileName": fileName
+            "fileName": fileName,
         ]
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
         
@@ -41,35 +42,59 @@ struct ImageKitService {
         let decoded = try JSONDecoder().decode(BackendUploadResponse.self, from: data)
         print("Backend'den dönen URL: \(decoded.url)")
         print("Backend'den dönen fileId: \(String(describing: decoded.fileId))")
+        print("Authorization header: Bearer \(token)")
         
         return decoded
     }
     
     static func deleteFile(fileId: String, token: String) async throws {
-        let url = URL(string: "https://chef-maker-back-bbeksrye8-rovshans-projects-4e30a7e2.vercel.app/api/delete")!
+        // fileId kontrolü
+        guard !fileId.isEmpty else {
+            throw ImageError.invalidFileId
+        }
+        
+        let url = URL(string: "http://192.168.1.70:3000/delete")!
         var request = URLRequest(url: url)
         request.httpMethod = "DELETE"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 
-        // Debug log: Request details
+        // Debug için request detaylarını yazdıralım
         print("DELETE Request URL: \(url)")
         print("Authorization header: Bearer \(token)")
+        print("FileId to be deleted: \(fileId)")
         
+        // Request body'yi oluşturalım
         let body: [String: Any] = ["fileId": fileId]
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+        
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: body)
+            request.httpBody = jsonData
+            
+            // Debug için request body'yi yazdıralım
+            if let bodyString = String(data: jsonData, encoding: .utf8) {
+                print("Request Body: \(bodyString)")
+            }
+        } catch {
+            print("JSON Serialization Error: \(error)")
+            throw ImageError.invalidRequestBody
+        }
 
         let (data, response) = try await URLSession.shared.data(for: request)
-        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-            throw ImageError.failedToDelete
+        
+        // Debug için response'u yazdıralım
+        if let responseString = String(data: data, encoding: .utf8) {
+            print("Response data: \(responseString)")
         }
         
-        // Debug: Response
-        print("Response data: \(String(data: data, encoding: .utf8) ?? "No response")")
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw ImageError.invalidResponse
+        }
+        
     }
-
-
-
+    
+    
+    
 }
 
 

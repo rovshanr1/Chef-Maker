@@ -43,7 +43,7 @@ class EditProfileViewModel:BaseViewModel<ProfileModel>, EditProfileViewModelProt
   
     func uploadProfilePhoto(_ image: UIImage) async throws {
         let token = try await appState.getIdToken()
-//        
+        
 //        if let oldFileId = appState.currentProfile?.fileId {
 //            try await ImageKitService.deleteFile(fileId: oldFileId, token: token)
 //        }
@@ -59,21 +59,25 @@ class EditProfileViewModel:BaseViewModel<ProfileModel>, EditProfileViewModelProt
     }
     
     func deleteProfilePhoto() async {
-        guard let fileId = appState.currentProfile?.fileId, !fileId.isEmpty else { return }
+        guard let currentUserId = appState.currentProfile?.id else { return }
+              
         isDeletingPhoto = true
         defer { isDeletingPhoto = false }
         
         do{
+            let profile = try await appState.profileService.fetchProfile(for: currentUserId)
+            guard let fileId = profile.fileId, !fileId.isEmpty else { return }
+            
             let token = try await appState.getIdToken()
             try await ImageKitService.deleteFile(fileId: fileId, token: token)
+
+            var updatedProfile = profile
+            updatedProfile.photoURL = ""
+            updatedProfile.fileId = ""
             
-            var profile = appState.currentProfile
-            profile?.photoURL = ""
-            profile?.fileId = ""
-            
-            try await appState.profileService.updateProfile(profile!)
-            appState.currentProfile = profile
-        } catch{
+            try await appState.profileService.updateProfile(updatedProfile)
+            appState.currentProfile = updatedProfile
+        }catch {
             self.error = error as? NetworkError ?? .unknown(error)
         }
     }

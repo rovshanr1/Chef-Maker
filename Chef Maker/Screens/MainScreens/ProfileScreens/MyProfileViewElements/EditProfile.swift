@@ -17,17 +17,19 @@ struct EditProfile: View {
     
     @State private var showSaveAlert = false
     @State private var showChangeImageSheet = false
+    @State private var backToProfile: Bool = false
     @Binding var showTabBar: Bool
     
     
     init(appState: AppState, showTabBar: Binding<Bool>) {
         _profileViewModel = StateObject(wrappedValue: ProfileViewModel(appState: appState, profileUser: appState.currentProfile!))
-         _viewModel = StateObject(wrappedValue: EditProfileViewModel(appState: appState))
-         self._showTabBar = showTabBar
-     }
+        _viewModel = StateObject(wrappedValue: EditProfileViewModel(appState: appState))
+        self._showTabBar = showTabBar
+    }
     
     var body: some View {
-    
+        
+        NavigationStack{
             VStack{
                 headerSection()
                 ScrollView{
@@ -43,7 +45,10 @@ struct EditProfile: View {
             .onTapGesture {
                 hideKeyboard()
             }
-          
+            .navigationDestination(isPresented: $backToProfile) {
+                MyProfileView(appState: appState, showTabBar: _showTabBar)
+            }
+        }
         
     }
     
@@ -59,11 +64,11 @@ struct EditProfile: View {
                     .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
             }
             
-           Text("Edit Profile")
+            Text("Edit Profile")
                 .font(.custom("Poppins-SemiBold", size: 16))
                 .padding(.leading, 26)
                 .frame(maxWidth: .infinity, alignment: .center)
-               
+            
             
             Button(action: {
                 showSaveAlert = true
@@ -78,17 +83,18 @@ struct EditProfile: View {
                 
                 Button(action: {
                     Task{
-                       await viewModel.updateProfile()
+                        backToProfile = true
+                        await refreshData()
                     }
                 }){
                     Text("Yes im sure!")
                 }
-              
+                
             }
             
         }
         .frame(maxWidth: .infinity, alignment: .center)
-      
+        
     }
     
     @ViewBuilder
@@ -143,11 +149,11 @@ struct EditProfile: View {
             VStack(alignment: .leading, spacing: 4){
                 Text("Name")
                     .font(.custom("Poppins-Regular", size: 16))
-
+                
                 TextField("Name", text: $viewModel.name)
                     .font(.custom("Poppins-Medium", size: 14))
                     .autocorrectionDisabled(true)
-                   
+                
             }
             .padding(8)
             .background(
@@ -158,12 +164,12 @@ struct EditProfile: View {
             VStack(alignment: .leading, spacing: 4){
                 Text("Username")
                     .font(.custom("Poppins-Regular", size: 16))
-
+                
                 TextField("Username", text: $viewModel.userName)
                     .font(.custom("Poppins-Medium", size: 14))
                     .autocorrectionDisabled(true)
-
-                   
+                
+                
             }
             .padding(8)
             .background(
@@ -178,8 +184,8 @@ struct EditProfile: View {
                 TextField("Bio", text: $viewModel.bio)
                     .font(.custom("Poppins-Medium", size: 14))
                     .autocorrectionDisabled(true)
-
-                   
+                
+                
             }
             .padding(8)
             .background(
@@ -189,6 +195,10 @@ struct EditProfile: View {
             
         }
         .padding(.top, 8)
+    }
+    
+    func refreshData() async {
+        await viewModel.updateProfile()
     }
 }
 
