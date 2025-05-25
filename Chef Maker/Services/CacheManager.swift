@@ -47,7 +47,7 @@ actor CacheManager {
             clearCache()
             await clearImageCache()
         } else{
-         print("ℹ️ Cache is valid")
+         print("Cache is valid")
         }
          return shouldRefresh
     }
@@ -78,19 +78,6 @@ actor CacheManager {
             throw CacheError.decodingError
         }
     }
-    
-//    func getImageCacheStatus() async -> (memorySize: UInt, diskSize: UInt) {
-//        let memorySize = memoryItems.reduce(0) { $0 + UInt($1.value.cacheCost) }
-//        
-//        do{
-//            let diskSize = try imageCache.diskStorage.totalSize()
-//            return (memorySize, diskSize)
-//        }catch{
-//            print("Disk size fetching error: \(error.localizedDescription)")
-//            return (memorySize, 0)
-//        }
-//    }
-    
     
     func clearImageCache() async {
            imageCache.clearMemoryCache()

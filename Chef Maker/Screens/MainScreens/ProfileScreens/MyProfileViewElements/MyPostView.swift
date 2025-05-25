@@ -11,7 +11,6 @@ import Kingfisher
 struct MyPostView: View {
     let userRecipe: PostModel
     
-    let columns = [GridItem(.adaptive(minimum: 100), spacing: 4)]
     
     @Environment(\.colorScheme) var colorScheme
     var body: some View {
@@ -25,7 +24,7 @@ struct MyPostView: View {
                 .fade(duration: 0.5)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-                .frame(width: 145, height: 100)
+                .frame(width: 130, height: 125)
             
             
             LinearGradient(
@@ -46,9 +45,8 @@ struct MyPostView: View {
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .frame(width: 145, height: 100)
-        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-        .padding(.horizontal)
+        .frame(width: 125, height: 125)
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 4)
         
     }

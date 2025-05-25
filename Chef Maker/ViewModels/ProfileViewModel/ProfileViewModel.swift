@@ -40,9 +40,20 @@ final class ProfileViewModel: BaseViewModel<ProfileModel>, ProfileViewModelProto
     }
     
     var profile: ProfileModel {
-     profileUser
+        appState.currentProfile ?? ProfileModel(
+            id: "",
+            fullName: "",
+            userName: "",
+            photoURL: nil,
+            fileId: nil,
+            email: nil,
+            bio: nil,
+            followingCount: 0,
+            followersCount: 0,
+            postCount: 0,
+            timeStamp: Date()
+        )
     }
-    
     var isCurrentUser: Bool {
         profileUser.id == appState.currentProfile?.id
     }
@@ -59,7 +70,9 @@ final class ProfileViewModel: BaseViewModel<ProfileModel>, ProfileViewModelProto
     }
     
  
-   
+    func refreshData() async {
+       await updateProfile(profile: profile)
+     }
 
     func fetchUserRecipes() async {
         isLoading = true

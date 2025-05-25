@@ -11,7 +11,6 @@ import Kingfisher
 struct EditProfile: View {
     @EnvironmentObject var appState : AppState
     @StateObject  var viewModel: EditProfileViewModel
-    @StateObject var profileViewModel: ProfileViewModel
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
     
@@ -22,7 +21,6 @@ struct EditProfile: View {
     
     
     init(appState: AppState, showTabBar: Binding<Bool>) {
-        _profileViewModel = StateObject(wrappedValue: ProfileViewModel(appState: appState, profileUser: appState.currentProfile!))
         _viewModel = StateObject(wrappedValue: EditProfileViewModel(appState: appState))
         self._showTabBar = showTabBar
     }
@@ -46,7 +44,7 @@ struct EditProfile: View {
                 hideKeyboard()
             }
             .navigationDestination(isPresented: $backToProfile) {
-                MyProfileView(appState: appState, showTabBar: _showTabBar)
+                MyProfileView(appState: appState, showTabBar: $showTabBar)
             }
         }
         
@@ -83,8 +81,9 @@ struct EditProfile: View {
                 
                 Button(action: {
                     Task{
-                        backToProfile = true
+                        showTabBar = true
                         await refreshData()
+                        dismiss()
                     }
                 }){
                     Text("Yes im sure!")
@@ -105,7 +104,7 @@ struct EditProfile: View {
                     .fill(.gray)
                     .frame(width: 92, height: 92)
                 Group{
-                    if let photoURL = profileViewModel.profile.photoURL, let url = URL(string: photoURL) {
+                    if let photoURL = viewModel.profile.photoURL, !photoURL.isEmpty, let url = URL(string: photoURL) {
                         KFImage(url)
                             .targetCache(CacheManager().imageCache)
                             .fade(duration: 0.5)
@@ -114,9 +113,10 @@ struct EditProfile: View {
                             .clipShape(Circle())
                             .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 5)
                             .frame(width: 92, height: 92)
+                            .id(photoURL)
                         
                     } else {
-                        Text(profileViewModel.profile.initials)
+                        Text(viewModel.profile.initials)
                             .font(.custom("Poppins-SemiBold", size: 16))
                             .foregroundColor(.white)
                     }
@@ -133,10 +133,13 @@ struct EditProfile: View {
                 
             }
             .sheet(isPresented: $showChangeImageSheet) {
-                ChangePhotoView(appState: appState,)
+                ChangePhotoView(appState: appState)
                     .presentationDetents([.height(350)])
                     .presentationDragIndicator(.visible)
                     .presentationCornerRadius(22)
+                    .onDisappear{
+                        viewModel.loadProfile()
+                    }
             }
             
         }
@@ -204,5 +207,4 @@ struct EditProfile: View {
 
 #Preview {
     EditProfile(appState: AppState(), showTabBar: .constant(true))
-    
 }

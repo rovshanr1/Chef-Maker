@@ -27,9 +27,12 @@ struct MyProfileView: View {
     @State private var navigationToFollowers: Bool = false
     @State private var navigationToFollowing: Bool = false
     
+    @State private var isRefreshing = false
+    
     @Binding var showTabBar: Bool
     
-    let columns = [GridItem(.adaptive(minimum: 100), spacing: 4)]
+    let columns = Array(repeating: GridItem(.adaptive(minimum: 100)), count: 3)
+    
     
     init(appState: AppState, showTabBar: Binding<Bool>) {
         _profileViewModel = StateObject(wrappedValue: ProfileViewModel(appState: appState, profileUser: appState.currentProfile!))
@@ -42,17 +45,21 @@ struct MyProfileView: View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 0){
                 headerView()
-                
-                ScrollView(showsIndicators: false ){
-                    
-                    profileContent()
-                    
-                    infoSection()
-                    
-                    butonSection()
+                RefreshableScrollView(isRefreshing: $isRefreshing) {
+                    await profileViewModel.refreshData()
+                } content: {
+                    ScrollView(showsIndicators: false ){
+                        
+                        profileContent()
+                        
+                        
+                        infoSection()
+                        
+                        
+                        butonSection()
+                    }
                 }
             }
-            .padding(.horizontal)
             .background(AppColors.adaptiveMainTabView(for: colorScheme))
             .navigationDestination(isPresented: $navigationEditScreen) {
                 EditProfile(appState: appState, showTabBar: $showTabBar)
@@ -73,7 +80,7 @@ struct MyProfileView: View {
                         await profileViewModel.fetchUserRecipes()
                     }
                     
-                    print("recipe loaded:", profileViewModel.userRecipes.count)
+//                    print("recipe loaded:", profileViewModel.userRecipes.count)
                 }
             }
             
@@ -100,7 +107,7 @@ struct MyProfileView: View {
                         .foregroundStyle(AppColors.adaptiveText(for: colorScheme))
                 }
             }
-            .padding(.horizontal, 8)
+            .padding(.horizontal)
             
         }
     }
@@ -122,6 +129,7 @@ struct MyProfileView: View {
                             .clipShape(Circle())
                             .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 5)
                             .frame(width: 92, height: 92)
+                            .id(photoURL)
                         
                     } else {
                         Text(profileViewModel.profile.initials)
@@ -181,7 +189,7 @@ struct MyProfileView: View {
             }
             
         }
-        .padding([.top])
+        .padding([.top, .horizontal])
     }
     
     @ViewBuilder
@@ -213,7 +221,8 @@ struct MyProfileView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding([.horizontal, .top], 8)
+        .padding(.horizontal)
+        .padding(.top, 8)
     }
     
     @ViewBuilder
@@ -235,6 +244,7 @@ struct MyProfileView: View {
                 )
                 
             }
+            .padding(.horizontal)
             
             VStack {
                 HStack{
@@ -296,6 +306,7 @@ struct MyProfileView: View {
                                     }
                                 }
                             }
+                            .ignoresSafeArea(edges: .all)
                         }
                     }
                     
@@ -304,10 +315,11 @@ struct MyProfileView: View {
                 }
             }
         }
-        .padding([.top, .horizontal])
+        .padding([.top])
         
     }
     
+  
 }
 
 

@@ -11,7 +11,6 @@ import Kingfisher
 
 struct ChangePhotoView: View {
     @StateObject var viewModel: EditProfileViewModel
-    @StateObject var profileViewModel: ProfileViewModel
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
     
@@ -23,8 +22,9 @@ struct ChangePhotoView: View {
     
     init(appState: AppState) {
         _viewModel = StateObject(wrappedValue: EditProfileViewModel(appState: appState))
-        _profileViewModel = StateObject(wrappedValue: ProfileViewModel(appState: appState, profileUser: appState.currentProfile!))
      }
+    
+    
     var body: some View {
         VStack{
             ZStack {
@@ -32,7 +32,7 @@ struct ChangePhotoView: View {
                     .fill(.gray)
                     .frame(width: 62, height: 62)
                 Group{
-                    if let photoURL = profileViewModel.profile.photoURL, let url = URL(string: photoURL) {
+                    if let photoURL = viewModel.profile.photoURL, let url = URL(string: photoURL) {
                         KFImage(url)
                             .targetCache(CacheManager().imageCache)
                             .fade(duration: 0.5)
@@ -41,8 +41,9 @@ struct ChangePhotoView: View {
                             .clipShape(Circle())
                             .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 5)
                             .frame(width: 62, height: 62)
+                            .id(photoURL)
                     } else {
-                        Text(profileViewModel.profile.initials)
+                        Text(viewModel.profile.initials)
                             .font(.custom("Poppins-SemiBold", size: 16))
                             .foregroundColor(.white)
                     }
@@ -71,7 +72,9 @@ struct ChangePhotoView: View {
                                 if let data = try? await newItem.loadTransferable(type: Data.self),
                                    let uiImage = UIImage(data: data) {
                                     try await viewModel.uploadProfilePhoto(uiImage)
+                                    
                                 }
+                                
                             }
                         }
                     }

@@ -87,8 +87,8 @@ struct DiscoveryView: View {
                     if viewModel.userRecipes.isEmpty {
                         await viewModel.fetchUserRecipes()
                     }
-                    print("Data Loaded Successfully: \(featuredViewModel.data.count)")
-                    print("Recipe Loaded Successfully:", featuredViewModel.data.map { $0.title})
+//                    print("Data Loaded Successfully: \(featuredViewModel.data.count)")
+//                    print("Recipe Loaded Successfully:", featuredViewModel.data.map { $0.title})
                 }
             }
             .navigationBarBackButtonHidden(true)

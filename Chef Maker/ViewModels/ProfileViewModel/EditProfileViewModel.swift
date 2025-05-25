@@ -32,8 +32,23 @@ class EditProfileViewModel:BaseViewModel<ProfileModel>, EditProfileViewModelProt
     @Published var photoURL: String = ""
     @Published var isDeletingPhoto = false
 
-    
     private let appState : AppState
+    
+    var profile: ProfileModel {
+        appState.currentProfile ?? ProfileModel(
+            id: "",
+            fullName: "",
+            userName: "",
+            photoURL: nil,
+            fileId: nil,
+            email: nil,
+            bio: nil,
+            followingCount: 0,
+            followersCount: 0,
+            postCount: 0,
+            timeStamp: Date()
+        )
+    }
     
     init(appState: AppState) {
         self.appState = appState
@@ -49,13 +64,17 @@ class EditProfileViewModel:BaseViewModel<ProfileModel>, EditProfileViewModelProt
 //        }
         
         let result = try await ImageKitService.uploadImageToBackend(image: image, fileName: "profile_\(UUID().uuidString).jpg", token: token)
-        self.photoURL = result.url
+    
+        self.photoURL = "\(result.url)?t=\(Date().timeIntervalSince1970)"
+
         
         guard var profile = appState.currentProfile else { return }
         profile.photoURL = result.url
         profile.fileId = result.fileId 
         try await appState.profileService.updateProfile(profile)
         appState.currentProfile = profile
+        
+        await CacheManager().clearImageCache()
     }
     
     func deleteProfilePhoto() async {
@@ -77,6 +96,8 @@ class EditProfileViewModel:BaseViewModel<ProfileModel>, EditProfileViewModelProt
             
             try await appState.profileService.updateProfile(updatedProfile)
             appState.currentProfile = updatedProfile
+            
+            self.photoURL = " "
         }catch {
             self.error = error as? NetworkError ?? .unknown(error)
         }
@@ -116,8 +137,6 @@ class EditProfileViewModel:BaseViewModel<ProfileModel>, EditProfileViewModelProt
         self.bio = profile?.bio ?? ""
         self.photoURL = profile?.photoURL ?? ""
     }
-    
-
 }
 
 

@@ -18,7 +18,6 @@ struct BackendUploadResponse: Decodable {
 
 struct ImageKitService {
     static func uploadImageToBackend(image: UIImage, fileName: String, token: String ) async throws -> BackendUploadResponse {
-       
         guard let imageData = image.jpegData(compressionQuality: 0.8) else {
             throw ImageError.invalidImageData
         }
@@ -38,17 +37,15 @@ struct ImageKitService {
         
         let (data, _) = try await URLSession.shared.data(for: request)
         let responseString = String(data: data, encoding: .utf8)
-        print("Backend cevabı: \(responseString ?? "veri yok")")
+ 
         let decoded = try JSONDecoder().decode(BackendUploadResponse.self, from: data)
         print("Backend'den dönen URL: \(decoded.url)")
         print("Backend'den dönen fileId: \(String(describing: decoded.fileId))")
-        print("Authorization header: Bearer \(token)")
         
         return decoded
     }
     
     static func deleteFile(fileId: String, token: String) async throws {
-        // fileId kontrolü
         guard !fileId.isEmpty else {
             throw ImageError.invalidFileId
         }
@@ -59,19 +56,18 @@ struct ImageKitService {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 
-        // Debug için request detaylarını yazdıralım
+        
         print("DELETE Request URL: \(url)")
-        print("Authorization header: Bearer \(token)")
         print("FileId to be deleted: \(fileId)")
         
-        // Request body'yi oluşturalım
+        
         let body: [String: Any] = ["fileId": fileId]
         
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: body)
             request.httpBody = jsonData
             
-            // Debug için request body'yi yazdıralım
+            
             if let bodyString = String(data: jsonData, encoding: .utf8) {
                 print("Request Body: \(bodyString)")
             }
@@ -80,17 +76,6 @@ struct ImageKitService {
             throw ImageError.invalidRequestBody
         }
 
-        let (data, response) = try await URLSession.shared.data(for: request)
-        
-        // Debug için response'u yazdıralım
-        if let responseString = String(data: data, encoding: .utf8) {
-            print("Response data: \(responseString)")
-        }
-        
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw ImageError.invalidResponse
-        }
-        
     }
     
     

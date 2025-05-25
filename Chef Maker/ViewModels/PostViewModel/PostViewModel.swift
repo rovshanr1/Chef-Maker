@@ -27,12 +27,12 @@ final class PostViewModel: ObservableObject, PostServiceProtocol {
         self.appState = appState
     }
 
-    
+    @MainActor
     func uploadPost(image: UIImage, form: PostFormData) async throws {
         let token = try await appState.getIdToken()
         let uploadResult = try await ImageKitService.uploadImageToBackend(image: image, fileName: UUID().uuidString, token: token)
 
-        let post = await PostModel(
+        let post = PostModel(
             id: UUID().uuidString,
             title: form.title,
             description: form.description,
@@ -51,8 +51,24 @@ final class PostViewModel: ObservableObject, PostServiceProtocol {
             isSaved: false
         )
 
+        let batch = db.batch()
         
-        try await createPost(post)
+        let postRef = db.collection(collectionName).document(post.id)
+        batch.setData(post.toFirebase(), forDocument: postRef)
+        
+        if let userId =  appState.currentProfile?.id {
+            let userRef = db.collection("users").document(userId)
+            batch.updateData(["postCount": FieldValue.increment(Int64(1))], forDocument: userRef)
+        }
+        
+        try await batch.commit()
+        
+        if var currentProfile = appState.currentProfile {
+            currentProfile.postCount += 1
+            
+                appState.currentProfile = currentProfile
+            
+        }
     }
 
     

@@ -23,6 +23,7 @@ struct MainTabView: View {
                     case 0:
                         if appState.currentProfile != nil {
                             DiscoveryView(appState: appState, showTabbar: self.$showTabBar)
+     
                         } else {
                             ProgressView("Loading profile...")
                         }
