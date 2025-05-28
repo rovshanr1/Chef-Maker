@@ -26,7 +26,7 @@ final class PostViewModel: ObservableObject, PostServiceProtocol {
     @Published var nutrients: String = ""
     @Published var selectedHour: Int = 0
     @Published var selectedMinute: Int = 0
-    @Published var selectTime: Int = 0
+    @Published var serving: Int = 1
     @Published var errorMessage: String?
     @Published var isLoading = false
     
@@ -63,6 +63,7 @@ final class PostViewModel: ObservableObject, PostServiceProtocol {
             postImage: uploadResult.url,
             ingredients: ingredients,
             cookingTime: form.cookingTime,
+            serving: form.serving,
             category: form.category,
             difficulty: form.difficulty,
             nutrients: form.nutrients,
@@ -106,6 +107,15 @@ final class PostViewModel: ObservableObject, PostServiceProtocol {
         ingredients.append(newIngredient)
     }
     
+    func loadExampleIngredients() -> [FilterIngredientsModel]{
+        guard let url = Bundle.main.url(forResource: "local_ingredients", withExtension: "json"),
+              let data = try? Data(contentsOf: url),
+              let ingredients = try? JSONDecoder().decode([FilterIngredientsModel].self, from: data)
+        else { return [] }
+        
+        return ingredients
+    }
+    
     func removeIngredient(at index: Int){
         ingredients.remove(at: index)
     }
@@ -116,6 +126,12 @@ final class PostViewModel: ObservableObject, PostServiceProtocol {
             errorMessage = "Please add at least one ingredient"
             return false
         }
+        
+        guard selectedMinute > 0 else {
+            errorMessage = "Please select a valid cooking time"
+            return false
+        }
+        
         isLoading = true
         defer { isLoading = false }
         
@@ -124,6 +140,7 @@ final class PostViewModel: ObservableObject, PostServiceProtocol {
             description: description,
             ingredients: ingredients,
             cookingTime: "\(selectedHour)h \(selectedMinute)m",
+            serving: "\(serving) servings",
             category: category,
             difficulty: difficulty,
             nutrients: nutrients

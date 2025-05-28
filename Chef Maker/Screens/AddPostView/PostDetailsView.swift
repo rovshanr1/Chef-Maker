@@ -30,7 +30,11 @@ struct PostDetailsView: View {
             VStack(alignment: .leading, spacing: 16){
                 ScrollView(showsIndicators: false){
                     VStack{
-                        cookingTimeSelection()
+                        selectIngredientSection()
+                        
+                        Divider()
+                        
+                        showingTimeAndServingSheetSection()
                     }
                 }
                 
@@ -58,7 +62,7 @@ struct PostDetailsView: View {
                     }
                     .foregroundStyle(AppColors.adaptiveText(for: colorScheme).opacity(0.7))
                 }
-            
+                
                 ToolbarItem(placement: .topBarTrailing){
                     Button(action: {
                         Task{
@@ -84,54 +88,87 @@ struct PostDetailsView: View {
     }
     
     @ViewBuilder
-    func cookingTimeSelection() -> some View {
-        VStack(spacing: 16){
-            Text("How long will your delicious dish take to cook?")
-                .font(.custom("Poppins-Regular", size: 14))
-                .foregroundStyle(AppColors.adaptiveText(for: colorScheme).opacity(0.6))
+    func selectIngredientSection() -> some View {
+        
+    }
+    
+    @ViewBuilder
+    func showingTimeAndServingSheetSection() -> some View {
+
             
             HStack(spacing: 8) {
-                Button(action:{
-                    showHourPicker = true
-                }) {
-                    Text(("Hour: \(viewModel.selectedHour)h"))
-                        .padding()
-                        .background(
-                            RoundedRectangle(cornerRadius: 8)
-                                .fill(.ultraThinMaterial)
-                        )
+                VStack(spacing: 16){
+                    Text("Time.")
+                        .font(.custom("Poppins-Bold", size: 18))
                     
+                    Button(action:{
+                        showHourPicker = true
+                    }) {
+                            HStack{
+                                if viewModel.selectedHour > 0{
+                                    Text(("\(viewModel.selectedHour)h"))
+                                    
+                                }
+                                Text(("\(viewModel.selectedMinute)mins"))
+                            }
+                            .frame(width: 100)
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(
+                                        .ultraThinMaterial,
+                                        style: StrokeStyle(
+                                            lineWidth: 2
+                                        )
+                                        
+                                    )
+                            )
+                            
+                        
+                    }
+                    .foregroundStyle(AppColors.adaptiveText(for: colorScheme).opacity(0.6))
+                    .sheet(isPresented: $showHourPicker) {
+                        TimeSheet(hour: $viewModel.selectedHour, minute: $viewModel.selectedMinute)
+                            .presentationDetents([.height(350)])
+                            .presentationDragIndicator(.visible)
+                    }
                 }
-                .foregroundStyle(AppColors.adaptiveText(for: colorScheme).opacity(0.6))
-                .sheet(isPresented: $showHourPicker) {
-                    HourSheet(hour: $viewModel.selectedHour)
-                        .presentationDetents([.height(350)])
-                        .presentationDragIndicator(.visible)
-                }
-                .padding(.trailing)
+                .padding(.top)
                 
-                Button(action:{
-                    showMinutePicker = true
-                }) {
-                    Text(("Minute: \(viewModel.selectedMinute)m"))
-                        .padding()
-                        .background(
-                            RoundedRectangle(cornerRadius: 8)
-                                .fill(.ultraThinMaterial)
-                        )
-                    
+                VStack(spacing: 16){
+                    Text("Servings.")
+                        .font(.custom("Poppins-Bold", size: 18))
+
+                    Button(action:{
+                        showMinutePicker = true
+                    }) {
+                        Text(("\(viewModel.serving) servings"))
+                            .frame(width: 100)
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(
+                                        .ultraThinMaterial,
+                                        style: StrokeStyle(
+                                            lineWidth: 2
+                                        )
+                                    )
+                            )
+                            
+                    }
+                    .foregroundStyle(AppColors.adaptiveText(for: colorScheme).opacity(0.6))
+                    .sheet(isPresented: $showMinutePicker) {
+                        ServingsSheet(serving: $viewModel.serving)
+                            .presentationDetents([.height(350)])
+                            .presentationDragIndicator(.visible)
+                    }
                 }
-                .foregroundStyle(AppColors.adaptiveText(for: colorScheme).opacity(0.6))
-                .sheet(isPresented: $showMinutePicker) {
-                    MinuteSheet(minute: $viewModel.selectedMinute)
-                        .presentationDetents([.height(350)])
-                        .presentationDragIndicator(.visible)
-                }
-                .padding(.leading)
+                .padding([.top, .leading])
             }
             .frame(maxWidth: .infinity, alignment: .center)
-        }
-        .padding(.horizontal)
+            
+        
+        
     }
 }
 

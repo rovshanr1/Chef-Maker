@@ -16,6 +16,7 @@ struct PostModel: Identifiable, Codable {
     
     let ingredients: [SelectedIngredient]
     let cookingTime: String
+    let serving: String
     let category: String
     let difficulty: String
     let nutrients: String
@@ -49,6 +50,7 @@ extension PostModel {
               let title = data["title"] as? String,
               let description = data["description"] as? String,
               let cookingTime = data["cookingTime"] as? String,
+              let serving = data["serving"] as? String,
               let category = data["category"] as? String,
               let difficulty = data["difficulty"] as? String,
               let nutrients = data["nutrients"] as? String,
@@ -78,6 +80,7 @@ extension PostModel {
             postImage: data["postImage"] as? String,
             ingredients: ingredients,
             cookingTime: cookingTime,
+            serving: serving,
             category: category,
             difficulty: difficulty,
             nutrients: nutrients,
@@ -103,6 +106,7 @@ extension PostModel {
                 "unit": $0.unit
             ] },
             "cookingTime": cookingTime,
+            "serving": serving,
             "category": category,
             "difficulty": difficulty,
             "nutrients": nutrients,
@@ -143,6 +147,7 @@ extension PostModel {
             SelectedIngredient(id: "3", name: "Cream", quantity: "100", unit: "ml")
         ],
         cookingTime: "45 m",
+        serving: "6",
         category: "Akşam Yemeği",
         difficulty: "Medium",
         nutrients: "500 kcal",

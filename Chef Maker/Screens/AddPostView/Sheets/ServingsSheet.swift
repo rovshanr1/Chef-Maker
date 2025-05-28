@@ -7,23 +7,23 @@
 
 import SwiftUI
 
-struct MinuteSheet: View {
-    @Binding var minute: Int
+struct ServingsSheet: View {
+    @Binding var serving: Int
     
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
     var body: some View {
         VStack{
-            Text("Minute!")
+            Text("Servings")
                 .font(.custom("Poppins-Medium", size: 16))
             
-            Picker("Minute", selection: $minute){
-                ForEach(0..<60, id: \.self){ minute in
-                    Text("\(minute)m")
+            Picker("Servings", selection: $serving){
+                ForEach(1...20, id: \.self){ serving in
+                    Text("\(serving) servings")
                         .foregroundStyle(AppColors.adaptiveText(for: colorScheme))
                 }
             }
-            .pickerStyle(.inline)
+            .pickerStyle(.wheel)
             .foregroundStyle(.gray)
             
             Button(action: {
@@ -43,5 +43,5 @@ struct MinuteSheet: View {
 }
 
 #Preview {
-    MinuteSheet(minute: .constant(0))
+    ServingsSheet(serving: .constant(0))
 }
