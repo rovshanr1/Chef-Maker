@@ -35,12 +35,19 @@ struct PostDetailsView: View {
                 }
                 
             }
+            .background(AppColors.adaptiveMainTabView(for: colorScheme))
             .navigationDestination(isPresented: $backRecipeDescriptionView){
                 PostTitleView(appState: appState, selectedImage: selectedImage)
             }
             .navigationBarBackButtonHidden(true)
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle(Text("Recipe Details"))
+            .alert("Opps", isPresented: Binding(get: { viewModel.errorMessage != nil }, set: { _ in viewModel.errorMessage = nil })){
+                Button("OK", role: .cancel){}
+            }message: {
+                Text(viewModel.errorMessage ?? "")
+            }
+            .onTapGesture {hideKeyboard()}
             .toolbar{
                 ToolbarItem(placement: .topBarLeading){
                     Button(action: {
@@ -51,7 +58,7 @@ struct PostDetailsView: View {
                     }
                     .foregroundStyle(AppColors.adaptiveText(for: colorScheme).opacity(0.7))
                 }
-                
+            
                 ToolbarItem(placement: .topBarTrailing){
                     Button(action: {
                         Task{
@@ -72,6 +79,7 @@ struct PostDetailsView: View {
                     .foregroundStyle(AppColors.adaptiveText(for: colorScheme).opacity(0.7))
                 }
             }
+            
         }
     }
     

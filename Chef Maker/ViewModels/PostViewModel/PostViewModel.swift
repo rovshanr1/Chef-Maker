@@ -17,9 +17,10 @@ protocol PostServiceProtocol{
 
 
 final class PostViewModel: ObservableObject, PostServiceProtocol {
+    // MARK: - Published Properties
     @Published var title: String = ""
     @Published var description: String = ""
-    @Published var ingredients: String = ""
+    @Published var ingredients: [SelectedIngredient] = []
     @Published var category: String = ""
     @Published var difficulty: String = ""
     @Published var nutrients: String = ""
@@ -49,18 +50,18 @@ final class PostViewModel: ObservableObject, PostServiceProtocol {
         return true
         
     }
-
+    
     @MainActor
     func uploadPost(image: UIImage, form: PostFormData) async throws {
         let token = try await appState.getIdToken()
         let uploadResult = try await ImageKitService.uploadImageToBackend(image: image, fileName: UUID().uuidString, token: token)
-
+        
         let post = PostModel(
             id: UUID().uuidString,
             title: form.title,
             description: form.description,
             postImage: uploadResult.url,
-            ingredients: form.ingredients,
+            ingredients: ingredients,
             cookingTime: form.cookingTime,
             category: form.category,
             difficulty: form.difficulty,
@@ -73,7 +74,7 @@ final class PostViewModel: ObservableObject, PostServiceProtocol {
             isLiked: false,
             isSaved: false
         )
-
+        
         let batch = db.batch()
         
         let postRef = db.collection(collectionName).document(post.id)
@@ -89,20 +90,39 @@ final class PostViewModel: ObservableObject, PostServiceProtocol {
         if var currentProfile = appState.currentProfile {
             currentProfile.postCount += 1
             
-                appState.currentProfile = currentProfile
+            appState.currentProfile = currentProfile
             
         }
     }
+    
+    func addIngredient(name: String, quantity: String, unit: String){
+        let newIngredient = SelectedIngredient(
+            id: UUID().uuidString,
+            name: name,
+            quantity: quantity,
+            unit: unit
+        )
+        
+        ingredients.append(newIngredient)
+    }
+    
+    func removeIngredient(at index: Int){
+        ingredients.remove(at: index)
+    }
+    
     @MainActor
     func handlePost() async -> Bool {
-        
+        guard !ingredients.isEmpty else {
+            errorMessage = "Please add at least one ingredient"
+            return false
+        }
         isLoading = true
         defer { isLoading = false }
         
         let form = PostFormData(
             title: title,
             description: description,
-            ingredients: ingredients.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) },
+            ingredients: ingredients,
             cookingTime: "\(selectedHour)h \(selectedMinute)m",
             category: category,
             difficulty: difficulty,
@@ -112,7 +132,7 @@ final class PostViewModel: ObservableObject, PostServiceProtocol {
         do {
             try await uploadPost(image: selectedImage, form: form)
             return true
-
+            
         } catch {
             await MainActor.run {
                 errorMessage = error.localizedDescription
@@ -120,29 +140,29 @@ final class PostViewModel: ObservableObject, PostServiceProtocol {
             return false
         }
     }
-
+    
     
     private func createPost(_ post: PostModel) async throws {
         let data = post.toFirebase()
         try await db.collection(collectionName).document(post.id).setData(data, merge: true)
     }
-
+    
     func fetchAllPosts() async throws -> [PostModel] {
         let snapshot = try await db.collection(collectionName).getDocuments()
         return snapshot.documents.compactMap { document in
             guard let post = PostModel.fromFirebase(document.data()) else { return nil }
             return post
         }
-     
+        
     }
     
     func fetchPosts(by id: String) async throws -> PostModel? {
-           let document = try await db.collection(collectionName).document(id).getDocument()
+        let document = try await db.collection(collectionName).document(id).getDocument()
         guard document.exists, let data = document.data(), let post = PostModel.fromFirebase(data) else {
-               return nil
-           }
-           return post
-       }
+            return nil
+        }
+        return post
+    }
     
     func deletePost(by id: String) async throws {
         try await db.collection(collectionName).document(id).delete()

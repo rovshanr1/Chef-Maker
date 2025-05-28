@@ -10,7 +10,7 @@ import SwiftUI
 struct PostFormData {
     var title: String
     var description: String
-    var ingredients: [String]
+    var ingredients: [SelectedIngredient]
     var cookingTime: String
     var category: String
     var difficulty: String
