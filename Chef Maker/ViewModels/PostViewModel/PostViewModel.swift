@@ -17,14 +17,37 @@ protocol PostServiceProtocol{
 
 
 final class PostViewModel: ObservableObject, PostServiceProtocol {
-
+    @Published var title: String = ""
+    @Published var description: String = ""
+    @Published var ingredients: String = ""
+    @Published var category: String = ""
+    @Published var difficulty: String = ""
+    @Published var nutrients: String = ""
+    @Published var selectedHour: Int = 0
+    @Published var selectedMinute: Int = 0
+    @Published var selectTime: Int = 0
+    @Published var errorMessage: String?
+    @Published var isLoading = false
+    
+    
     
     private let db = Firestore.firestore()
     private let collectionName = "posts"
     let appState: AppState
+    let selectedImage: UIImage
     
-    init(appState: AppState) {
+    init(appState: AppState, selectedImage: UIImage) {
         self.appState = appState
+        self.selectedImage = selectedImage
+    }
+    
+    func checkFormValidity() -> Bool {
+        guard !title.isEmpty, !description.isEmpty else {
+            errorMessage = "All Text Fields Are Required!"
+            return false
+        }
+        return true
+        
     }
 
     @MainActor
@@ -68,6 +91,33 @@ final class PostViewModel: ObservableObject, PostServiceProtocol {
             
                 appState.currentProfile = currentProfile
             
+        }
+    }
+    @MainActor
+    func handlePost() async -> Bool {
+        
+        isLoading = true
+        defer { isLoading = false }
+        
+        let form = PostFormData(
+            title: title,
+            description: description,
+            ingredients: ingredients.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) },
+            cookingTime: "\(selectedHour)h \(selectedMinute)m",
+            category: category,
+            difficulty: difficulty,
+            nutrients: nutrients
+        )
+        
+        do {
+            try await uploadPost(image: selectedImage, form: form)
+            return true
+
+        } catch {
+            await MainActor.run {
+                errorMessage = error.localizedDescription
+            }
+            return false
         }
     }
 

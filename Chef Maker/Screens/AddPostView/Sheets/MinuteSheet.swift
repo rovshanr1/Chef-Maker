@@ -18,7 +18,7 @@ struct MinuteSheet: View {
                 .font(.custom("Poppins-Medium", size: 16))
             
             Picker("Minute", selection: $minute){
-                ForEach(1..<60, id: \.self){ minute in
+                ForEach(0..<60, id: \.self){ minute in
                     Text("\(minute)m")
                         .foregroundStyle(AppColors.adaptiveText(for: colorScheme))
                 }

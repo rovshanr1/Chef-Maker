@@ -114,6 +114,7 @@ struct SelectedImagePreview: View {
                     }
                 }) {
                     Image(systemName: "aspectratio")
+                        
                 }
                 .padding()
                 .background(

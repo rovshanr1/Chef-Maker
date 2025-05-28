@@ -25,10 +25,16 @@ struct PostView: View {
         
         NavigationStack {
             VStack(spacing: 16){
-                //Header Section
-                header()
-                
-                photoPreview()
+                //Image Placeholder
+                SelectedImagePreview(
+                    service: service,
+                    croppedImage: $croppedImage,
+                    finalScale: $finalScale,
+                    finalOffset: $finalOffset
+                )
+                Divider()
+                //Image Piceker
+                CustomImagePickerGridView(viewModel: service)
                 
             }
             .background(
@@ -44,53 +50,37 @@ struct PostView: View {
                     PostTitleView(appState: appState, selectedImage: croppedImage)
                 }
             }
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("Recipe Photos")
+            .toolbar{
+                ToolbarItem(placement: .topBarLeading){
+                    Button(action: {
+                        dismiss()
+                    }){
+                        Text("Close")
+                            .font(.custom("Poppins-Regular", size: 14))
+                    }
+                    .foregroundStyle(AppColors.adaptiveText(for: colorScheme).opacity(0.7))
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: {
+                        showAddNewPostTitleView = true
+                    }){
+                        Text("Next")
+                            .font(.custom("Poppins-Regular", size: 14))
+                    }
+                    .foregroundStyle(AppColors.adaptiveText(for: colorScheme).opacity(0.7))
+                }
+            }
         }
         
-    }
-    
-    
-    @ViewBuilder
-    func header() -> some View {
-        HStack {
-            Button(action: {
-                dismiss()
-            }){
-                Text("Close")
-                    .font(.custom("Poppins-Regular", size: 14))
-            }
-            .foregroundStyle(AppColors.adaptiveText(for: colorScheme).opacity(0.7))
-            
-            Spacer(minLength: 0)
-            
-            Text("New Post")
-                .font(.custom("Poppins-SemiBold", size: 18))
-            
-            Spacer(minLength: 0)
-            
-            Button(action: {
-
-                showAddNewPostTitleView = true
-            }){
-                Text("Next")
-                    .font(.custom("Poppins-Regular", size: 14))
-            }
-            .foregroundStyle(AppColors.adaptiveText(for: colorScheme).opacity(0.7))
-        }
-        .padding([.top, .horizontal])
-     
     }
     
     @ViewBuilder
     func photoPreview() -> some View {
         VStack{
-            SelectedImagePreview(
-                service: service,
-                croppedImage: $croppedImage,
-                finalScale: $finalScale,
-                finalOffset: $finalOffset
-            )
-            Divider()
-            CustomImagePickerGridView(viewModel: service)
+
         }
 
     }
