@@ -29,8 +29,8 @@ struct PostDetailsView: View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 16){
                 ScrollView(showsIndicators: false){
-                    VStack{
-                        selectIngredientSection()
+                    VStack(alignment: .leading){
+                        IngredientsSection(viewModel: viewModel)
                         
                         Divider()
                         
@@ -87,15 +87,10 @@ struct PostDetailsView: View {
         }
     }
     
-    @ViewBuilder
-    func selectIngredientSection() -> some View {
-        
-    }
+ 
     
     @ViewBuilder
     func showingTimeAndServingSheetSection() -> some View {
-
-            
             HStack(spacing: 8) {
                 VStack(spacing: 16){
                     Text("Time.")

@@ -21,6 +21,8 @@ final class PostViewModel: ObservableObject, PostServiceProtocol {
     @Published var title: String = ""
     @Published var description: String = ""
     @Published var ingredients: [SelectedIngredient] = []
+    @Published var allIngredients: [SelectedIngredient] = []
+    @Published var searchIngredient: String = ""
     @Published var category: String = ""
     @Published var difficulty: String = ""
     @Published var nutrients: String = ""
@@ -30,6 +32,15 @@ final class PostViewModel: ObservableObject, PostServiceProtocol {
     @Published var errorMessage: String?
     @Published var isLoading = false
     
+    // Calculated property for search results
+    var filteredIngredients: [SelectedIngredient] {
+        if searchIngredient.isEmpty {
+            return []
+        }
+        return allIngredients.filter { ingredient in
+            ingredient.name.lowercased().contains(searchIngredient.lowercased())
+        }
+    }
     
     
     private let db = Firestore.firestore()
@@ -40,6 +51,7 @@ final class PostViewModel: ObservableObject, PostServiceProtocol {
     init(appState: AppState, selectedImage: UIImage) {
         self.appState = appState
         self.selectedImage = selectedImage
+        loadExampleIngredients()
     }
     
     func checkFormValidity() -> Bool {
@@ -96,29 +108,60 @@ final class PostViewModel: ObservableObject, PostServiceProtocol {
         }
     }
     
-    func addIngredient(name: String, quantity: String, unit: String){
+    
+    func selectIngredient(ingredient: SelectedIngredient){
+        ingredients.append(ingredient)
+        searchIngredient = ""
+    }
+    
+    func searchIngredients() {
+        objectWillChange.send()
+    }
+    
+    func moveIngredient(from source: IndexSet, to destination: Int){
+        ingredients.move(fromOffsets: source, toOffset: destination)
+    }
+    
+    func addCustomIngredient(){
+        guard !searchIngredient.trimmingCharacters(in: .whitespaces).isEmpty else {
+            errorMessage = "Please enter a valid ingredient name."
+            return
+        }
         let newIngredient = SelectedIngredient(
             id: UUID().uuidString,
-            name: name,
-            quantity: quantity,
-            unit: unit
+            name: searchIngredient.trimmingCharacters(in: .whitespacesAndNewlines),
+            quantity: "",
+            unit: ""
         )
         
         ingredients.append(newIngredient)
+        searchIngredient = ""
     }
     
-    func loadExampleIngredients() -> [FilterIngredientsModel]{
-        guard let url = Bundle.main.url(forResource: "local_ingredients", withExtension: "json"),
-              let data = try? Data(contentsOf: url),
-              let ingredients = try? JSONDecoder().decode([FilterIngredientsModel].self, from: data)
-        else { return [] }
-        
-        return ingredients
+    func removeIngredient(at offsets: IndexSet) {
+        ingredients.remove(atOffsets: offsets)
     }
     
-    func removeIngredient(at index: Int){
-        ingredients.remove(at: index)
+    
+    func loadExampleIngredients() {
+        do{
+            guard let url = Bundle.main.url(forResource: "local_ingredients", withExtension: "json")
+            else {
+                errorMessage = "Json file not found"
+                return
+            }
+            
+            let data  = try Data(contentsOf: url)
+            let response = try JSONDecoder().decode(IngredientsResponse.self, from: data)
+            
+            allIngredients = response.ingredients
+            
+        }catch{
+            errorMessage = "Ingredients could not be loaded"
+        }
     }
+    
+    
     
     @MainActor
     func handlePost() async -> Bool {

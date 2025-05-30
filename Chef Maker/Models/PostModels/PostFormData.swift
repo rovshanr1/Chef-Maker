@@ -18,3 +18,7 @@ struct PostFormData {
     var nutrients: String
 }
 
+//Local json file parsing model
+struct IngredientsResponse: Codable {
+    let ingredients: [SelectedIngredient]
+}
