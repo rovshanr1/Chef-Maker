@@ -19,8 +19,6 @@ protocol ProfileViewModelProtocol: BaseViewModelProtocol {
 @MainActor
 final class ProfileViewModel: BaseViewModel<ProfileModel>, ProfileViewModelProtocol {
     
-
-    
     private let appState: AppState
     private let profileUser: ProfileModel
     let service = ProfileService()

@@ -59,9 +59,9 @@ class EditProfileViewModel:BaseViewModel<ProfileModel>, EditProfileViewModelProt
     func uploadProfilePhoto(_ image: UIImage) async throws {
         let token = try await appState.getIdToken()
         
-//        if let oldFileId = appState.currentProfile?.fileId {
-//            try await ImageKitService.deleteFile(fileId: oldFileId, token: token)
-//        }
+        if let oldFileId = appState.currentProfile?.fileId {
+            try await ImageKitService.deleteFile(fileId: oldFileId, token: token)
+        }
         
         let result = try await ImageKitService.uploadImageToBackend(image: image, fileName: "profile_\(UUID().uuidString).jpg", token: token)
     

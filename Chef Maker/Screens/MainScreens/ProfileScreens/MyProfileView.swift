@@ -29,15 +29,13 @@ struct MyProfileView: View {
     
     @State private var isRefreshing = false
     
-    @Binding var showTabBar: Bool
     
     let columns = Array(repeating: GridItem(.adaptive(minimum: 100)), count: 3)
     
     
-    init(appState: AppState, showTabBar: Binding<Bool>) {
+    init(appState: AppState) {
         _profileViewModel = StateObject(wrappedValue: ProfileViewModel(appState: appState, profileUser: appState.currentProfile!))
         _editProfileViewModel = StateObject(wrappedValue: EditProfileViewModel(appState: appState))
-        self._showTabBar = showTabBar
     }
     
     
@@ -62,17 +60,10 @@ struct MyProfileView: View {
             }
             .background(AppColors.adaptiveMainTabView(for: colorScheme))
             .navigationDestination(isPresented: $navigationEditScreen) {
-                EditProfile(appState: appState, showTabBar: $showTabBar)
-                    .onAppear { showTabBar = false }
-                    .onChange(of: navigationEditScreen) { oldValue  ,newValue in
-                        if !newValue {
-                            showTabBar = true
-                        }
-                    }
-                
+                EditProfile(appState: appState)
             }
             .navigationDestination(isPresented: $navigateBurgerMenu) {
-                BurgerMenu(viewModel: profileViewModel)
+                BurgerMenu(appState: appState, profileUser: profileViewModel.profile)
             }
             .onAppear{
                 Task{

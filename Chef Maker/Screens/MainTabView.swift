@@ -22,7 +22,7 @@ struct MainTabView: View {
                     switch index{
                     case 0:
                         if appState.currentProfile != nil {
-                            DiscoveryView(appState: appState, showTabbar: self.$showTabBar)
+                            DiscoveryView(appState: appState)
      
                         } else {
                             ProgressView("Loading profile...")
@@ -30,9 +30,9 @@ struct MainTabView: View {
                     case 1:
                         SearchView(showTabbar: self.$showTabBar)
                     case 2:
-                        NotificationView()
+                        NotificationView(appState: appState)
                     default:
-                        MyProfileView(appState: appState, showTabBar: self.$showTabBar )
+                        MyProfileView(appState: appState)
                     }
                 }
                 

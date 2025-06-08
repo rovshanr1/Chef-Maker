@@ -27,6 +27,7 @@ struct IngredientsSection: View {
                         .foregroundStyle(AppColors.filedFilterButtonColor)
                 }
                 .padding()
+                .disabled(viewModel.searchIngredient.isEmpty)
             }
             .padding(.horizontal)
             .padding(.bottom, 4)
@@ -88,6 +89,7 @@ struct IngredientsSection: View {
                 )
                 .cornerRadius(8)
             }
+            .padding(.horizontal)
             .frame(maxWidth: .infinity ,maxHeight: 80, alignment: .leading)
             
     }
@@ -98,6 +100,7 @@ struct IngredientsSection: View {
             HStack(spacing: 12){
                 TextField("Ingredient Name", text: $ingredinet.name)
                     .padding()
+                    .autocorrectionDisabled(true)
                     .background(
                         RoundedRectangle(cornerRadius: 8)
                             .stroke(
@@ -108,6 +111,7 @@ struct IngredientsSection: View {
                 
                 TextField("Amount", text: $ingredinet.quantity)
                     .padding()
+                    .autocorrectionDisabled(true)
                     .background(
                         RoundedRectangle(cornerRadius: 8)
                             .stroke(

@@ -21,7 +21,6 @@ struct DiscoveryView: View {
     @State var index = 0
     @State var selectedRecipe: Recipe?
     @State private var isRefreshing = false
-    @Binding var showTabbar: Bool
     
     
     //Animation
@@ -31,9 +30,8 @@ struct DiscoveryView: View {
     @Environment(\.colorScheme) var colorScheme
     
     
-    init(appState: AppState, showTabbar: Binding<Bool>) {
+    init(appState: AppState) {
         _profileViewModel = StateObject(wrappedValue: ProfileViewModel(appState: appState, profileUser: appState.currentProfile!))
-         self._showTabbar = showTabbar
      }
     
     
@@ -133,8 +131,12 @@ struct DiscoveryView: View {
                         FeaturedCardView(recipe: recipe, namespace: namespace, show: $show)
                             .onTapGesture {
                                 withAnimation(.easeInOut(duration: 0.3)) {
-                                    selectedRecipe = recipe
-                                    show.toggle()
+                                    if selectedRecipe?.id == recipe.id {
+                                        show.toggle()
+                                    }else{
+                                        selectedRecipe = recipe
+                                        show = true
+                                    }
                                 }
                             }
                             .matchedGeometryEffect(id: "\(recipe.id)  image", in: namespace, isSource: !show)

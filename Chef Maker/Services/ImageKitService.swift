@@ -22,7 +22,7 @@ struct ImageKitService {
             throw ImageError.invalidImageData
         }
         let base64String = imageData.base64EncodedString()
-        let url = URL(string: "http://192.168.1.70:3000/upload")!
+        let url = URL(string: "http://192.168.1.70:2025/upload")!
         var request = URLRequest(url: url)
         
         request.httpMethod = "POST"
@@ -50,7 +50,7 @@ struct ImageKitService {
             throw ImageError.invalidFileId
         }
         
-        let url = URL(string: "http://192.168.1.70:3000/delete")!
+        let url = URL(string: "http://192.168.1.70:2025/delete")!
         var request = URLRequest(url: url)
         request.httpMethod = "DELETE"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")

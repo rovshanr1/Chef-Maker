@@ -31,6 +31,7 @@ struct SearchView: View {
                     
                     Spacer()
                 }
+                
                
                 
 

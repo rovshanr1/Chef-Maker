@@ -17,19 +17,16 @@ struct EditProfile: View {
     @State private var showSaveAlert = false
     @State private var showChangeImageSheet = false
     @State private var backToProfile: Bool = false
-    @Binding var showTabBar: Bool
     
     
-    init(appState: AppState, showTabBar: Binding<Bool>) {
+    init(appState: AppState) {
         _viewModel = StateObject(wrappedValue: EditProfileViewModel(appState: appState))
-        self._showTabBar = showTabBar
     }
     
     var body: some View {
         
         NavigationStack{
             VStack{
-                headerSection()
                 ScrollView{
                     profilePictureSection()
                     
@@ -38,64 +35,55 @@ struct EditProfile: View {
                 }
             }
             .padding(.horizontal)
-            .navigationBarBackButtonHidden(true)
             .background(AppColors.adaptiveMainTabView(for: colorScheme).ignoresSafeArea())
+            .navigationBarBackButtonHidden(true)
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("Edit profile")
+            .background(EnableSwipeBackGesture())
             .onTapGesture {
                 hideKeyboard()
             }
-            .navigationDestination(isPresented: $backToProfile) {
-                MyProfileView(appState: appState, showTabBar: $showTabBar)
-            }
-        }
-        
-    }
-    
-    @ViewBuilder
-    private func headerSection() -> some View {
-        HStack{
-            Button(action: {
-                showTabBar = true
-                dismiss()
-            }){
-                Image(systemName: "chevron.backward")
-                    .font(.headline)
-                    .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
-            }
-            
-            Text("Edit Profile")
-                .font(.custom("Poppins-SemiBold", size: 16))
-                .padding(.leading, 26)
-                .frame(maxWidth: .infinity, alignment: .center)
-            
-            
-            Button(action: {
-                showSaveAlert = true
-            }){
-                Text("done")
-                    .font(.custom("Poppins-Regular", size: 18))
-                    .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
-            }
-            .alert("are you sure you want to save changes?", isPresented: $showSaveAlert){
-                
-                Button("No!", role: .cancel){}
-                
-                Button(action: {
-                    Task{
-                        showTabBar = true
-                        await refreshData()
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: {
                         dismiss()
+                    }){
+                        Image(systemName: "chevron.backward")
+                            .font(.headline)
+                            .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
                     }
-                }){
-                    Text("Yes im sure!")
                 }
                 
+                ToolbarItem(placement: .topBarTrailing){
+                    Button(action: {
+                        showSaveAlert = true
+                    }){
+                        Text("done")
+                            .font(.custom("Poppins-Regular", size: 18))
+                            .foregroundStyle(AppColors.adaptiveText(for: colorScheme).secondary)
+                    }
+                    .alert("are you sure you want to save changes?", isPresented: $showSaveAlert){
+                        
+                        Button("No!", role: .cancel){}
+                        
+                        Button(action: {
+                            Task{
+
+                                await refreshData()
+                                dismiss()
+                            }
+                        }){
+                            Text("Yes im sure!")
+                        }
+                        
+                    }
+                }
             }
-            
         }
-        .frame(maxWidth: .infinity, alignment: .center)
         
     }
     
+     
     @ViewBuilder
     private func profilePictureSection() -> some View {
         VStack{
@@ -206,5 +194,6 @@ struct EditProfile: View {
 }
 
 #Preview {
-    EditProfile(appState: AppState(), showTabBar: .constant(true))
+    EditProfile(appState: AppState())
+        .environmentObject(AppState())
 }

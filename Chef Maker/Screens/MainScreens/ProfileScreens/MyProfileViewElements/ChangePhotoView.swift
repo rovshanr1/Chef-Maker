@@ -150,5 +150,5 @@ struct ChangePhotoView: View {
 }
 
 #Preview {
-    EditProfile(appState: AppState(), showTabBar: .constant(true))
+    EditProfile(appState: AppState())
 }

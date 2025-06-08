@@ -8,11 +8,19 @@
 import SwiftUI
 
 struct NotificationView: View {
+    @StateObject var viewModel: NotificationViewModel
+    @EnvironmentObject var appState: AppState
+    
+    init(appState: AppState){
+        _viewModel = StateObject(wrappedValue: NotificationViewModel())
+    }
+    
     var body: some View {
         Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }
 }
 
 #Preview {
-    NotificationView()
+    NotificationView(appState: AppState())
+        .environmentObject(AppState())
 }
