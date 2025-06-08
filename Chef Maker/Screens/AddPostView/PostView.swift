@@ -38,8 +38,7 @@ struct PostView: View {
                 
             }
             .background(
-                AppColors.adaptiveMainTabView(for: colorScheme)
-                    .ignoresSafeArea(edges: .all)
+                Color.appsBackground
             )
             .onAppear{
                 requestPhotoLibraryAccess()

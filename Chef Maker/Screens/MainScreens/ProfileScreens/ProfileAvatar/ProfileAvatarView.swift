@@ -9,7 +9,7 @@ import SwiftUI
 
 
 struct ProfileAvatarView: View {
-  let profile: ProfileModel
+    let profile: ProfileModel
     @Environment(\.colorScheme) var colorScheme
     var body: some View {
         HStack{
@@ -30,8 +30,6 @@ struct ProfileAvatarView: View {
             
             //Profile Photo
             ProfilePhoto(profile: profile)
-
-               
         }
         .padding(.horizontal)
     }

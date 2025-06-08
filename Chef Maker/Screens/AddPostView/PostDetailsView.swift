@@ -39,7 +39,7 @@ struct PostDetailsView: View {
                 }
                 
             }
-            .background(AppColors.adaptiveMainTabView(for: colorScheme))
+            .background(Color.appsBackground)
             .navigationDestination(isPresented: $backRecipeDescriptionView){
                 PostTitleView(appState: appState, selectedImage: selectedImage)
             }

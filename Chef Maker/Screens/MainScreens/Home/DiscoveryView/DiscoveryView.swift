@@ -75,7 +75,7 @@ struct DiscoveryView: View {
                         scrollOffset = value
                     }
             }
-            .background(AppColors.adaptiveMainTabView(for: colorScheme).ignoresSafeArea())
+            .background(Color.appsBackground.ignoresSafeArea())
             .onAppear{
                 Task {
                     if featuredViewModel.data.isEmpty {

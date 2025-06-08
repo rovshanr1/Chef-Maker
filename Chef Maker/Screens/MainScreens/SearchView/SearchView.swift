@@ -16,7 +16,7 @@ struct SearchView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                AppColors.adaptiveMainTabView(for: colorScheme)
+                Color.appsBackground
                     .ignoresSafeArea(edges: .all)
                 
                 VStack {

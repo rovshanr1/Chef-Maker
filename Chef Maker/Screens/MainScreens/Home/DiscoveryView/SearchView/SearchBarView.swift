@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct SearchBarView: View {
-    @Environment(\.colorScheme) var colorScheme
     var body: some View {
         HStack{
             HStack{
@@ -19,7 +18,7 @@ struct SearchBarView: View {
             .padding()
             .background(
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(AppColors.adaptiveMainTabView(for: colorScheme))
+                    .fill(Color.appsBackground)
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)
                             .stroke(Color.gray.opacity(0.3), lineWidth: 1)

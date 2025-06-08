@@ -26,7 +26,7 @@ struct CustomTexteditorField: View {
                     .scrollContentBackground(.hidden)
                     .frame(height: 140)
                     .padding(10)
-                    .background(AppColors.adaptiveMainTabView(for: colorScheme))
+                    .background(Color.appsBackground)
                     .overlay(
                         RoundedRectangle(cornerRadius: 8)
                             .stroke(AppColors.adaptiveText(for: colorScheme).opacity(0.2), lineWidth: 1)

@@ -35,7 +35,7 @@ struct EditProfile: View {
                 }
             }
             .padding(.horizontal)
-            .background(AppColors.adaptiveMainTabView(for: colorScheme).ignoresSafeArea())
+            .background(Color.appsBackground.ignoresSafeArea())
             .navigationBarBackButtonHidden(true)
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("Edit profile")

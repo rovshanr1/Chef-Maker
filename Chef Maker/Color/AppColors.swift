@@ -53,6 +53,7 @@ struct AppColors {
 
 
 extension Color {
+
     init(hex: String) {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
         var int: UInt64 = 0
@@ -77,4 +78,9 @@ extension Color {
             opacity: Double(a) / 255
         )
     }
+}
+
+extension Color {
+    static let appsBackground = Color("AppBackground")
+
 }

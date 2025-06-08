@@ -22,7 +22,7 @@ struct RecipeSearchGridView: View {
     
     var body: some View {
         ZStack {
-            AppColors.adaptiveMainTabView(for: colorScheme)
+            Color.appsBackground
                 .ignoresSafeArea()
             VStack(spacing: 20){
                 HStack{

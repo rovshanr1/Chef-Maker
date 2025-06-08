@@ -14,7 +14,7 @@ struct EmptySearchView: View {
     
     var body: some View {
         ZStack{
-            AppColors.adaptiveMainTabView(for: colorScheme)
+            Color.appsBackground
                 .ignoresSafeArea()
             VStack(spacing: 16){
                 Image("Search")
@@ -35,6 +35,7 @@ struct EmptySearchView: View {
                 .lineLimit(2)
                 .padding(.horizontal, 24)
             }
+            
         }
         .onAppear{
             animate = true

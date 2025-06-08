@@ -32,7 +32,7 @@ NavigationStack{
       
         
     }
-    .background(AppColors.adaptiveMainTabView(for: colorScheme).ignoresSafeArea(.all))
+    .background(Color.appsBackground)
     .toolbar {
         ToolbarItem(placement: .topBarLeading) {
             Button(action: {

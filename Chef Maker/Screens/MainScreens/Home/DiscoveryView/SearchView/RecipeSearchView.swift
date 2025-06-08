@@ -44,7 +44,7 @@ struct RecipeSearchView: View {
                         .padding()
                         .background(
                             RoundedRectangle(cornerRadius: 12)
-                                .fill(AppColors.adaptiveMainTabView(for: colorScheme))
+                                .fill(Color.appsBackground)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 12)
                                         .stroke(AppColors.filedFilterButtonColor.opacity(0.5), lineWidth: 1)
@@ -90,8 +90,7 @@ struct RecipeSearchView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 .background(
-                    AppColors.adaptiveMainTabView(for: colorScheme)
-                        .ignoresSafeArea()
+                    Color.appsBackground
                 ).navigationBarBackButtonHidden(true)
         }
     }

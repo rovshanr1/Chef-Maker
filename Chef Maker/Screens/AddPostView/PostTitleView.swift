@@ -42,8 +42,7 @@ struct PostTitleView: View {
                 }
             }
             .background(
-                AppColors.adaptiveMainTabView(for: colorScheme)
-                    .ignoresSafeArea(edges: .all)
+                Color.appsBackground
             )
             .navigationDestination(isPresented: $backImagePickerView, destination: {
                 PostView()

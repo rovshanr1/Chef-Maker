@@ -43,7 +43,7 @@ struct MainTabView: View {
                 }
             }
             .ignoresSafeArea(.keyboard,edges: .bottom)
-            .background(AppColors.adaptiveMainTabView(for: colorScheme).ignoresSafeArea())
+            .background(Color.appsBackground.ignoresSafeArea())
             .navigationDestination(isPresented: $showPostView){
                 PostView()
             }

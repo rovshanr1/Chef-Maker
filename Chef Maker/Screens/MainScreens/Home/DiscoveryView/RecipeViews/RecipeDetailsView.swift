@@ -37,8 +37,7 @@ struct RecipeDetailsView: View {
     
     var body: some View {
         ZStack {
-            AppColors.adaptiveMainTabView(for: colorScheme)
-                .ignoresSafeArea()
+     
             VStack(alignment: .leading,spacing: 16){
                 // Top Bar
                 headerButton()
@@ -326,7 +325,7 @@ struct RecipeDetailsView: View {
 
 
 
-//#Preview{
-//    RecipeCardView(recipe: MockData.sampleRecipes[0])
-//        .environmentObject(AppState())
-//}
+#Preview{
+    RecipeCardView(recipe: MockData.sampleRecipes[0])
+        .environmentObject(AppState())
+}

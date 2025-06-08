@@ -58,7 +58,7 @@ struct MyProfileView: View {
                     }
                 }
             }
-            .background(AppColors.adaptiveMainTabView(for: colorScheme))
+            .background(Color.appsBackground)
             .navigationDestination(isPresented: $navigationEditScreen) {
                 EditProfile(appState: appState)
             }
