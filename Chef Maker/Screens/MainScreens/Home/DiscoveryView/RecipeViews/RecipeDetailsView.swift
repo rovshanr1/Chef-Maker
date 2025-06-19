@@ -37,6 +37,8 @@ struct RecipeDetailsView: View {
     
     var body: some View {
         ZStack {
+            Color.appsBackground
+                .ignoresSafeArea()
      
             VStack(alignment: .leading,spacing: 16){
                 // Top Bar

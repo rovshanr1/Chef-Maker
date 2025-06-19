@@ -30,6 +30,7 @@ struct ProfileAvatarView: View {
             
             //Profile Photo
             ProfilePhoto(profile: profile)
+                .frame(width: 52, height: 52)
         }
         .padding(.horizontal)
     }

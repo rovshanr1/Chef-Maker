@@ -11,13 +11,9 @@ import Kingfisher
 struct ProfilePhoto: View {
     let profile: ProfileModel
     var body: some View {
-        Button(action: {
-            // TODO: - NavigationLink ProfileView
-        }) {
             ZStack {
                 Circle()
                     .fill(.gray)
-                    .frame(width: 52, height: 52)
                 Group{
                     if let photoURL = profile.photoURL, let url = URL(string: photoURL) {
                         KFImage(url)
@@ -27,7 +23,7 @@ struct ProfilePhoto: View {
                             .aspectRatio(contentMode: .fill)
                             .clipShape(Circle())
                             .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 5)
-                            .frame(width: 52, height: 52)
+                            
                         
                     } else {
                         Text(profile.initials)
@@ -38,7 +34,7 @@ struct ProfilePhoto: View {
                     
             }
         }
-    }
+    
 }
 
 //#Preview {

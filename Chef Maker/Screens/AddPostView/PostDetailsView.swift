@@ -20,8 +20,8 @@ struct PostDetailsView: View {
     let appState: AppState
     let selectedImage: UIImage
     
-    init(appState: AppState, selectedImage: UIImage) {
-        _viewModel = StateObject(wrappedValue: PostViewModel(appState: appState, selectedImage: selectedImage))
+    init(appState: AppState, selectedImage: UIImage, viewModel: PostViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
         self.appState = appState
         self.selectedImage = selectedImage
     }
@@ -168,5 +168,6 @@ struct PostDetailsView: View {
 }
 
 #Preview {
-    PostDetailsView(appState: AppState(), selectedImage: UIImage())
+    PostDetailsView(appState: AppState(), selectedImage: UIImage(), viewModel: PostViewModel(appState:AppState(), selectedImage: UIImage()))
 }
+

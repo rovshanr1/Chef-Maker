@@ -15,6 +15,7 @@ struct PostView: View {
     @EnvironmentObject var appState: AppState
     
     @StateObject private var service = PhotoLibraryManager()
+
     
     @State var showAddNewPostTitleView: Bool = false
     @State private var croppedImage: UIImage? = nil
@@ -76,13 +77,7 @@ struct PostView: View {
         
     }
     
-    @ViewBuilder
-    func photoPreview() -> some View {
-        VStack{
 
-        }
-
-    }
     
     private func requestPhotoLibraryAccess() {
         PHPhotoLibrary.requestAuthorization { status in

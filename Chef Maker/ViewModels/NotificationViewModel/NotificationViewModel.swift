@@ -7,11 +7,11 @@
 
 import Foundation
 
-protocol NotificationViewModelProtocol{
+protocol NotificationViewModelProtocol: ObservableObject{
     
 }
 
 
-class NotificationViewModel: ObservableObject{
+class NotificationViewModel: NotificationViewModelProtocol{
     
 }
