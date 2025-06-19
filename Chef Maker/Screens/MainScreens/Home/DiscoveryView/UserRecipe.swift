@@ -51,7 +51,7 @@ struct UserRecipe: View {
                         
                         Spacer()
                         
-                        Image("Timer")
+                        Image("timer")
                         
                         Text("\(userRecipe.cookingTime)")
                             .font(.custom("Poppins-Regular", size: 14))
