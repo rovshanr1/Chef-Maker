@@ -37,17 +37,7 @@ struct FeaturedCardView: View {
                             
                     }
                     
-                    Spacer()
-                    
-                    Button(action: {
-                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                        
-                    }){
-                        Image("Bookmark2")
-                            .resizable()
-                            .frame(width: 40, height: 40)
-                    }
-                    
+                    Spacer()         
                 }
                 .padding()
             }
@@ -77,7 +67,7 @@ struct FeaturedCardView: View {
             RoundedRectangle(cornerRadius: 20, style: .continuous)
         )
         .frame(height: 300)
-        .padding(.horizontal, 20)
+        .padding(.horizontal)
         
     }
 }

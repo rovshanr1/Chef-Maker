@@ -44,8 +44,6 @@ struct SelectedIngredient: Identifiable, Codable {
 
 extension PostModel {
     static func fromFirebase(_ data: [String: Any]) -> PostModel? {
-        
-    
         guard let id = data["id"] as? String,
               let title = data["title"] as? String,
               let description = data["description"] as? String,

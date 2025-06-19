@@ -54,7 +54,7 @@ struct CustomTexteditorField: View {
 
 
 
-#Preview {
- PostTitleView(appState: AppState(), selectedImage: UIImage())
-        .environmentObject(AppState())
-}
+//#Preview {
+// PostTitleView(appState: AppState(), selectedImage: UIImage())
+//        .environmentObject(AppState())
+//}

@@ -129,5 +129,5 @@ struct IngredientsSection: View {
 }
 
 #Preview {
-    PostDetailsView(appState: AppState(), selectedImage: UIImage())
+    PostDetailsView(appState: AppState(), selectedImage: UIImage(), viewModel: PostViewModel(appState: AppState(), selectedImage: UIImage()))
 }

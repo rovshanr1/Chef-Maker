@@ -8,7 +8,7 @@
 import Foundation
 import FirebaseFirestore
 
-protocol PostServiceProtocol{
+protocol PostViewModelProtocol: ObservableObject{
     func uploadPost(image: UIImage, form: PostFormData) async throws
     func fetchAllPosts() async throws -> [PostModel]
     func fetchPosts(by id: String) async throws -> PostModel?
@@ -16,7 +16,7 @@ protocol PostServiceProtocol{
 }
 
 
-final class PostViewModel: ObservableObject, PostServiceProtocol {
+final class PostViewModel: PostViewModelProtocol {
     // MARK: - Published Properties
     @Published var title: String = ""
     @Published var description: String = ""
@@ -228,4 +228,5 @@ final class PostViewModel: ObservableObject, PostServiceProtocol {
         try await db.collection(collectionName).document(id).delete()
     }
 }
+
 

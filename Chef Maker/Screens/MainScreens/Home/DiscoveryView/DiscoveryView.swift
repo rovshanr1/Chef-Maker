@@ -28,11 +28,11 @@ struct DiscoveryView: View {
     @State var show: Bool = false
     
     @Environment(\.colorScheme) var colorScheme
-    
-    
+
+
     init(appState: AppState) {
         _profileViewModel = StateObject(wrappedValue: ProfileViewModel(appState: appState, profileUser: appState.currentProfile!))
-     }
+    }
     
     
     var body: some View {
@@ -41,39 +41,30 @@ struct DiscoveryView: View {
             VStack(alignment: .leading, spacing: 16){
                 //Avatar
                 ProfileAvatarView(profile: profileViewModel.profile)
+
                 
-                    
-                    RefreshableScrollView(isRefreshing: $isRefreshing, onRefresh: {
-                        await refreshData()
-                    }) {
-                        VStack(alignment: .leading, spacing: 16) {
-                            // Categories
-                            ShowCategoryButton()
-                            
-                            //Featured card
-                            hero()
-                            
-                            //User Recipe
-                            userRecipesSection
-                        }
-                        .background(GeometryReader { geometry in
-                            Color.clear.preference(
-                                key: ScrollOffsetPreferenceKey.self,
-                                value: geometry.frame(in: .named("scroll")).minY
-                            )
-                        })
-                        .alert("Error", isPresented: .constant(featuredViewModel.error != nil)) {
-                            Button("Ok") {
-                                featuredViewModel.error = nil
-                            }
-                        } message:{
-                            Text(featuredViewModel.error?.localizedDescription ?? "Unkonwn Error")
-                        }
+                RefreshableScrollView(isRefreshing: $isRefreshing, onRefresh: {
+                    await refreshData()
+                }) {
+                    VStack(alignment: .leading, spacing: 16) {
+                        // Categories
+                        ShowCategoryButton()
+                        
+                        //Featured card
+                        hero()
+                        
+                        //User Recipe
+                        userRecipesSection
                     }
-                    .coordinateSpace(name: "scroll")
-                    .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                        scrollOffset = value
+                    .alert("Error", isPresented: .constant(featuredViewModel.error != nil)) {
+                        Button("Ok") {
+                            featuredViewModel.error = nil
+                        }
+                    } message:{
+                        Text(featuredViewModel.error?.localizedDescription ?? "Unkonwn Error")
                     }
+                }
+              
             }
             .background(Color.appsBackground.ignoresSafeArea())
             .onAppear{
@@ -81,26 +72,14 @@ struct DiscoveryView: View {
                     if featuredViewModel.data.isEmpty {
                         await featuredViewModel.forceRefresh()
                     }
-
+                    
                     if viewModel.userRecipes.isEmpty {
                         await viewModel.fetchUserRecipes()
                     }
-//                    print("Data Loaded Successfully: \(featuredViewModel.data.count)")
-//                    print("Recipe Loaded Successfully:", featuredViewModel.data.map { $0.title})
                 }
             }
             .navigationBarBackButtonHidden(true)
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    if scrollOffset < -20 {
-                        Text("Discovery")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .transition(.move(edge: .top).combined(with: .opacity))
-                    }
-                }
-            }
             .overlay(
                 ZStack{
                     if let selectedRecipe = selectedRecipe, show {
@@ -123,7 +102,7 @@ struct DiscoveryView: View {
             Text("Chef's Picks")
                 .font(.custom("Poppins-Bold", size: 18))
                 .padding(.leading)
-                
+            
             
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack {
@@ -147,7 +126,7 @@ struct DiscoveryView: View {
         .padding([.top])
     }
     
-
+    
     private var userRecipesSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("New Recipes")
@@ -178,25 +157,22 @@ struct DiscoveryView: View {
     func refreshData() async {
         await viewModel.fetchUserRecipes()
     }
-
+    
 }
 
 
 
 
-
-
-
-// Preference key for tracking scroll offset
-struct ScrollOffsetPreferenceKey: PreferenceKey {
-    static var defaultValue: CGFloat = 0
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
-    }
-}
+//// Preference key for tracking scroll offset
+//struct ScrollOffsetPreferenceKey: PreferenceKey {
+//    static var defaultValue: CGFloat = 0
+//    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+//        value = nextValue()
+//    }
+//}
 
 #Preview{
-  ContentView()
+    ContentView()
         .environmentObject(AppState())
 }
 

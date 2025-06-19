@@ -48,7 +48,7 @@ struct PostTitleView: View {
                 PostView()
             })
             .navigationDestination(isPresented: $showPostDitailsView, destination: {
-                PostDetailsView(appState: appState, selectedImage: selectedImage)
+                PostDetailsView(appState: appState, selectedImage: selectedImage, viewModel: viewModel)
             })
             .navigationBarBackButtonHidden(true)
             .alert("Opps", isPresented: Binding(get: { viewModel.errorMessage != nil }, set: { _ in viewModel.errorMessage = nil })) {

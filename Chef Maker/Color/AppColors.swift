@@ -42,9 +42,6 @@ struct AppColors {
         colorScheme == .dark ? darkAccent : lightAccent
     }
     
-    static func adaptiveMainTabView(for colorScheme: ColorScheme) -> Color{
-        colorScheme == .dark ? darkBackground : lightMainTabBackground
-    }
     static func adaptiveCardBackground(for colorScheme: ColorScheme) -> Color {
         colorScheme == .dark ? darkCardBackground : lightCardBackground
     }

@@ -8,7 +8,7 @@
 import SwiftUI
 import Photos
 
-class PhotoLibraryManager: ObservableObject {
+final class PhotoLibraryManager: ObservableObject {
     @Published var selectedImage: UIImage?
     @Published var allImages: [UIImage] = []
     @Published var errorMessge: String?

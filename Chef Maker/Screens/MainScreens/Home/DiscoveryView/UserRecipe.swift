@@ -34,7 +34,7 @@ struct UserRecipe: View {
             )
             
           
-                VStack(alignment: .leading, spacing: 16){
+                VStack(alignment: .leading){
                     Spacer()
                     
                     Text(userRecipe.title)
@@ -43,6 +43,7 @@ struct UserRecipe: View {
                     
                     HStack {
                         ProfilePhoto(profile: profile)
+                            .frame(width: 32, height: 32)
                         
                         Text(profile.fullName)
                             .font(.custom("Poppins-Light", size: 14))
@@ -55,6 +56,7 @@ struct UserRecipe: View {
                         Text("\(userRecipe.cookingTime)")
                             .font(.custom("Poppins-Regular", size: 14))
                             .foregroundStyle(.white)
+                     
                     }
                 }
                 .padding()
