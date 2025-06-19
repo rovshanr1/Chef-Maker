@@ -21,22 +21,9 @@
 		449E690F2DA3D0870000847E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		444DEADD2DB188DB00E62217 /* Exceptions for "Chef Maker" folder in "Chef Maker" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Support/Secrets.xcconfig,
-			);
-			target = 4498319A2DA1BB4B00041AF4 /* Chef Maker */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		4498319D2DA1BB4B00041AF4 /* Chef Maker */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				444DEADD2DB188DB00E62217 /* Exceptions for "Chef Maker" folder in "Chef Maker" target */,
-			);
 			path = "Chef Maker";
 			sourceTree = "<group>";
 		};
@@ -115,7 +102,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1620;
-				LastUpgradeCheck = 1630;
+				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					4498319A2DA1BB4B00041AF4 = {
 						CreatedOnToolsVersion = 16.2;
@@ -229,6 +216,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -288,6 +276,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};

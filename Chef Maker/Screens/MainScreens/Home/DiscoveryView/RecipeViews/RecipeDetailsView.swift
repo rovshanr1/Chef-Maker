@@ -185,7 +185,7 @@ struct RecipeDetailsView: View {
                     Spacer()
                     
                     HStack{
-                        Image("Timer")
+                        Image("timer")
                         
                         Text("\(recipe.readyInMinutes) min")
                             .font(.system(size: 12))
