@@ -1,13 +1,31 @@
 //
-//  TabViewModel.swift
+//  Items.swift
 //  Chef Maker
 //
-//  Created by Rovshan Rasulov on 01.05.25.
+//  Created by Rovshan Rasulov on 28.04.25.
 //
 
 import Foundation
 
+//MARK: - Recipe Detail Tab
+enum DetailTab{
+    case ingredients
+    case nutrition
+}
 
+//MARK: - Bookmark Status
+enum BookmarkStatus{
+    case bookmarked
+    case notBookmarked
+}
+
+//MARK: -  Profile button
+enum ProfileButton{
+    case posts
+    case bookmarks
+}
+
+//MARK: - TabBar Enums
 enum AppTab: CaseIterable{
     case discovery, savedRecipes, notification, profile
     

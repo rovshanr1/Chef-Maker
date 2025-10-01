@@ -1,6 +1,6 @@
 import Foundation
 
-
+//MARK: - API Response
 struct SpoonacularResponse: Codable {
     let results: [Recipe]
     let offset: Int
@@ -8,7 +8,7 @@ struct SpoonacularResponse: Codable {
     let totalResults: Int
 }
 
-
+//MARK: - Recipe Model
 struct Recipe: Codable, Identifiable {
     let id: Int
     let title: String
@@ -19,7 +19,15 @@ struct Recipe: Codable, Identifiable {
     let spoonacularScore: Double?
     let nutrition: RecipeNutrition
 
+
+//    //MARK: - Coding Keys
+//    enum CodingKeys: String, CodingKey{
+//        case id, title, image, imageType, nutrition
+//        case spoonacularScore = "meta-score"
+//    }
     
+    //MARK: - Computed Propertys
+
     var cookTime: Int {
         readyInMinutes
     }
@@ -50,22 +58,22 @@ struct Recipe: Codable, Identifiable {
     }
 }
 
-enum CodingKeys: String, CodingKey{
-    case id, title, image, imageType, nutrition
-    case spoonacularScore = "meta-score"
-}
 
+
+//MARK: - Recipe Nutrition Model
 struct RecipeNutrition: Codable {
     let nutrients: [RecipeNutrient]
     let ingredients: [Ingredient]?
 }
 
+//MARK: - Recipe Nutrient Model
 struct RecipeNutrient: Codable {
     let name: String
     let amount: Double
     let unit: String
 } 
 
+//MARK: - Ingredient Model
 struct Ingredient: Codable, Identifiable {
     let id: Int
     let name: String

@@ -7,7 +7,7 @@
 
 import Foundation
 
-// Time
+//MARK: - Time Model
 enum TimeFilter: String, CaseIterable, Identifiable {
     case all = "All"
     case newest = "Newest"
@@ -20,7 +20,7 @@ enum TimeFilter: String, CaseIterable, Identifiable {
     }
 }
 
-// Rate
+//MARK: - Rate Model
 enum RateFilter: Int, CaseIterable, Identifiable {
     case oneStar = 1
     case twoStars = 2
@@ -37,6 +37,7 @@ enum RateFilter: Int, CaseIterable, Identifiable {
     }
 }
 
+//MARK: - Category Model
 enum CategoryFilter: String, CaseIterable, Identifiable {
     case breakfast = "Breakfast"
     case lunch = "Lunch"
@@ -54,5 +55,4 @@ enum CategoryFilter: String, CaseIterable, Identifiable {
     var id: String {
         rawValue
     }
-    
 }

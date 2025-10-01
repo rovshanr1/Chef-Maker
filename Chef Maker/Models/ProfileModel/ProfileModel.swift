@@ -7,6 +7,7 @@
 
 import Foundation
 
+//MARK: - Profile Model
 struct ProfileModel: Identifiable, Codable {
     let id: String
     var fullName: String
@@ -28,7 +29,10 @@ struct ProfileModel: Identifiable, Codable {
         }
         return ""
     }
-    
+}
+
+//MARK: Profile Model Extension
+extension ProfileModel{
     static func fromFirebase(_ data: [String: Any]) -> ProfileModel? {
         guard
             let id = data["id"] as? String,
@@ -82,6 +86,8 @@ struct ProfileModel: Identifiable, Codable {
     }
 }
 
+
+//MARK: - for Mock Data
 #if DEBUG
 extension ProfileModel {
     static let preview = ProfileModel(

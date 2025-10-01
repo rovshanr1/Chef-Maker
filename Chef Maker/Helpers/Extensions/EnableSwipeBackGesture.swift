@@ -10,7 +10,6 @@ import SwiftUI
 struct EnableSwipeBackGesture: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
     
-    
     func makeUIViewController(context: Context) -> UIViewController {
         let controller = UIViewController()
         

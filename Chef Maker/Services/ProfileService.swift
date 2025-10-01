@@ -32,8 +32,6 @@ final class ProfileService: ProfileServiceProtocol{
     }
     
     
-    
-    
     func createUserPosts() async throws -> [PostModel] {
         let snapshot = try await db.collection("posts")
             .order(by: "createdAt", descending: true)

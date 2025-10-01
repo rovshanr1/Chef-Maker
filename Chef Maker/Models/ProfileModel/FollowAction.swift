@@ -7,14 +7,16 @@
 
 import Foundation
 
+struct FollowStatus{
+    let isFollowing: Bool
+    let timeStamp: Date?
+    let status: String?
+}
+
 
 enum FollowAction{
     case follow
     case unfollow
 }
 
-struct FollowStatus{
-    let isFollowing: Bool
-    let timeStamp: Date?
-    let status: String?
-}
+

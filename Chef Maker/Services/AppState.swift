@@ -12,78 +12,141 @@ import FirebaseFirestore
 @MainActor
 class AppState: ObservableObject {
     @Published var isLoggedIn: Bool = false
+    @Published var hasSeenOnboarding: Bool = false
     @Published var currentProfile: ProfileModel?
-    @Published var hasSeenOnboarding: Bool = UserDefaults.standard.bool(forKey: "onboardingShown")
     
-    let authService: AuthServiceProtocol
-    let profileService = ProfileService()
-    let auth = Auth.auth()
-    private let db: Firestore
+    private let onboardingStoring: OnboardingStoring
+    private let session: SessionManaging
+    private let profile: FirestoreRepostory
     
-    init(authService: AuthServiceProtocol = AuthService(),
-        db: Firestore = Firestore.firestore()) {
-        self.authService = authService
-        self.db = db
-        checkInitialSession()
+    init(
+         onboardingStoring: OnboardingStoring = UserDefaultsOnboardingStoring(),
+         session: SessionManaging = SessionManager(authService: AuthService()),
+         firebaseRepostory: FirestoreRepostory = FirebaseProfileService(),
+    ){
+        self.session = session
+        self.onboardingStoring = onboardingStoring
+        self.profile = firebaseRepostory
+        
+        self.isLoggedIn = session.isLoggedIn
+        self.hasSeenOnboarding = onboardingStoring.hasSeenOnboarding
+        
+        bootstrap()
     }
-    
-    func checkInitialSession() {
-        Task {
-            let result = await authService.checkSession()
+   
+    private func bootstrap() {
+        Task{
+            let result = await session.checkSession()
             isLoggedIn = result
-            if isLoggedIn {
+            if result{
                 await loadUserProfile()
             }
         }
     }
     
+    //MARK: - Onboarding
     func markOnboardingSeen() {
-        hasSeenOnboarding = true
-        UserDefaults.standard.set(true, forKey: "onboardingShown")
+        onboardingStoring.markOnboardingSeen()
+        hasSeenOnboarding = onboardingStoring.hasSeenOnboarding
     }
     
-    func login() {
-        isLoggedIn = true
-        Task {
-            await loadUserProfile()
+    //MARK: - Login
+    func loginSucceded() {
+        Task{
+            await session.loginSucceded()
+            isLoggedIn = session.isLoggedIn
+            if isLoggedIn{
+                await loadUserProfile()
+            }
         }
     }
     
-    func logout() async throws{
-        do {
-            try await authService.logout()
+    func logout() async{
+        do{
+            try await session.logout()
             isLoggedIn = false
             currentProfile = nil
-        } catch {
+        }
+        catch{
+            //TODO: - Crate error handeling
             print("Logout Error: \(error.localizedDescription)")
-        
+            isLoggedIn = false
+            currentProfile = nil
         }
     }
     
+    
+    //MARK: - Profile
     func loadUserProfile() async {
-        guard let currentUser = authService.currentUser else {
+        guard let uid = session.currenUser?.uid else {
+            return
+        }
+        do {
+            self.currentProfile = try await profile.fetchProfile(for: uid)
+        }
+        catch{
+            print("Load User Profile Error: \(error.localizedDescription)")
+            //TODO: - Crate error handeling
+        }
+    }
+    
+    
+    func upadteUserProfile(fullName: String) async{
+        guard let uid = session.currenUser?.uid else {
             return
         }
         
-        do {
-            let doc = try await db.collection("users").document(currentUser.uid).getDocument()
-            if let data = doc.data(),
-               let profile = ProfileModel.fromFirebase(data) {
-                self.currentProfile = profile
-            }
-        } catch {
-            print("Load User Error: \(error.localizedDescription)")
-            // TODO: Error handling
+        do{
+            try await profile.updateFullName(for: uid, fullName: fullName)
+            await loadUserProfile()
+        }catch{
+            //TODO: - Crate error handeling
+            print("Update User Error: \(error.localizedDescription)")
         }
     }
     
-    func updateUserProfile(fullName: String) async throws {
-        guard let user = authService.currentUser else { return }
-        try await db.collection("users").document(user.uid).updateData([
-            "fullName": fullName,
-            "timeStamp": Date().timeIntervalSince1970
-        ])
-        await loadUserProfile()
-    }
+//    func login() {
+//        isLoggedIn = true
+//        Task {
+//            await loadUserProfile()
+//        }
+//    }
+//    
+//    func logout() async throws{
+//        do {
+//            try await authService.logout()
+//            isLoggedIn = false
+//            currentProfile = nil
+//        } catch {
+//            print("Logout Error: \(error.localizedDescription)")
+//            
+//        }
+//    }
+    
+//    func loadUserProfile() async {
+//        guard let currentUser = authService.currentUser else {
+//            return
+//        }
+//        
+//        do {
+//            let doc = try await db.collection("users").document(currentUser.uid).getDocument()
+//            if let data = doc.data(),
+//               let profile = ProfileModel.fromFirebase(data) {
+//                self.currentProfile = profile
+//            }
+//        } catch {
+//            print("Load User Error: \(error.localizedDescription)")
+//            // TODO: Error handling
+//        }
+//    }
+//    
+//    func updateUserProfile(fullName: String) async throws {
+//        guard let user = authService.currentUser else { return }
+//        try await db.collection("users").document(user.uid).updateData([
+//            "fullName": fullName,
+//            "timeStamp": Date().timeIntervalSince1970
+//        ])
+//        await loadUserProfile()
+//    }
 }
 

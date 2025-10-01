@@ -27,6 +27,7 @@ struct MyApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(appState)
+                .environmentObject(SessionManager(authService: AuthService()))
         }
     }
 }

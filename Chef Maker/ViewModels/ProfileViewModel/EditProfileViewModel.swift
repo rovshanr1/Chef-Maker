@@ -33,6 +33,7 @@ class EditProfileViewModel:BaseViewModel<ProfileModel>, EditProfileViewModelProt
     @Published var isDeletingPhoto = false
 
     private let appState : AppState
+    private let sessionManager: SessionManaging
     
     var profile: ProfileModel {
         appState.currentProfile ?? ProfileModel(
@@ -50,14 +51,17 @@ class EditProfileViewModel:BaseViewModel<ProfileModel>, EditProfileViewModelProt
         )
     }
     
-    init(appState: AppState) {
+    init(appState: AppState,
+         sessionManager: SessionManaging
+    ) {
         self.appState = appState
+        self.sessionManager = sessionManager
         super.init()
         loadProfile()
     }
   
     func uploadProfilePhoto(_ image: UIImage) async throws {
-        let token = try await appState.getIdToken()
+        let token = try await sessionManager.getIdTokken()
         
         if let oldFileId = appState.currentProfile?.fileId {
             try await ImageKitService.deleteFile(fileId: oldFileId, token: token)

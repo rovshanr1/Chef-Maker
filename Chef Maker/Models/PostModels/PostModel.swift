@@ -7,6 +7,8 @@
 
 import Foundation
 
+
+//MARK: - Post Model
 struct PostModel: Identifiable, Codable {
     let id: String
     let title: String
@@ -30,11 +32,9 @@ struct PostModel: Identifiable, Codable {
     
     var isLiked: Bool?
     var isSaved: Bool?
-    
-    
-    
 }
 
+//MARK: - Selected IngredientModel
 struct SelectedIngredient: Identifiable, Codable {
     var id: String
     var name: String
@@ -42,6 +42,8 @@ struct SelectedIngredient: Identifiable, Codable {
     var unit: String
 }
 
+
+//MARK: - Post Model Extension
 extension PostModel {
     static func fromFirebase(_ data: [String: Any]) -> PostModel? {
         guard let id = data["id"] as? String,
@@ -131,7 +133,7 @@ extension PostModel {
     }
 }
 
-
+//MARK: - for Mock Data
 #if DEBUG
 extension PostModel {
     static let previews = PostModel(

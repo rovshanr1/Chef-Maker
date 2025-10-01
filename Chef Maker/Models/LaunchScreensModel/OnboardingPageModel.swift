@@ -15,7 +15,6 @@ struct OnboardingPageModel: Identifiable {
     let imageName: String
 }
 
-
 let onboardingData = [
     OnboardingPageModel(
         title: "Discover Recipes",
